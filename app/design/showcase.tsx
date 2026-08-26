@@ -19,12 +19,14 @@ type ThemeId = (typeof themes)[number]["id"];
 type ScreenId = (typeof screens)[number]["id"];
 
 const days = [
-  { day: "01", topic: "How decisions go wrong", sessions: "2 sessions" },
-  { day: "02", topic: "Judgment under uncertainty", sessions: "2 sessions" },
-  { day: "03", topic: "Decisions in groups", sessions: "2 sessions" },
-  { day: "04", topic: "Choice architecture", sessions: "2 sessions" },
-  { day: "05", topic: "Improving decisions", sessions: "1 session" },
-  { day: "06", topic: "Synthesis and application", sessions: "1 session" },
+  { day: "01", topic: "Decision approaches and anatomy", sessions: "14 Sep" },
+  { day: "02", topic: "Heuristics, biases and noise", sessions: "15 Sep" },
+  { day: "03", topic: "Framing and preferences", sessions: "16 Sep" },
+  { day: "04", topic: "Attention, expertise and emotion", sessions: "17 Sep" },
+  { day: "05", topic: "Overconfidence and escalation", sessions: "22 Sep" },
+  { day: "06", topic: "Fairness and ethics", sessions: "23 Sep" },
+  { day: "07", topic: "Improving decisions", sessions: "24 Sep" },
+  { day: "08", topic: "Presentations and synthesis", sessions: "28 Sep" },
 ];
 
 function CourseHeader({ compact = false }: { compact?: boolean }) {
@@ -36,7 +38,7 @@ function CourseHeader({ compact = false }: { compact?: boolean }) {
       </div>
       <div className={styles.courseIdentity}>
         <span>ØAADM3700</span>
-        {!compact && <span>Independent teaching project</span>}
+        {!compact && <span>Autumn 2026</span>}
       </div>
     </header>
   );
@@ -52,10 +54,7 @@ function HubScreen() {
             <p className={styles.eyebrow}>Course workspace · Autumn 2026</p>
             <h1>Decision-Making Processes<br />in Organizations</h1>
           </div>
-          <p className={styles.introCopy}>
-            Experiments, cases and practical tools for examining how decisions
-            are made—and how they can be improved.
-          </p>
+          <p className={styles.introCopy}>Eight teaching days from 14 to 28 September 2026.</p>
         </section>
 
         <section className={styles.nextSession} aria-labelledby="next-session-title">
@@ -76,7 +75,7 @@ function HubScreen() {
         <section className={styles.courseMap} aria-labelledby="course-map-title">
           <div className={styles.sectionHeading}>
             <h2 id="course-map-title">Course map</h2>
-            <p>Six teaching days · ten sessions</p>
+            <p>Eight teaching days</p>
           </div>
           <ol className={styles.dayList}>
             {days.map((item, index) => (
@@ -288,7 +287,7 @@ export function DesignShowcase() {
 
       <footer className={styles.reviewFooter}>
         <p>All content is representative. Activities and dates will be added after the design system is selected.</p>
-        <p>Independent teaching project · Not an official OsloMet service</p>
+        <p>ØAADM3700 · Autumn 2026</p>
       </footer>
     </main>
   );

@@ -731,6 +731,649 @@
   text-transform: uppercase;
 }
 
+/* Course hub */
+.hero {
+  display: block;
+  padding: 72px 0 62px;
+  border-bottom: 1px solid var(--line);
+}
+
+.courseCode {
+  margin: 0 0 16px;
+  color: var(--accent);
+  font-size: clamp(25px, 3vw, 40px);
+  font-weight: 850;
+  letter-spacing: -.035em;
+}
+
+.hero h1 {
+  margin-top: 0;
+  max-width: 1050px;
+}
+
+.term {
+  margin: 23px 0 0;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.today {
+  display: grid;
+  grid-template-columns: 105px minmax(0, 1fr) auto;
+  gap: 32px;
+  align-items: center;
+  padding: 30px 0 33px;
+  border-top: 3px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+
+.today h2 {
+  margin: 8px 0 6px;
+  font-size: clamp(30px, 3vw, 42px);
+  letter-spacing: -.04em;
+  text-transform: uppercase;
+}
+
+.today > div:nth-child(2) > p:last-child {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.todayAction {
+  display: grid;
+  gap: 12px;
+  justify-items: end;
+}
+
+.todayAction > span {
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.schedule {
+  padding-top: 60px;
+}
+
+.sectionTitle > a {
+  color: var(--ink);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  text-underline-offset: 4px;
+}
+
+.scheduleTable {
+  border-top: 3px solid var(--ink);
+}
+
+.scheduleHead,
+.scheduleRow {
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) 170px 130px;
+  gap: 26px;
+  align-items: center;
+  min-height: 54px;
+  border-bottom: 1px solid var(--fine-line);
+}
+
+.scheduleHead {
+  min-height: 36px;
+  color: var(--muted);
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.scheduleRow > span:first-child {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.scheduleRow > span:nth-child(2),
+.scheduleRow a {
+  color: var(--muted);
+  font-size: 10px;
+  letter-spacing: .035em;
+}
+
+.scheduleRow a {
+  color: var(--ink);
+  font-weight: 800;
+  text-underline-offset: 4px;
+}
+
+.overviewList {
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--line);
+  list-style: none;
+}
+
+.overviewList li {
+  position: relative;
+  display: grid;
+  grid-template-columns: 58px minmax(220px, .75fr) minmax(300px, 1.4fr) 95px;
+  gap: 22px;
+  align-items: center;
+  min-height: 93px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--fine-line);
+}
+
+.overviewList li.activeDay::before {
+  position: absolute;
+  inset: 0 auto 0 -12px;
+  width: 4px;
+  background: var(--accent);
+  content: "";
+}
+
+.activeDay {
+  background: rgba(31, 78, 255, .035);
+}
+
+.dayMeta {
+  display: grid;
+  gap: 5px;
+}
+
+.dayMeta strong {
+  font-size: 12px;
+  line-height: 1.35;
+  text-transform: uppercase;
+}
+
+.dayMeta span,
+.overviewList p {
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.55;
+}
+
+.overviewList p {
+  margin: 0;
+}
+
+.overviewList a {
+  color: var(--ink);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .05em;
+  text-align: right;
+  text-transform: uppercase;
+  text-underline-offset: 4px;
+}
+
+/* Teaching-day pages */
+.dayFacts {
+  display: grid;
+  grid-template-columns: 1.4fr .65fr .55fr;
+  max-width: 900px;
+  margin: 35px 0 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.dayFacts > div {
+  display: grid;
+  gap: 5px;
+  padding: 14px 20px 14px 0;
+  border-right: 1px solid var(--fine-line);
+}
+
+.dayFacts > div:not(:first-child) {
+  padding-left: 20px;
+}
+
+.dayFacts > div:last-child {
+  border-right: 0;
+}
+
+.dayFacts dt,
+.sectionLabel {
+  color: var(--muted);
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.dayFacts dd {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 750;
+}
+
+.dayFacts a {
+  color: var(--ink);
+  text-underline-offset: 3px;
+}
+
+.dayOverview {
+  display: grid;
+  grid-template-columns: minmax(190px, .65fr) minmax(0, 1.6fr);
+  gap: 50px;
+  padding: 38px 0;
+  border-top: 3px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+
+.sectionLabel {
+  margin: 0 0 7px;
+  color: var(--accent);
+}
+
+.dayOverview h2 {
+  margin: 0;
+  font-size: 26px;
+  letter-spacing: -.035em;
+  text-transform: uppercase;
+}
+
+.topicList,
+.readingGroups ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.topicList li {
+  position: relative;
+  padding: 9px 0 9px 25px;
+  border-bottom: 1px solid var(--fine-line);
+  font-size: 13px;
+}
+
+.topicList li:first-child {
+  border-top: 1px solid var(--fine-line);
+}
+
+.topicList li::before {
+  position: absolute;
+  top: 14px;
+  left: 0;
+  width: 7px;
+  height: 7px;
+  background: var(--accent);
+  content: "";
+}
+
+.readingSection,
+.sessionSection,
+.assignmentSection {
+  padding-top: 60px;
+}
+
+.readingGroups {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: 3px solid var(--ink);
+}
+
+.readingGroups > div {
+  padding: 23px 28px 24px 0;
+  border-right: 1px solid var(--fine-line);
+  border-bottom: 1px solid var(--line);
+}
+
+.readingGroups > div:not(:first-child) {
+  padding-left: 28px;
+}
+
+.readingGroups > div:last-child {
+  border-right: 0;
+}
+
+.readingGroups h3 {
+  margin: 0 0 15px;
+  color: var(--accent);
+  font-size: 9px;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+}
+
+.readingGroups li {
+  margin-bottom: 11px;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.55;
+}
+
+.sessionList,
+.assignmentList {
+  margin: 0;
+  padding: 0;
+  border-top: 3px solid var(--ink);
+  list-style: none;
+}
+
+.sessionList li {
+  display: grid;
+  grid-template-columns: 145px minmax(0, 1fr) 70px;
+  gap: 28px;
+  min-height: 91px;
+  align-items: center;
+  border-bottom: 1px solid var(--fine-line);
+}
+
+.sessionList time {
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.sessionList strong {
+  font-size: 13px;
+  text-transform: uppercase;
+}
+
+.sessionList p {
+  max-width: 760px;
+  margin: 5px 0 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+.sessionList > li > span {
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .06em;
+  text-align: right;
+  text-transform: uppercase;
+}
+
+.sessionList .breakRow {
+  min-height: 49px;
+  background: repeating-linear-gradient(-45deg, transparent, transparent 8px, rgba(23, 32, 42, .035) 8px, rgba(23, 32, 42, .035) 9px);
+}
+
+.breakRow strong,
+.breakRow time {
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.planPending {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  gap: 30px;
+  align-items: center;
+  min-height: 95px;
+  border-top: 3px solid var(--ink);
+  border-bottom: 1px solid var(--line);
+}
+
+.planPending span {
+  color: var(--accent);
+  font-size: 30px;
+  font-weight: 850;
+}
+
+.planPending p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.assignmentList li {
+  display: grid;
+  grid-template-columns: 78px minmax(0, 1fr) auto;
+  gap: 28px;
+  align-items: center;
+  min-height: 125px;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.assignmentList h3 {
+  margin: 6px 0;
+  font-size: 23px;
+  letter-spacing: -.035em;
+  text-transform: uppercase;
+}
+
+.assignmentList div > p:last-child {
+  max-width: 700px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+/* Two-player bargain */
+.bargainQuestion {
+  display: grid;
+  grid-template-columns: minmax(160px, .45fr) minmax(0, 1.8fr);
+  gap: 55px;
+  min-height: 520px;
+  padding: 43px 0 55px;
+  border-top: 3px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+
+.bargainQuestion aside {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-content: start;
+  gap: 3px 8px;
+  padding-right: 30px;
+  border-right: 1px solid var(--line);
+}
+
+.bargainQuestion aside p {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.bargainQuestion aside strong {
+  color: var(--accent);
+  font-size: 54px;
+  letter-spacing: -.06em;
+}
+
+.bargainQuestion aside span {
+  align-self: end;
+  padding-bottom: 10px;
+  color: var(--muted);
+  font-size: 10px;
+  text-transform: uppercase;
+}
+
+.bargainQuestion h2 {
+  max-width: 900px;
+  margin: 13px 0 19px;
+  font-size: clamp(34px, 4.4vw, 62px);
+  letter-spacing: -.052em;
+  line-height: 1.02;
+}
+
+.bargainQuestion h2 em {
+  color: var(--accent);
+  font-style: normal;
+}
+
+.decisionPrompt {
+  margin: 0 0 30px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.decisionButtons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+}
+
+.decisionButtons button {
+  min-height: 92px;
+  border: 0;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 19px;
+  font-weight: 850;
+  letter-spacing: -.02em;
+  text-transform: uppercase;
+}
+
+.decisionButtons button:hover,
+.selectedDecision {
+  background: var(--ink) !important;
+  color: white !important;
+}
+
+.bargainComplete {
+  padding: 47px 0 54px;
+  border-top: 3px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+
+.bargainComplete h2 {
+  margin: 9px 0 14px;
+  font-size: clamp(35px, 4vw, 55px);
+  letter-spacing: -.05em;
+  text-transform: uppercase;
+}
+
+.bargainComplete > p:nth-child(3) {
+  max-width: 720px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.decisionSummary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin-top: 34px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.decisionSummary > div {
+  display: grid;
+  gap: 7px;
+  padding: 17px 20px 17px 0;
+  border-right: 1px solid var(--fine-line);
+}
+
+.decisionSummary > div:not(:first-child) {
+  padding-left: 20px;
+}
+
+.decisionSummary > div:last-child {
+  border-right: 0;
+}
+
+.decisionSummary span {
+  color: var(--muted);
+  font-size: 9px;
+}
+
+.decisionSummary strong {
+  color: var(--accent);
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.bargainComplete .resultActions a {
+  color: var(--ink);
+  font-size: 10px;
+  font-weight: 800;
+  text-underline-offset: 4px;
+  text-transform: uppercase;
+}
+
+.resultsHeader {
+  padding: 66px 0 45px;
+}
+
+.resultsHeader h1 {
+  margin: 12px 0 14px;
+  font-size: clamp(48px, 6vw, 84px);
+  letter-spacing: -.06em;
+  line-height: .95;
+  text-transform: uppercase;
+}
+
+.resultsHeader > p:last-child {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.hiddenResults {
+  border-top: 3px solid var(--ink);
+}
+
+.hiddenResults > div {
+  display: grid;
+  grid-template-columns: 55px minmax(250px, .8fr) minmax(320px, 1.5fr) 130px;
+  gap: 25px;
+  align-items: center;
+  min-height: 103px;
+  border-bottom: 1px solid var(--line);
+}
+
+.hiddenResults > div > span {
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 850;
+}
+
+.hiddenResults strong {
+  font-size: 13px;
+  text-transform: uppercase;
+}
+
+.hiddenResults > div > div {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5px;
+}
+
+.hiddenResults i {
+  display: block;
+  height: 20px;
+  background: repeating-linear-gradient(135deg, var(--fine-line), var(--fine-line) 7px, transparent 7px, transparent 10px);
+}
+
+.hiddenResults em {
+  color: var(--muted);
+  font-size: 9px;
+  font-style: normal;
+  font-weight: 800;
+  letter-spacing: .06em;
+  text-align: right;
+  text-transform: uppercase;
+}
+
+.resultsStatus {
+  max-width: 650px;
+  margin: 25px 0 0 auto;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.6;
+  text-align: right;
+}
+
 @media (max-width: 850px) {
   .hero,
   .activityHeader,
@@ -800,6 +1443,52 @@
   .sourceNote > div {
     grid-column: 2;
   }
+
+  .today {
+    grid-template-columns: 72px 1fr;
+  }
+
+  .todayAction {
+    grid-column: 2;
+    justify-items: start;
+  }
+
+  .overviewList li {
+    grid-template-columns: 45px 1fr 90px;
+  }
+
+  .overviewList p {
+    grid-column: 2 / -1;
+    margin-top: -5px;
+  }
+
+  .readingGroups {
+    grid-template-columns: 1fr;
+  }
+
+  .readingGroups > div,
+  .readingGroups > div:not(:first-child) {
+    padding: 22px 0;
+    border-right: 0;
+  }
+
+  .assignmentList li {
+    grid-template-columns: 65px 1fr;
+  }
+
+  .assignmentList .primaryLink {
+    grid-column: 2;
+    justify-self: start;
+  }
+
+  .hiddenResults > div {
+    grid-template-columns: 45px minmax(230px, 1fr) 110px;
+    padding: 18px 0;
+  }
+
+  .hiddenResults > div > div {
+    grid-column: 2 / -1;
+  }
 }
 
 @media (max-width: 600px) {
@@ -829,6 +1518,10 @@
     grid-template-columns: 1fr;
   }
 
+  .today {
+    grid-template-columns: 1fr;
+  }
+
   .sectionIndex {
     padding: 0 0 12px;
     border-right: 0;
@@ -836,6 +1529,10 @@
   }
 
   .activityAction {
+    grid-column: 1;
+  }
+
+  .todayAction {
     grid-column: 1;
   }
 
@@ -853,6 +1550,141 @@
     grid-template-columns: 37px 1fr auto;
     gap: 12px;
     padding: 15px 0;
+  }
+
+  .scheduleHead,
+  .scheduleRow {
+    grid-template-columns: 1fr 92px;
+    gap: 13px;
+  }
+
+  .scheduleHead > span:last-child,
+  .scheduleRow > a {
+    grid-column: 1 / -1;
+    padding-bottom: 10px;
+  }
+
+  .scheduleRow {
+    padding-top: 12px;
+  }
+
+  .overviewList li {
+    grid-template-columns: 35px 1fr auto;
+    gap: 12px;
+    padding: 18px 0;
+  }
+
+  .overviewList p {
+    grid-column: 2 / -1;
+  }
+
+  .overviewList a {
+    font-size: 0;
+  }
+
+  .overviewList a::after {
+    content: "Open →";
+    font-size: 9px;
+  }
+
+  .dayHeader h1 {
+    line-height: 1.04;
+  }
+
+  .dayFacts {
+    grid-template-columns: 1fr;
+  }
+
+  .dayFacts > div,
+  .dayFacts > div:not(:first-child) {
+    padding: 12px 0;
+    border-right: 0;
+    border-bottom: 1px solid var(--fine-line);
+  }
+
+  .dayFacts > div:last-child {
+    border-bottom: 0;
+  }
+
+  .dayOverview,
+  .bargainQuestion {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .sessionList li {
+    grid-template-columns: 105px 1fr;
+    gap: 15px;
+    padding: 16px 0;
+  }
+
+  .sessionList > li > span {
+    grid-column: 2;
+    text-align: left;
+  }
+
+  .assignmentList li,
+  .planPending {
+    grid-template-columns: 1fr;
+  }
+
+  .assignmentList .primaryLink {
+    grid-column: 1;
+    width: 100%;
+  }
+
+  .bargainQuestion aside {
+    display: flex;
+    align-items: baseline;
+    gap: 9px;
+    padding: 0 0 15px;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .bargainQuestion aside p {
+    grid-column: auto;
+  }
+
+  .bargainQuestion aside strong {
+    font-size: 32px;
+  }
+
+  .bargainQuestion aside span {
+    padding: 0;
+  }
+
+  .decisionButtons {
+    grid-template-columns: 1fr;
+  }
+
+  .decisionButtons button {
+    min-height: 68px;
+  }
+
+  .decisionSummary {
+    grid-template-columns: 1fr;
+  }
+
+  .decisionSummary > div,
+  .decisionSummary > div:not(:first-child) {
+    padding: 14px 0;
+    border-right: 0;
+    border-bottom: 1px solid var(--fine-line);
+  }
+
+  .hiddenResults > div {
+    grid-template-columns: 35px 1fr;
+  }
+
+  .hiddenResults > div > div,
+  .hiddenResults em {
+    grid-column: 2;
+  }
+
+  .hiddenResults em,
+  .resultsStatus {
+    text-align: left;
   }
 
   .dayList li > span:nth-child(3) {

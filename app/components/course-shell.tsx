@@ -10,7 +10,7 @@ export function CourseHeader() {
       </Link>
       <div className={styles.courseMark}>
         <span>ØAADM3700</span>
-        <span>Independent teaching project</span>
+        <span>Autumn 2026</span>
       </div>
     </header>
   );
@@ -20,7 +20,7 @@ export function CourseFooter() {
   return (
     <footer className={styles.siteFooter}>
       <span>ØAADM3700 · Decision-Making Processes in Organizations</span>
-      <span>Not an official OsloMet service</span>
+      <span>Autumn 2026</span>
     </footer>
   );
 }

@@ -4,8 +4,9 @@ A mobile-first teaching tool for **ØAADM3700 Decision-Making Processes in Organ
 
 ## Current features
 
-- Precision Grid course hub and six teaching-day placeholders
-- Day 1 REI-10 cognitive-style activity
+- Precision Grid course hub with eight dated teaching days
+- Day pages with topics, readings, session plans and assignments
+- Day 1 two-player bargain and REI-10 cognitive-style activities
 - Private, on-device scoring with no student data collection
 - Three design directions retained at `/design`
 - Security headers configured for deployment
