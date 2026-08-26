@@ -31,11 +31,6 @@ export default function BargainResultsPage() {
             </div>
           ))}
         </section>
-
-        <p className={styles.resultsStatus}>
-          This is the slide-ready results address. Live counts and reveal
-          controls will appear here after Supabase is connected.
-        </p>
       </main>
     </CourseShell>
   );

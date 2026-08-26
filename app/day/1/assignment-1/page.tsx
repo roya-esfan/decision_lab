@@ -19,13 +19,14 @@ export default function BargainAssignmentPage() {
           </div>
           <div className={styles.activityIntro}>
             <p>
-              You are Player 2, the responder. Player 1, Eve, receives 100 kr
-              and decides how to divide it between herself and you. You do not
-              know each other.
+              Imagine a bargain between you and Eve. You do not know one
+              another. Eve receives 100 kr and proposes how much to give you
+              and how much to keep for herself.
             </p>
             <p className={styles.localNotice}>
-              If you accept, each player receives the proposed amount. If you
-              reject, neither player receives anything.
+              You decide whether to accept or reject each offer. Accepting means
+              the money is divided exactly as Eve proposes. Rejecting means
+              both of you receive 0 kr.
             </p>
           </div>
         </header>

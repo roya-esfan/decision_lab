@@ -46,12 +46,8 @@ export function BargainActivity() {
     return (
       <section className={styles.bargainComplete} aria-live="polite">
         <p className={styles.eyebrow}>Response complete</p>
-        <h2>Your three decisions are ready.</h2>
-        <p>
-          Your choices are saved only on this device for now. Class collection
-          and the instructor reveal control will be activated when the live
-          Supabase session is connected.
-        </p>
+        <h2>Thank you.</h2>
+        <p>You have responded to all three offers.</p>
         <div className={styles.decisionSummary}>
           {offers.map((item) => (
             <div key={item.id}>
@@ -70,15 +66,10 @@ export function BargainActivity() {
 
   return (
     <section className={styles.bargainQuestion} aria-labelledby="offer-title">
-      <aside>
-        <p>Offer</p>
-        <strong>{String(index + 1).padStart(2, "0")}</strong>
-        <span>of {offers.length}</span>
-      </aside>
       <div>
         <p className={styles.eyebrow}>Eve proposes</p>
         <h2 id="offer-title">
-          Eve offers you <em>{offer.offered} kr</em> and keeps {offer.kept} kr.
+          Eve offers you <em>{offer.offered} kr</em> and keeps <em>{offer.kept} kr</em>.
         </h2>
         <p className={styles.decisionPrompt}>Would you accept or reject the offer?</p>
         <div className={styles.decisionButtons} role="group" aria-label="Choose whether to accept or reject">

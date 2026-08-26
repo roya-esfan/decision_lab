@@ -771,7 +771,7 @@
 }
 
 .today h2 {
-  margin: 8px 0 6px;
+  margin: 0 0 6px;
   font-size: clamp(30px, 3vw, 42px);
   letter-spacing: -.04em;
   text-transform: uppercase;
@@ -903,20 +903,47 @@
   margin: 0;
 }
 
-.overviewList a {
-  color: var(--ink);
+.overviewList a.overviewButton {
+  display: inline-flex;
+  min-height: 34px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 12px;
+  background: var(--accent);
+  color: white;
   font-size: 9px;
   font-weight: 800;
   letter-spacing: .05em;
   text-align: right;
+  text-decoration: none;
   text-transform: uppercase;
-  text-underline-offset: 4px;
+}
+
+.overviewList a.overviewButton:hover {
+  background: var(--accent-dark);
+}
+
+.feedback {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 35px;
+  align-items: center;
+  margin-top: 60px;
+  padding: 31px 0 34px;
+  border-top: 3px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+
+.feedback h2 {
+  margin: 8px 0 0;
+  font-size: clamp(24px, 3vw, 37px);
+  letter-spacing: -.04em;
 }
 
 /* Teaching-day pages */
 .dayFacts {
   display: grid;
-  grid-template-columns: 1.4fr .65fr .55fr;
+  grid-template-columns: 1.4fr .65fr;
   max-width: 900px;
   margin: 35px 0 0;
   border-top: 1px solid var(--line);
@@ -1154,8 +1181,7 @@
 /* Two-player bargain */
 .bargainQuestion {
   display: grid;
-  grid-template-columns: minmax(160px, .45fr) minmax(0, 1.8fr);
-  gap: 55px;
+  grid-template-columns: minmax(0, 1fr);
   min-height: 520px;
   padding: 43px 0 55px;
   border-top: 3px solid var(--ink);
@@ -1210,8 +1236,10 @@
 
 .decisionPrompt {
   margin: 0 0 30px;
-  color: var(--muted);
-  font-size: 13px;
+  color: var(--ink);
+  font-size: clamp(20px, 2.2vw, 29px);
+  font-weight: 750;
+  letter-spacing: -.025em;
 }
 
 .decisionButtons {
@@ -1374,6 +1402,532 @@
   text-align: right;
 }
 
+/* Assignment 02 */
+.singlePromptHeader {
+  max-width: 1080px;
+  padding: 70px 0 48px;
+}
+
+.singlePromptHeader h1 {
+  margin: 14px 0 22px;
+  font-size: clamp(42px, 5.5vw, 76px);
+  font-weight: 760;
+  letter-spacing: -.055em;
+  line-height: .98;
+  text-transform: uppercase;
+}
+
+.singlePromptHeader > p:last-child {
+  max-width: 760px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.examChoice {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  padding: 1px;
+  background: var(--line);
+  border-top: 3px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+
+.examChoice button {
+  min-height: 220px;
+  border: 0;
+  background: var(--surface);
+  color: var(--accent);
+  font-size: clamp(48px, 7vw, 92px);
+  font-weight: 850;
+  letter-spacing: -.06em;
+}
+
+.examChoice button:hover,
+.examChoice button:focus-visible {
+  background: var(--ink);
+  color: white;
+}
+
+.choiceComplete {
+  padding: 47px 0 54px;
+  border-top: 3px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+
+.choiceComplete h2 {
+  margin: 9px 0 13px;
+  font-size: clamp(40px, 5vw, 66px);
+  letter-spacing: -.055em;
+  text-transform: uppercase;
+}
+
+.choiceComplete > p:nth-child(3) {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.choiceComplete > p strong {
+  color: var(--accent);
+}
+
+.choiceComplete .resultActions a {
+  color: var(--ink);
+  font-size: 10px;
+  font-weight: 800;
+  text-underline-offset: 4px;
+  text-transform: uppercase;
+}
+
+.choiceResults {
+  border-top: 3px solid var(--ink);
+}
+
+.choiceResults > div {
+  display: grid;
+  grid-template-columns: 55px minmax(180px, .45fr) minmax(300px, 1.4fr) 130px;
+  gap: 25px;
+  align-items: center;
+  min-height: 125px;
+  border-bottom: 1px solid var(--line);
+}
+
+.choiceResults > div > span {
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 850;
+}
+
+.choiceResults strong {
+  color: var(--accent);
+  font-size: clamp(28px, 4vw, 51px);
+  letter-spacing: -.045em;
+}
+
+.choiceResults > div > div {
+  height: 24px;
+  background: repeating-linear-gradient(135deg, var(--fine-line), var(--fine-line) 7px, transparent 7px, transparent 10px);
+}
+
+.choiceResults em {
+  color: var(--muted);
+  font-size: 9px;
+  font-style: normal;
+  font-weight: 800;
+  letter-spacing: .06em;
+  text-align: right;
+  text-transform: uppercase;
+}
+
+/* Assignment 03 */
+.decisionTool {
+  display: grid;
+  grid-template-columns: minmax(210px, .55fr) minmax(0, 2fr);
+  gap: clamp(38px, 6vw, 82px);
+  padding: 44px 0 58px;
+  border-top: 3px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+
+.stepRail {
+  margin: 0;
+  padding: 0 28px 0 0;
+  border-right: 1px solid var(--line);
+  list-style: none;
+}
+
+.stepRail li {
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  gap: 10px;
+  min-height: 47px;
+  align-items: center;
+  border-bottom: 1px solid var(--fine-line);
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .035em;
+  text-transform: uppercase;
+}
+
+.stepRail li span {
+  color: var(--muted);
+  font-weight: 850;
+}
+
+.stepRail .currentStep {
+  color: var(--ink);
+  font-weight: 850;
+}
+
+.stepRail .currentStep span {
+  color: var(--accent);
+}
+
+.stepRail .completedStep,
+.stepRail .completedStep span {
+  color: var(--accent);
+}
+
+.decisionStep h2 {
+  margin: 10px 0 28px;
+  font-size: clamp(31px, 4vw, 52px);
+  letter-spacing: -.048em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.fieldBlock,
+.itemBuilder label {
+  display: grid;
+  gap: 10px;
+}
+
+.fieldBlock > span,
+.itemBuilder label > span {
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .075em;
+  text-transform: uppercase;
+}
+
+.fieldBlock textarea,
+.itemBuilder input {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 0;
+  background: white;
+  color: var(--ink);
+  font: inherit;
+}
+
+.fieldBlock textarea {
+  min-height: 165px;
+  padding: 17px;
+  resize: vertical;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.stepInstruction {
+  max-width: 760px;
+  margin: -10px 0 26px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.itemBuilder {
+  display: grid;
+  grid-template-columns: 1fr 82px;
+  gap: 10px;
+  align-items: end;
+}
+
+.itemBuilder input {
+  min-height: 48px;
+  padding: 0 14px;
+}
+
+.itemBuilder > button,
+.toolActions button {
+  min-height: 48px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--ink);
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+}
+
+.itemBuilder > button {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: white;
+}
+
+.itemChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 23px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.itemChips li {
+  display: inline-flex;
+  min-height: 39px;
+  align-items: center;
+  border: 1px solid var(--ink);
+  background: white;
+}
+
+.itemChips li span {
+  padding: 0 12px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.itemChips button {
+  width: 36px;
+  align-self: stretch;
+  border: 0;
+  border-left: 1px solid var(--line);
+  background: transparent;
+  color: var(--muted);
+  font-size: 17px;
+}
+
+.emptyItems {
+  margin: 21px 0 0;
+  padding: 18px 0;
+  border-top: 1px solid var(--fine-line);
+  border-bottom: 1px solid var(--fine-line);
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.weightList {
+  border-top: 1px solid var(--line);
+}
+
+.weightList label {
+  display: grid;
+  grid-template-columns: 1fr 115px;
+  gap: 20px;
+  min-height: 64px;
+  align-items: center;
+  border-bottom: 1px solid var(--fine-line);
+}
+
+.weightList label > span:first-child {
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.weightList label > span:last-child {
+  display: flex;
+  align-items: center;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.weightList input,
+.ratingQuestions input {
+  width: 78px;
+  min-height: 40px;
+  margin-right: 6px;
+  border: 1px solid var(--line);
+  border-radius: 0;
+  background: white;
+  color: var(--ink);
+  font: inherit;
+  font-weight: 800;
+  text-align: center;
+}
+
+.validTotal,
+.invalidTotal {
+  display: grid;
+  grid-template-columns: 1fr auto 130px;
+  gap: 20px;
+  align-items: baseline;
+  margin-top: 18px;
+  padding: 15px 0;
+  border-top: 3px solid var(--ink);
+  border-bottom: 1px solid var(--line);
+}
+
+.validTotal span,
+.invalidTotal span,
+.validTotal em,
+.invalidTotal em {
+  font-size: 9px;
+  font-style: normal;
+  font-weight: 800;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.validTotal strong,
+.invalidTotal strong {
+  color: var(--accent);
+  font-size: 28px;
+}
+
+.validTotal em,
+.invalidTotal em {
+  color: var(--muted);
+  text-align: right;
+}
+
+.invalidTotal strong {
+  color: #b13a2d;
+}
+
+.matrixScroll {
+  overflow-x: auto;
+  margin-bottom: 30px;
+}
+
+.ratingMatrix {
+  width: 100%;
+  min-width: 560px;
+  border-collapse: collapse;
+  border-top: 3px solid var(--ink);
+}
+
+.ratingMatrix th,
+.ratingMatrix td {
+  min-width: 90px;
+  padding: 11px;
+  border-right: 1px solid var(--fine-line);
+  border-bottom: 1px solid var(--fine-line);
+  font-size: 10px;
+  text-align: center;
+}
+
+.ratingMatrix th:first-child {
+  min-width: 140px;
+  text-align: left;
+}
+
+.ratingMatrix thead th {
+  color: var(--muted);
+  font-size: 8px;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+
+.ratingMatrix tbody td {
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 850;
+}
+
+.ratingQuestions {
+  border-top: 1px solid var(--line);
+}
+
+.ratingQuestions label {
+  display: grid;
+  grid-template-columns: 1fr 90px;
+  gap: 20px;
+  min-height: 72px;
+  align-items: center;
+  border-bottom: 1px solid var(--fine-line);
+}
+
+.ratingQuestions label > span {
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.ratingQuestions label strong {
+  color: var(--accent);
+}
+
+.decisionOutcome {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px 25px;
+  align-items: end;
+  padding: 24px 0;
+  border-top: 3px solid var(--ink);
+  border-bottom: 1px solid var(--line);
+}
+
+.decisionOutcome p {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.decisionOutcome h3 {
+  margin: 0;
+  font-size: clamp(27px, 4vw, 47px);
+  letter-spacing: -.045em;
+  text-transform: uppercase;
+}
+
+.decisionOutcome > strong {
+  color: var(--accent);
+  font-size: 38px;
+}
+
+.decisionOutcome small {
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.rankingTable {
+  margin-top: 30px;
+  border-top: 1px solid var(--line);
+}
+
+.rankingTable > div {
+  display: grid;
+  grid-template-columns: 60px 1fr 130px;
+  gap: 20px;
+  min-height: 52px;
+  align-items: center;
+  border-bottom: 1px solid var(--fine-line);
+  font-size: 11px;
+}
+
+.rankingTable > div:first-child {
+  min-height: 34px;
+  color: var(--muted);
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+}
+
+.rankingTable > div span:last-child {
+  color: var(--accent);
+  font-size: 16px;
+  font-weight: 850;
+  text-align: right;
+}
+
+.formError {
+  margin: 24px 0 0;
+  padding: 13px 15px;
+  border-left: 4px solid #b13a2d;
+  background: rgba(177, 58, 45, .07);
+  color: #7d291f;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.toolActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 30px;
+}
+
+.toolActions button {
+  min-width: 100px;
+  padding: 0 18px;
+}
+
+.toolActions .nextButton {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: white;
+}
+
 @media (max-width: 850px) {
   .hero,
   .activityHeader,
@@ -1489,6 +2043,40 @@
   .hiddenResults > div > div {
     grid-column: 2 / -1;
   }
+
+  .feedback {
+    grid-template-columns: 1fr;
+  }
+
+  .feedback .primaryLink {
+    justify-self: start;
+  }
+
+  .choiceResults > div {
+    grid-template-columns: 45px minmax(160px, .45fr) 1fr;
+    padding: 18px 0;
+  }
+
+  .choiceResults em {
+    grid-column: 2 / -1;
+    text-align: left;
+  }
+
+  .decisionTool {
+    grid-template-columns: 1fr;
+  }
+
+  .stepRail {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    padding: 0 0 25px;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .stepRail li {
+    padding-right: 10px;
+  }
 }
 
 @media (max-width: 600px) {
@@ -1583,8 +2171,95 @@
   }
 
   .overviewList a::after {
-    content: "Open →";
+    content: "Open day";
     font-size: 9px;
+  }
+
+  .feedback {
+    grid-template-columns: 1fr;
+  }
+
+  .singlePromptHeader {
+    padding: 48px 0 36px;
+  }
+
+  .singlePromptHeader h1 {
+    font-size: 38px;
+  }
+
+  .examChoice {
+    grid-template-columns: 1fr;
+  }
+
+  .examChoice button {
+    min-height: 135px;
+  }
+
+  .choiceResults > div {
+    grid-template-columns: 35px 1fr;
+  }
+
+  .choiceResults > div > div,
+  .choiceResults em {
+    grid-column: 2;
+  }
+
+  .decisionTool {
+    gap: 30px;
+  }
+
+  .stepRail {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .stepRail li {
+    grid-template-columns: 25px 1fr;
+    font-size: 8px;
+  }
+
+  .itemBuilder {
+    grid-template-columns: 1fr;
+  }
+
+  .weightList label {
+    grid-template-columns: 1fr 95px;
+  }
+
+  .validTotal,
+  .invalidTotal {
+    grid-template-columns: 1fr auto;
+  }
+
+  .validTotal em,
+  .invalidTotal em {
+    grid-column: 1 / -1;
+    text-align: left;
+  }
+
+  .ratingQuestions label {
+    grid-template-columns: 1fr 75px;
+    padding: 13px 0;
+  }
+
+  .ratingQuestions input {
+    width: 68px;
+  }
+
+  .decisionOutcome {
+    grid-template-columns: 1fr;
+  }
+
+  .decisionOutcome > strong {
+    font-size: 31px;
+  }
+
+  .rankingTable > div {
+    grid-template-columns: 40px 1fr 80px;
+    gap: 12px;
+  }
+
+  .toolActions button {
+    flex: 1;
   }
 
   .dayHeader h1 {

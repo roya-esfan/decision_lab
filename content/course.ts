@@ -4,7 +4,6 @@ export type CourseDay = {
   dateISO: string;
   date: string;
   time: string;
-  room: string;
   topics: string[];
   readings: {
     required: string[];
@@ -45,7 +44,6 @@ export const courseDays: CourseDay[] = [
     dateISO: "2026-09-14",
     date: "Monday, 14 September 2026",
     time: "08:30–10:15",
-    room: "Check TP",
     topics: [
       "Introduction to the course",
       "Normative, descriptive and prescriptive approaches",
@@ -86,13 +84,26 @@ export const courseDays: CourseDay[] = [
       {
         number: 1,
         title: "A two-player bargain",
-        description:
-          "Respond to three proposed divisions of 100 kr, then compare the class pattern after the results are revealed.",
+        description: "Respond to three offers.",
         href: "/day/1/assignment-1",
         status: "ready",
       },
       {
+        number: 2,
+        title: "Which result feels better?",
+        description: "Choose the exam result that makes you feel happier at first glance.",
+        href: "/day/1/assignment-2",
+        status: "ready",
+      },
+      {
         number: 3,
+        title: "Build a rational decision",
+        description: "Apply six steps to a problem of your own and compare weighted alternatives.",
+        href: "/day/1/assignment-3",
+        status: "ready",
+      },
+      {
+        number: 4,
         title: "How do you tend to think?",
         description:
           "Complete the REI-10 and reflect on analytical engagement and intuitive trust.",
@@ -107,7 +118,6 @@ export const courseDays: CourseDay[] = [
     dateISO: "2026-09-15",
     date: "Tuesday, 15 September 2026",
     time: "12:30–17:15",
-    room: "Check TP",
     topics: [
       "Bounded rationality and satisficing",
       "Dual-process theories: System 1 and System 2",
@@ -138,7 +148,6 @@ export const courseDays: CourseDay[] = [
     dateISO: "2026-09-16",
     date: "Wednesday, 16 September 2026",
     time: "08:30–12:15",
-    room: "Check TP",
     topics: [
       "Framing and equivalent descriptions",
       "Reference dependence and loss aversion",
@@ -160,7 +169,6 @@ export const courseDays: CourseDay[] = [
     dateISO: "2026-09-17",
     date: "Thursday, 17 September 2026",
     time: "08:30–12:30",
-    room: "Check TP",
     topics: [
       "Attention, cognitive effort and bounded awareness",
       "Experience, expertise and intuition",
@@ -187,7 +195,6 @@ export const courseDays: CourseDay[] = [
     dateISO: "2026-09-22",
     date: "Tuesday, 22 September 2026",
     time: "12:30–17:15",
-    room: "Check TP",
     topics: [
       "Overconfidence, persuasion and influence",
       "Leader certainty and uncertainty",
@@ -215,7 +222,6 @@ export const courseDays: CourseDay[] = [
     dateISO: "2026-09-23",
     date: "Wednesday, 23 September 2026",
     time: "12:30–15:15",
-    room: "Check TP",
     topics: [
       "Interdependence and social dilemmas",
       "Trust, reciprocity and fairness",
@@ -239,7 +245,6 @@ export const courseDays: CourseDay[] = [
     dateISO: "2026-09-24",
     date: "Thursday, 24 September 2026",
     time: "11:30–15:15",
-    room: "Check TP",
     topics: [
       "Decision-analysis tools, debiasing and the outside view",
       "Choice architecture, nudges, boosts and sludge",
@@ -264,7 +269,6 @@ export const courseDays: CourseDay[] = [
     dateISO: "2026-09-28",
     date: "Monday, 28 September 2026",
     time: "08:30–13:15",
-    room: "Check TP",
     topics: ["Group presentations", "Course synthesis and discussion"],
     readings: {
       required: [
@@ -276,9 +280,6 @@ export const courseDays: CourseDay[] = [
     assignments: [],
   },
 ];
-
-export const timetableUrl =
-  "https://student.oslomet.no/en/timeplan/-/timeplan/emne/%C3%98AADM3700/2026/H%C3%98ST";
 
 export const rei10Items: ReiItem[] = [
   {

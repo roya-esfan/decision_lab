@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CourseShell } from "../../components/course-shell";
-import { courseDays, timetableUrl } from "@/content/course";
+import { courseDays } from "@/content/course";
 import styles from "../../course.module.css";
 
 export function generateStaticParams() {
@@ -37,7 +37,6 @@ export default async function DayPage({
           <dl className={styles.dayFacts}>
             <div><dt>Date</dt><dd>{day.date}</dd></div>
             <div><dt>Time</dt><dd>{day.time}</dd></div>
-            <div><dt>Room</dt><dd><a href={timetableUrl} target="_blank" rel="noreferrer">{day.room} ↗</a></dd></div>
           </dl>
         </header>
 
