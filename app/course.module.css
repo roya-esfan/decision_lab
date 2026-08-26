@@ -1063,16 +1063,17 @@
 .readingGroups h3 {
   margin: 0 0 15px;
   color: var(--accent);
-  font-size: 9px;
+  font-size: 12px;
+  font-weight: 850;
   letter-spacing: .09em;
   text-transform: uppercase;
 }
 
 .readingGroups li {
-  margin-bottom: 11px;
+  margin-bottom: 14px;
   color: var(--muted);
-  font-size: 10px;
-  line-height: 1.55;
+  font-size: 15px;
+  line-height: 1.6;
 }
 
 .sessionList,
@@ -1418,11 +1419,11 @@
 }
 
 .singlePromptHeader > p:last-child {
-  max-width: 760px;
+  max-width: 880px;
   margin: 0;
   color: var(--muted);
-  font-size: 16px;
-  line-height: 1.6;
+  font-size: clamp(20px, 2.1vw, 27px);
+  line-height: 1.45;
 }
 
 .examChoice {
@@ -1900,6 +1901,55 @@
   text-align: right;
 }
 
+.calculationBreakdown {
+  margin-top: 34px;
+  border-top: 3px solid var(--ink);
+}
+
+.calculationBreakdown > div {
+  padding: 20px 0 17px;
+  border-bottom: 1px solid var(--line);
+}
+
+.calculationBreakdown h3 {
+  margin: 0 0 6px;
+  font-size: 16px;
+  letter-spacing: -.02em;
+  text-transform: uppercase;
+}
+
+.calculationBreakdown > div p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.calculationBreakdown section {
+  display: grid;
+  grid-template-columns: minmax(150px, .35fr) 1fr;
+  gap: 24px;
+  padding: 17px 0;
+  border-bottom: 1px solid var(--fine-line);
+}
+
+.calculationBreakdown section > strong {
+  font-size: 12px;
+}
+
+.calculationBreakdown section p {
+  margin: 0;
+  color: var(--muted);
+  font-family: var(--font-mono), monospace;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.calculationBreakdown section p > strong {
+  color: var(--accent);
+  font-size: 14px;
+}
+
 .formError {
   margin: 24px 0 0;
   padding: 13px 15px;
@@ -2256,6 +2306,11 @@
   .rankingTable > div {
     grid-template-columns: 40px 1fr 80px;
     gap: 12px;
+  }
+
+  .calculationBreakdown section {
+    grid-template-columns: 1fr;
+    gap: 7px;
   }
 
   .toolActions button {

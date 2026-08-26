@@ -12,7 +12,7 @@ export default function ExamResultResultsPage() {
         <header className={styles.resultsHeader}>
           <p className={styles.eyebrow}>Assignment 02 · Projector view</p>
           <h1>Which result felt better?</h1>
-          <p>Class results remain hidden until the instructor reveals them.</p>
+          <p>Live class collection will appear here after the Supabase session is connected.</p>
         </header>
 
         <section className={styles.choiceResults} aria-label="Hidden class results">
@@ -21,7 +21,7 @@ export default function ExamResultResultsPage() {
               <span>{String(index + 1).padStart(2, "0")}</span>
               <strong>{result}</strong>
               <div aria-hidden="true" />
-              <em>Waiting for reveal</em>
+              <em>Not connected yet</em>
             </div>
           ))}
         </section>

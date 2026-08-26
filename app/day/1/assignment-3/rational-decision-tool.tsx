@@ -211,6 +211,25 @@ export function RationalDecisionTool() {
                 <div role="row" key={alternative.id}><span role="cell">{index + 1}</span><strong role="cell">{alternative.name}</strong><span role="cell">{alternative.score.toFixed(2)}</span></div>
               ))}
             </div>
+            <div className={styles.calculationBreakdown}>
+              <div>
+                <h3>How the scores were calculated</h3>
+                <p>Each percentage is converted to a decimal, multiplied by the rating, and then added.</p>
+              </div>
+              {rankedAlternatives.map((alternative) => (
+                <section key={alternative.id}>
+                  <strong>{alternative.name}</strong>
+                  <p>
+                    {criteria.map((criterion, index) => (
+                      <span key={criterion.id}>
+                        {index > 0 ? " + " : ""}({((weights[criterion.id] ?? 0) / 100).toFixed(2)} × {ratings[`${alternative.id}:${criterion.id}`] ?? 0})
+                      </span>
+                    ))}
+                    {" = "}<strong>{alternative.score.toFixed(2)}</strong>
+                  </p>
+                </section>
+              ))}
+            </div>
           </>
         )}
 
