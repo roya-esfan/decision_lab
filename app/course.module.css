@@ -2796,6 +2796,25 @@
   gap: 18px;
 }
 
+.magicLinkSent {
+  align-self: center;
+  padding: 24px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.magicLinkSent > strong {
+  color: var(--accent);
+  font-size: 18px;
+}
+
+.magicLinkSent > p {
+  margin: 9px 0 13px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
 .instructorLogin .textButton,
 .controlRoom > .textButton,
 .controlEmpty .textButton {

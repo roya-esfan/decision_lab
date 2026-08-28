@@ -16,21 +16,18 @@ The migration enables Row Level Security, removes access for the public
 database roles, creates server-only functions for joining and submitting, and
 schedules daily deletion of classroom data older than 30 days.
 
-## 2. Make the instructor email contain a numeric code
+## 2. Configure the instructor magic-link destination
 
-1. Open **Authentication → Email Templates → Magic Link**.
-2. Replace the template body with a short message containing `{{ .Token }}`.
+Open **Authentication → URL Configuration** and set:
 
-For example:
+- Site URL: `https://decision-lab-oaadm.vercel.app`
+- Redirect URL: `https://decision-lab-oaadm.vercel.app/**`
+- Development redirect: `http://localhost:3000/**`
 
-```html
-<h2>Your Decision Lab sign-in code</h2>
-<p>Enter this code on the instructor page:</p>
-<p><strong>{{ .Token }}</strong></p>
-```
-
-Save the template. Supabase sends a numeric code instead of requiring the
-instructor to follow a magic link.
+The default Supabase magic-link template can remain unchanged. No custom SMTP
+is needed for the initial test, provided the instructor email is a member of
+the Supabase organization's team. Custom SMTP is recommended before live use
+for more dependable delivery.
 
 ## 3. Confirm the Vercel variables
 
@@ -48,7 +45,7 @@ in client-side code. Redeploy Vercel after adding or changing variables.
 ## 4. Start a classroom session
 
 1. Open `/instructor` on the deployed website.
-2. Request the instructor email code and sign in.
+2. Request the secure email link and open it in the browser you want to use for classroom control.
 3. Select **Start classroom session**.
 4. Show the generated join code to the class.
 5. Use the private preview while students answer.

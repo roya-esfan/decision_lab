@@ -13,10 +13,14 @@ export async function POST(request: Request) {
     if (email.length > 254 || !/^\S+@\S+\.\S+$/.test(email)) throw new ApiError(400, "Enter a valid email address.");
 
     if (isInstructorEmail(email)) {
+      const redirectOrigin = process.env.NODE_ENV === "production"
+        ? "https://decision-lab-oaadm.vercel.app"
+        : new URL(request.url).origin;
+      const redirectTo = `${redirectOrigin}/instructor/auth/confirm`;
       const supabase = createSupabaseAuthClient();
       const { error } = await supabase.auth.signInWithOtp({
         email,
-        options: { shouldCreateUser: true },
+        options: { shouldCreateUser: true, emailRedirectTo: redirectTo },
       });
       if (error) throw error;
     }
