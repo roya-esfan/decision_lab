@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { LiveSessionGate, useLiveSession } from "../../../components/live-session";
 import styles from "../../../course.module.css";
 
 const offers = [
@@ -13,9 +14,13 @@ const offers = [
 type Decision = "accept" | "reject";
 
 export function BargainActivity() {
+  const session = useLiveSession();
+  const idempotencyKey = useRef<string | null>(null);
   const [index, setIndex] = useState(0);
   const [decisions, setDecisions] = useState<Record<string, Decision>>({});
   const [complete, setComplete] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submissionError, setSubmissionError] = useState("");
   const offer = offers[index];
   const selected = decisions[offer.id];
 
@@ -23,7 +28,7 @@ export function BargainActivity() {
     setDecisions((current) => ({ ...current, [offer.id]: decision }));
   }
 
-  function next() {
+  async function next() {
     if (!selected) return;
     if (index < offers.length - 1) {
       setIndex((current) => current + 1);
@@ -31,16 +36,33 @@ export function BargainActivity() {
     }
 
     const finished = { ...decisions, [offer.id]: selected };
-    window.localStorage.setItem("decision-lab:day1:bargain", JSON.stringify(finished));
-    setComplete(true);
+    idempotencyKey.current ??= crypto.randomUUID();
+    setSubmitting(true);
+    setSubmissionError("");
+    try {
+      const response = await fetch("/api/responses/assignment-1", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          idempotencyKey: idempotencyKey.current,
+          responses: offers.map((item) => ({
+            promptKey: `bargain-${item.offered}`,
+            choice: finished[item.id],
+          })),
+        }),
+      });
+      const data = await response.json() as { accepted?: boolean; error?: string };
+      if (!response.ok || !data.accepted) throw new Error(data.error ?? "Your response could not be submitted.");
+      setDecisions(finished);
+      setComplete(true);
+    } catch (error) {
+      setSubmissionError(error instanceof Error ? error.message : "Your response could not be submitted.");
+    } finally {
+      setSubmitting(false);
+    }
   }
 
-  function restart() {
-    window.localStorage.removeItem("decision-lab:day1:bargain");
-    setDecisions({});
-    setIndex(0);
-    setComplete(false);
-  }
+  if (session.state !== "joined") return <LiveSessionGate state={session.state} message={session.message} onJoin={session.join} />;
 
   if (complete) {
     return (
@@ -58,7 +80,6 @@ export function BargainActivity() {
         </div>
         <div className={styles.resultActions}>
           <Link href="/day/1/assignment-1/results">Class results when revealed</Link>
-          <button type="button" onClick={restart}>Start again</button>
         </div>
       </section>
     );
@@ -92,10 +113,11 @@ export function BargainActivity() {
         </div>
         <div className={styles.questionActions}>
           <button type="button" onClick={() => setIndex((current) => current - 1)} disabled={index === 0}>Back</button>
-          <button className={styles.nextButton} type="button" onClick={next} disabled={!selected}>
-            {index === offers.length - 1 ? "Finish" : "Next offer"}
+          <button className={styles.nextButton} type="button" onClick={() => void next()} disabled={!selected || submitting}>
+            {submitting ? "Submitting…" : index === offers.length - 1 ? "Submit responses" : "Next offer"}
           </button>
         </div>
+        {submissionError && <p className={styles.formError} role="alert">{submissionError}</p>}
       </div>
     </section>
   );

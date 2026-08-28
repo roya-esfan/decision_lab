@@ -20,7 +20,7 @@ export function CourseFooter() {
   return (
     <footer className={styles.siteFooter}>
       <span>ØAADM3700 · Decision-Making Processes in Organizations</span>
-      <span>Autumn 2026</span>
+      <div><Link href="/instructor">Instructor</Link><span>Autumn 2026</span></div>
     </footer>
   );
 }

@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { CourseShell } from "../../../../components/course-shell";
+import { LiveResults } from "../../../../components/live-results";
 import styles from "../../../../course.module.css";
 
-export default function ExamResultResultsPage() {
+export default async function ExamResultResultsPage({ searchParams }: { searchParams: Promise<{ projector?: string }> }) {
+  const projector = (await searchParams).projector === "1";
   return (
     <CourseShell>
       <main>
@@ -12,19 +14,9 @@ export default function ExamResultResultsPage() {
         <header className={styles.resultsHeader}>
           <p className={styles.eyebrow}>Assignment 02 · Projector view</p>
           <h1>Which result felt better?</h1>
-          <p>Live class collection will appear here after the Supabase session is connected.</p>
+          <p>{projector ? "This screen updates automatically when results are revealed." : "Results appear after the instructor reveals them."}</p>
         </header>
-
-        <section className={styles.choiceResults} aria-label="Hidden class results">
-          {['70/100', '96/137'].map((result, index) => (
-            <div key={result}>
-              <span>{String(index + 1).padStart(2, "0")}</span>
-              <strong>{result}</strong>
-              <div aria-hidden="true" />
-              <em>Not connected yet</em>
-            </div>
-          ))}
-        </section>
+        <LiveResults activityKey="assignment-2" projector={projector} />
       </main>
     </CourseShell>
   );

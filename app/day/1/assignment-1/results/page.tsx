@@ -1,14 +1,10 @@
 import Link from "next/link";
 import { CourseShell } from "../../../../components/course-shell";
+import { LiveResults } from "../../../../components/live-results";
 import styles from "../../../../course.module.css";
 
-const offers = [
-  { offered: 50, kept: 50 },
-  { offered: 20, kept: 80 },
-  { offered: 2, kept: 98 },
-];
-
-export default function BargainResultsPage() {
+export default async function BargainResultsPage({ searchParams }: { searchParams: Promise<{ projector?: string }> }) {
+  const projector = (await searchParams).projector === "1";
   return (
     <CourseShell>
       <main>
@@ -18,19 +14,9 @@ export default function BargainResultsPage() {
         <header className={styles.resultsHeader}>
           <p className={styles.eyebrow}>Assignment 01 · Projector view</p>
           <h1>Accept or reject?</h1>
-          <p>Live class collection will appear here after the Supabase session is connected.</p>
+          <p>{projector ? "This screen updates automatically when results are revealed." : "Results appear after the instructor reveals them."}</p>
         </header>
-
-        <section className={styles.hiddenResults} aria-label="Hidden class results">
-          {offers.map((offer, index) => (
-            <div key={offer.offered}>
-              <span>{String(index + 1).padStart(2, "0")}</span>
-              <strong>{offer.offered} kr to you / {offer.kept} kr to Eve</strong>
-              <div aria-hidden="true"><i /><i /></div>
-              <em>Not connected yet</em>
-            </div>
-          ))}
-        </section>
+        <LiveResults activityKey="assignment-1" projector={projector} />
       </main>
     </CourseShell>
   );

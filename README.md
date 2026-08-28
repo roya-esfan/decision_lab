@@ -7,11 +7,15 @@ A mobile-first teaching tool for **ØAADM3700 Decision-Making Processes in Organ
 - Precision Grid course hub with eight dated teaching days
 - Day pages with topics, readings, session plans and assignments
 - Day 1 bargain, exam-result choice, rational decision tool and REI-10 activities
-- Private, on-device scoring with no student data collection
+- Private, on-device scoring for REI-10 and the rational decision tool
+- Anonymous live response collection for the two classroom polls
+- Instructor controls with private preview and deliberate result reveal
 - Three design directions retained at `/design`
 - Security headers configured for deployment
 
-Live classroom sessions, aggregate results, instructor controls and Supabase integration are planned but are not connected yet.
+Supabase is accessed only through server routes. Follow
+[`SUPABASE_SETUP.md`](SUPABASE_SETUP.md) for the one-time database and instructor
+email configuration.
 
 ## Local development
 
@@ -31,4 +35,5 @@ npm run build
 
 ## Deployment
 
-The application can be imported directly into Vercel as a Next.js project. The current version requires no environment variables.
+The application is deployed through Vercel. Its four required server environment
+variables are documented in [`SUPABASE_SETUP.md`](SUPABASE_SETUP.md).
