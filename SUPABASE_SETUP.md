@@ -1,8 +1,10 @@
 # Supabase setup
 
-The Decision Lab uses Supabase only for anonymous classroom sessions and the
-instructor's email sign-in. Assignment 3 and REI-10 remain on the student's
-device and are never sent to Supabase.
+The Decision Lab uses Supabase only for anonymous classroom sessions,
+privacy-preserving completion counts and the instructor's email sign-in.
+The content of private activities—including problems, criteria, alternatives,
+ratings, REI answers and REI scores—remains on the student's device and is
+never sent to Supabase.
 
 ## 1. Create the tables and security rules
 
@@ -16,6 +18,13 @@ device and are never sent to Supabase.
    `supabase/migrations/202609040001_bingo_card_allocator.sql`, and select
    **Run** once. This creates only an anonymous counter used to distribute the
    prepared bingo cards in order.
+
+6. Run the remaining migrations in filename order:
+   - `supabase/migrations/202609040002_add_outcome_bias_activity.sql`
+   - `supabase/migrations/202609040003_private_completion_counts.sql`
+
+The last migration stores only an anonymous, run-specific completion marker
+for Activities 5 and 6. It does not store any activity content or scores.
 
 The migration enables Row Level Security, removes access for the public
 database roles, creates server-only functions for joining and submitting, and
@@ -51,11 +60,10 @@ in client-side code. Redeploy Vercel after adding or changing variables.
 
 1. Open `/instructor` on the deployed website.
 2. Request the secure email link and open it in the browser you want to use for classroom control.
-3. Select **Start classroom session**.
-4. Show the generated join code to the class.
-5. Use the private preview while students answer.
-6. Select **Reveal results** when the projector should show the distribution.
+3. Create the Day 1 session.
+4. Open a specific live activity immediately before the class answers it.
+5. Use **Open presentation view** to show the automatically updating results.
+6. Close the activity to freeze its classroom responses, then enable review mode when students should be able to revisit it.
 
-The projector links update automatically every two seconds. Regular student
-result pages check once and provide a manual refresh button while results are
-hidden.
+The instructor page and presentation views update automatically every two
+seconds. Students do not see classroom results while an activity is live.

@@ -2,6 +2,7 @@
 
 import { useMemo, useRef, useState } from "react";
 import type { FormEvent } from "react";
+import { recordAnonymousCompletion } from "../../../components/anonymous-completion";
 import styles from "../../../course.module.css";
 
 type NamedItem = { id: string; name: string };
@@ -105,6 +106,7 @@ export function RationalDecisionTool() {
         "decision-lab:day1:rational-decision",
         JSON.stringify({ problem, criteria, weights, alternatives, ratings }),
       );
+      void recordAnonymousCompletion("rational-decision");
     }
     setStep((current) => Math.min(6, current + 1));
   }
@@ -145,7 +147,7 @@ export function RationalDecisionTool() {
 
         {step === 2 && (
           <>
-            <p className={styles.stepInstruction}>What matters when judging a good solution?</p>
+            <p className={styles.stepInstruction}>What aspects would you value in a solution?</p>
             <ItemBuilder value={criterionDraft} onChange={setCriterionDraft} onSubmit={(event) => addNamedItem(event, criterionDraft, "criterion")} label="Add a criterion" placeholder="For example: cost" />
             <ItemChips items={criteria} onRemove={removeCriterion} empty="No criteria added yet." />
           </>
@@ -214,7 +216,6 @@ export function RationalDecisionTool() {
             <div className={styles.calculationBreakdown}>
               <div>
                 <h3>How the scores were calculated</h3>
-                <p>Each percentage is converted to a decimal, multiplied by the rating, and then added.</p>
               </div>
               {rankedAlternatives.map((alternative) => (
                 <section key={alternative.id}>

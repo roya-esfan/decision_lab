@@ -12,6 +12,8 @@ type ClassroomRun = {
   isActive: boolean;
   capacity: number;
   participantCount: number;
+  completionCounts: Record<"rational-decision" | "rei-10", number>;
+  completionTrackingReady: boolean;
   createdAt: string;
   expiresAt: string;
   activities: ActivityState[];
@@ -356,10 +358,32 @@ export function ControlRoom({ email }: { email: string }) {
         })}
       </div>
 
-      <div className={styles.localActivitiesNote}>
-        <strong>Other Day 1 activities</strong>
-        <p>Life-experience bingo, the rational decision tool and REI-10 stay on each student’s device and do not produce class results here.</p>
-      </div>
+      <section className={styles.privateCompletionSection}>
+        <header>
+          <div>
+            <p className={styles.eyebrow}>Private activities</p>
+            <h2>Anonymous completions</h2>
+          </div>
+          <p>Only the number finished is collected. Student work, answers and scores remain in each browser.</p>
+        </header>
+        <div className={styles.privateCompletionRows}>
+          <article>
+            <span>Activity 5</span>
+            <h3>Make a rational decision</h3>
+            <strong>{run.completionCounts?.["rational-decision"] ?? 0}</strong>
+            <small>finished</small>
+          </article>
+          <article>
+            <span>Activity 6</span>
+            <h3>How do you prefer to think?</h3>
+            <strong>{run.completionCounts?.["rei-10"] ?? 0}</strong>
+            <small>finished</small>
+          </article>
+        </div>
+        {!run.completionTrackingReady && (
+          <p className={styles.activitySetupWarning}>Run the latest Supabase migration to activate completion counts.</p>
+        )}
+      </section>
       {error && <p className={styles.formError} role="alert">{error}</p>}
       <button className={styles.textButton} type="button" onClick={() => void logout()}>Sign out {email}</button>
     </section>

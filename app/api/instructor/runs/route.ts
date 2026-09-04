@@ -43,7 +43,11 @@ export async function GET(request: Request) {
       );
     }
 
-    const [{ data: activities, error: activityError }, { count, error: countError }] = await Promise.all([
+    const [
+      { data: activities, error: activityError },
+      { count, error: countError },
+      { data: completions, error: completionError },
+    ] = await Promise.all([
       supabase
         .from("classroom_activity_states")
         .select("activity_key, is_open, is_revealed")
@@ -53,9 +57,24 @@ export async function GET(request: Request) {
         .from("classroom_participants")
         .select("id", { count: "exact", head: true })
         .eq("run_id", run.id),
+      supabase
+        .from("classroom_private_completions")
+        .select("activity_key")
+        .eq("run_id", run.id),
     ]);
     if (activityError) throw activityError;
     if (countError) throw countError;
+    const completionTrackingReady = !completionError;
+    const completionTableMissing = completionError
+      && ["PGRST205", "42P01"].includes(completionError.code);
+    if (completionError && !completionTableMissing) throw completionError;
+
+    const completionCounts = { "rational-decision": 0, "rei-10": 0 };
+    for (const completion of completions ?? []) {
+      if (completion.activity_key in completionCounts) {
+        completionCounts[completion.activity_key as keyof typeof completionCounts] += 1;
+      }
+    }
 
     return NextResponse.json({
       run: {
@@ -66,6 +85,8 @@ export async function GET(request: Request) {
         createdAt: run.created_at,
         expiresAt: run.expires_at,
         participantCount: count ?? 0,
+        completionCounts,
+        completionTrackingReady,
         activities: (activities ?? []).map((activity) => ({
           key: activity.activity_key,
           isOpen: activity.is_open,

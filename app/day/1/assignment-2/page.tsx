@@ -12,10 +12,13 @@ export default function ExamResultAssignmentPage() {
           <Link href="/day/1">Day 1</Link><span>/</span><span>Activity 4</span>
         </nav>
 
-        <header className={styles.singlePromptHeader}>
+        <header className={styles.learningActivityHeader}>
           <p className={styles.eyebrow}>Day 1 · Activity 4</p>
-          <h1>You just got your results back after a challenging exam.</h1>
-          <p>Which exam result would you feel happier receiving? Answer based on your immediate reaction.</p>
+          <h1>Which exam results feel better?</h1>
+          <div className={styles.activityBrief}>
+            <p>You just got your results back after a challenging exam.</p>
+            <p>Which exam result would you feel happier receiving? Answer based on your immediate reaction.</p>
+          </div>
         </header>
 
         <ExamResultChoice />

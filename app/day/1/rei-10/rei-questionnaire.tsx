@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { rei10Items, rei10ResponseLabels } from "@/content/course";
+import { recordAnonymousCompletion } from "../../../components/anonymous-completion";
 import styles from "../../../course.module.css";
 
 type Answers = Record<string, number>;
@@ -41,6 +42,7 @@ export function ReiQuestionnaire() {
     if (!selected) return;
     if (step === rei10Items.length - 1) {
       setShowResults(true);
+      void recordAnonymousCompletion("rei-10");
       return;
     }
     setStep((current) => current + 1);
@@ -57,7 +59,7 @@ export function ReiQuestionnaire() {
       <section className={styles.reiResults} aria-live="polite" aria-labelledby="results-title">
         <div className={styles.resultLead}>
           <p className={styles.eyebrow}>Your private result</p>
-          <h2 id="results-title">Two preferences, not one “type”</h2>
+          <h2 id="results-title">Your two scores</h2>
           <p>
             These scores are independent. A stronger preference for analytical
             thinking does not imply weaker intuition, and neither score measures intelligence.
@@ -66,16 +68,18 @@ export function ReiQuestionnaire() {
 
         <div className={styles.scoreRows}>
           <ScoreRow
-            label="Analytical engagement"
+            label="Need for Cognition"
             code="NFC"
             score={scores.analytical}
-            description="Preference for effortful thought, complexity and cognitive challenge."
+            mode="Analytic-rational thinking"
+            description="NFC reflects how much you tend to enjoy thinking deeply and engaging with mentally challenging tasks. People with higher scores typically report enjoying complex problems and putting effort into thinking things through."
           />
           <ScoreRow
-            label="Intuitive trust"
+            label="Faith in Intuition"
             code="FI"
             score={scores.intuitive}
-            description="Confidence in hunches, first impressions and gut feelings."
+            mode="Intuitive-experiential thinking"
+            description="FI reflects how much you tend to trust your feelings, hunches and immediate impressions when making judgments and decisions. People with higher scores generally place more confidence in these intuitive impressions."
           />
         </div>
 
@@ -144,17 +148,19 @@ function ScoreRow({
   label,
   code,
   score,
+  mode,
   description,
 }: {
   label: string;
   code: string;
   score: number;
+  mode: string;
   description: string;
 }) {
   const rounded = score.toFixed(1);
   return (
     <section className={styles.scoreRow} aria-label={`${label}: ${rounded} out of 5`}>
-      <div className={styles.scoreName}><span>{code}</span><h3>{label}</h3></div>
+      <div className={styles.scoreName}><span>{code}</span><h3>{label}</h3><p>{mode}</p></div>
       <div className={styles.scoreTrack} aria-hidden="true"><span style={{ width: `${(score / 5) * 100}%` }} /></div>
       <strong>{rounded}<small>/5</small></strong>
       <p>{description}</p>

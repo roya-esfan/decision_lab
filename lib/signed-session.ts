@@ -21,7 +21,14 @@ type BingoSession = {
   expiresAt: number;
 };
 
-export type SignedSession = ParticipantSession | InstructorSession | BingoSession;
+type CompletionSession = {
+  kind: "completion";
+  anonymousId: string;
+  runId: string;
+  expiresAt: number;
+};
+
+export type SignedSession = ParticipantSession | InstructorSession | BingoSession | CompletionSession;
 
 function signingSecret() {
   const secret = process.env.SESSION_SIGNING_SECRET;
@@ -54,6 +61,7 @@ export function verifySession(token: string | undefined): SignedSession | null {
     if (session.kind === "participant" && typeof session.participantId === "string" && typeof session.runId === "string") return session;
     if (session.kind === "instructor" && typeof session.email === "string") return session;
     if (session.kind === "bingo" && Number.isInteger(session.cardIndex) && session.cardIndex >= 0 && session.cardIndex < 100) return session;
+    if (session.kind === "completion" && typeof session.anonymousId === "string" && typeof session.runId === "string") return session;
   } catch {
     return null;
   }
@@ -63,6 +71,7 @@ export function verifySession(token: string | undefined): SignedSession | null {
 export const participantCookieName = "decision_lab_participant";
 export const instructorCookieName = "decision_lab_instructor";
 export const bingoCookieName = "decision_lab_bingo_card";
+export const completionCookieName = "decision_lab_completion";
 
 export const secureCookieOptions = {
   httpOnly: true,

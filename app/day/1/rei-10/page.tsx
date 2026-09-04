@@ -17,21 +17,25 @@ export default function Rei10Page() {
           <Link href="/">Course home</Link><span>/</span>
           <Link href="/day/1">Day 01</Link><span>/</span><span>REI-10</span>
         </nav>
-        <header className={styles.activityHeader}>
+        <header className={styles.learningActivityHeader}>
+          <p className={styles.eyebrow}>Day 1 · Activity 6 · Individual</p>
+          <h1>How do you tend to think?</h1>
+        </header>
+
+        <section className={styles.reiMeasure} aria-labelledby="rei-measure-title">
+          <h2 id="rei-measure-title">What does the REI measure?</h2>
           <div>
-            <p className={styles.eyebrow}>Day 1 · Activity 6 · Individual</p>
-            <h1>How do you tend to think?</h1>
-          </div>
-          <div className={styles.activityIntro}>
             <p>
-              The REI-10 examines two independent preferences: engagement with
-              analytical thinking and trust in intuitive impressions.
+              Epstein and colleagues (1996) proposed two independent thinking styles: an analytic-rational mode and an intuitive-experiential mode. In their theory, rational processing is relatively conscious, intentional, analytic and rule-based, whereas experiential processing is more automatic, holistic, associative and closely connected to feelings and past experience. The REI measures people&apos;s self-reported tendency or preference to rely on these modes, rather than their intelligence or ability.
+            </p>
+            <p>
+              Their original measure, REI-40, consists of 40 items. This is a short version, REI-10, with 10 items.
             </p>
             <p className={styles.localNotice}>
-              Your answers and result stay in this browser. Nothing is submitted or stored.
+              Your answers and scores stay in this browser. The instructor sees only an anonymous completion count.
             </p>
           </div>
-        </header>
+        </section>
 
         <ReiQuestionnaire />
 
