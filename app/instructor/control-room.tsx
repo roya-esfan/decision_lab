@@ -155,13 +155,41 @@ export function ControlRoom({ email }: { email: string }) {
     }
   }
 
-  function resetRun() {
+  async function startFreshRun() {
     if (!run) return;
-    const confirmed = window.confirm(
-      "Reset this classroom session? All anonymous participants, responses, completion counts and activity states in this session will be permanently deleted. The session will then reopen empty.",
-    );
-    if (!confirmed) return;
-    void updateRun({ action: "reset-run" }, "reset");
+    if (run.isActive && !window.confirm(
+      "Close the current session and start a new empty one? The current session and all its results will remain saved in the session dropdown.",
+    )) return;
+
+    setBusy("fresh");
+    setError("");
+    try {
+      if (run.isActive) {
+        const closeResponse = await fetch(`/api/instructor/runs/${run.id}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action: "close-run" }),
+        });
+        const closeData = await closeResponse.json() as { error?: string };
+        if (!closeResponse.ok) throw new Error(closeData.error ?? "The current session could not be closed.");
+      }
+
+      const createResponse = await fetch("/api/instructor/runs", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ capacity: run.capacity }),
+      });
+      const createData = await createResponse.json() as { error?: string };
+      if (!createResponse.ok) throw new Error(createData.error ?? "A fresh classroom session could not be created.");
+
+      setResults({});
+      await loadRun();
+    } catch (caught) {
+      await loadRun(run.id);
+      setError(caught instanceof Error ? caught.message : "A fresh classroom session could not be created.");
+    } finally {
+      setBusy("");
+    }
   }
 
   async function logout() {
@@ -216,11 +244,11 @@ export function ControlRoom({ email }: { email: string }) {
         <div className={styles.runActions}>
           {(!activeRunId || activeRunId === run.id) && (
             <button
-              className={styles.resetButton}
+              className={styles.freshSessionButton}
               type="button"
               disabled={Boolean(busy)}
-              onClick={resetRun}
-            >{busy === "reset" ? "Resetting…" : "Reset & start over"}</button>
+              onClick={() => void startFreshRun()}
+            >{busy === "fresh" ? "Starting…" : "Start fresh session"}</button>
           )}
           {run.isActive ? (
             <button className={styles.dangerButton} type="button" disabled={Boolean(busy)} onClick={() => {

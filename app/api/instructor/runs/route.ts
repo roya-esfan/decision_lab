@@ -21,7 +21,7 @@ export async function GET(request: Request) {
       .from("classroom_runs")
       .select("id, state, capacity, created_at, expires_at")
       .order("created_at", { ascending: false })
-      .limit(10);
+      .limit(25);
     if (recentRunsError) throw recentRunsError;
 
     const now = Date.now();

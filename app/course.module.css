@@ -3180,11 +3180,11 @@
   color: #8c2e25;
 }
 
-.runActions .resetButton {
+.runActions .freshSessionButton {
   margin-right: auto;
-  border-color: #b8a38f;
+  border-color: var(--accent);
   background: transparent;
-  color: #70472f;
+  color: var(--accent);
 }
 
 .controlActivities {
@@ -3759,7 +3759,7 @@
     flex: 1;
   }
 
-  .runActions .resetButton {
+  .runActions .freshSessionButton {
     margin-right: 0;
   }
 
