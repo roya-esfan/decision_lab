@@ -9,7 +9,7 @@ A mobile-first teaching tool for **ØAADM3700 Decision-Making Processes in Organ
 - Day 1 classroom activities and the Day 2 REI-10 reflection
 - Private, on-device scoring for REI-10 and the rational decision tool
 - Anonymous live response collection for the two classroom polls
-- Day-by-day instructor controls for closed, live and review availability
+- Day-specific classroom sessions, totals and instructor controls for closed, live and review availability
 - Three design directions retained at `/design`
 - Security headers configured for deployment
 

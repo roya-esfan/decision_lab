@@ -24,13 +24,16 @@ never sent to Supabase.
    - `supabase/migrations/202609040003_private_completion_counts.sql`
    - `supabase/migrations/202609040004_add_bingo_completion_count.sql`
    - `supabase/migrations/202609040005_control_private_activity_availability.sql`
+   - `supabase/migrations/202609040006_add_teaching_day_to_runs.sql`
 
 The completion migrations store only anonymous, run-specific completion
 markers for Day 1 Activities 1 and 5 and Day 2 Activity 1. They do not store
 cards, marked squares, activity content or scores.
 
-The final migration adds open, closed and review availability controls for
+The activity-availability migration adds open, closed and review controls for
 those private activities. It stores only the activity mode, never student work.
+The day-specific session migration assigns existing test sessions to Day 1 and
+keeps future session status, totals and history separate for each teaching day.
 
 The migration enables Row Level Security, removes access for the public
 database roles, creates server-only functions for joining and submitting, and
@@ -66,7 +69,7 @@ in client-side code. Redeploy Vercel after adding or changing variables.
 
 1. Open `/instructor` on the deployed website.
 2. Request the secure email link and open it in the browser you want to use for classroom control.
-3. Create a classroom session.
+3. Select the teaching day and create a session for that day.
 4. Open a specific live activity immediately before the class answers it.
 5. Use **Open presentation view** to show the automatically updating results.
 6. Close the activity to freeze its classroom responses, then enable review mode when students should be able to revisit it.

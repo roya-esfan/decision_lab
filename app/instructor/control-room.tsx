@@ -15,6 +15,7 @@ import styles from "../course.module.css";
 type ActivityState = { key: ControlledActivityKey; isOpen: boolean; isRevealed: boolean };
 type ClassroomRun = {
   id: string;
+  dayNumber: TeachingDayNumber;
   state: "open" | "closed";
   isActive: boolean;
   capacity: number;
@@ -28,10 +29,12 @@ type ClassroomRun = {
 type ResultRow = { promptKey: string; label: string; counts: Record<string, number> };
 type RunOption = {
   id: string;
+  dayNumber: TeachingDayNumber;
   state: "open" | "closed";
   isActive: boolean;
   createdAt: string;
 };
+type ActiveRun = { id: string; dayNumber: TeachingDayNumber };
 
 const responseActivities = courseActivityCatalog.filter(
   (activity): activity is typeof activity & { key: ActivityKey; kind: "responses" } =>
@@ -41,7 +44,7 @@ const responseActivities = courseActivityCatalog.filter(
 export function ControlRoom({ email }: { email: string }) {
   const [run, setRun] = useState<ClassroomRun | null>(null);
   const [recentRuns, setRecentRuns] = useState<RunOption[]>([]);
-  const [activeRunId, setActiveRunId] = useState<string | null>(null);
+  const [activeRun, setActiveRun] = useState<ActiveRun | null>(null);
   const [selectedDay, setSelectedDay] = useState<TeachingDayNumber>(1);
   const [results, setResults] = useState<Record<string, ResultRow[]>>({});
   const [loading, setLoading] = useState(true);
@@ -49,21 +52,27 @@ export function ControlRoom({ email }: { email: string }) {
   const [error, setError] = useState("");
   const currentRunId = run?.id;
   const dayActivities = courseActivityCatalog.filter((activity) => activity.day === selectedDay);
+  const dayHasResponseActivities = dayActivities.some((activity) => activity.kind === "responses");
+  const dayPrivateCompletionTotal = dayActivities.reduce((total, activity) => {
+    if (activity.kind !== "private" || !run) return total;
+    return total + (run.completionCounts?.[activity.key as keyof ClassroomRun["completionCounts"]] ?? 0);
+  }, 0);
 
-  const loadRun = useCallback(async (runId?: string) => {
+  const loadRun = useCallback(async (dayNumber: TeachingDayNumber, runId?: string) => {
     try {
-      const query = runId ? `?run=${encodeURIComponent(runId)}` : "";
-      const response = await fetch(`/api/instructor/runs${query}`, { cache: "no-store" });
+      const query = new URLSearchParams({ day: String(dayNumber) });
+      if (runId) query.set("run", runId);
+      const response = await fetch(`/api/instructor/runs?${query}`, { cache: "no-store" });
       const data = await response.json() as {
         run?: ClassroomRun | null;
         recentRuns?: RunOption[];
-        activeRunId?: string | null;
+        activeRun?: ActiveRun | null;
         error?: string;
       };
       if (!response.ok) throw new Error(data.error ?? "The classroom session could not be loaded.");
       setRun(data.run ?? null);
       setRecentRuns(data.recentRuns ?? []);
-      setActiveRunId(data.activeRunId ?? null);
+      setActiveRun(data.activeRun ?? null);
       setError("");
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "The classroom session could not be loaded.");
@@ -83,22 +92,22 @@ export function ControlRoom({ email }: { email: string }) {
   }, []);
 
   useEffect(() => {
-    const timer = window.setTimeout(() => { void loadRun(); }, 0);
+    const timer = window.setTimeout(() => { void loadRun(selectedDay); }, 0);
     return () => window.clearTimeout(timer);
-  }, [loadRun]);
+  }, [loadRun, selectedDay]);
 
   useEffect(() => {
     if (!currentRunId) return;
     const initial = window.setTimeout(() => { void loadResults(currentRunId); }, 0);
     const timer = window.setInterval(() => {
-      void loadRun(currentRunId);
+      void loadRun(selectedDay, currentRunId);
       void loadResults(currentRunId);
     }, 2000);
     return () => {
       window.clearTimeout(initial);
       window.clearInterval(timer);
     };
-  }, [currentRunId, loadResults, loadRun]);
+  }, [currentRunId, loadResults, loadRun, selectedDay]);
 
   async function createRun() {
     setBusy("create");
@@ -107,11 +116,11 @@ export function ControlRoom({ email }: { email: string }) {
       const response = await fetch("/api/instructor/runs", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ capacity: 120 }),
+        body: JSON.stringify({ capacity: run?.capacity ?? 120, dayNumber: selectedDay }),
       });
       const data = await response.json() as { error?: string };
       if (!response.ok) throw new Error(data.error ?? "The classroom session could not be created.");
-      await loadRun();
+      await loadRun(selectedDay);
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "The classroom session could not be created.");
     } finally {
@@ -131,7 +140,7 @@ export function ControlRoom({ email }: { email: string }) {
       });
       const data = await response.json() as { error?: string };
       if (!response.ok) throw new Error(data.error ?? "The classroom session could not be updated.");
-      await Promise.all([loadRun(run.id), loadResults(run.id)]);
+      await Promise.all([loadRun(selectedDay, run.id), loadResults(run.id)]);
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "The classroom session could not be updated.");
     } finally {
@@ -161,19 +170,37 @@ export function ControlRoom({ email }: { email: string }) {
       const createResponse = await fetch("/api/instructor/runs", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ capacity: run.capacity }),
+        body: JSON.stringify({ capacity: run.capacity, dayNumber: selectedDay }),
       });
       const createData = await createResponse.json() as { error?: string };
       if (!createResponse.ok) throw new Error(createData.error ?? "A fresh classroom session could not be created.");
 
       setResults({});
-      await loadRun();
+      await loadRun(selectedDay);
     } catch (caught) {
-      await loadRun(run.id);
+      await loadRun(selectedDay, run.id);
       setError(caught instanceof Error ? caught.message : "A fresh classroom session could not be created.");
     } finally {
       setBusy("");
     }
+  }
+
+  function selectTeachingDay(dayNumber: TeachingDayNumber) {
+    if (dayNumber === selectedDay) return;
+    setLoading(true);
+    setRun(null);
+    setRecentRuns([]);
+    setResults({});
+    setSelectedDay(dayNumber);
+  }
+
+  function showActiveRun() {
+    if (!activeRun) return;
+    if (activeRun.dayNumber === selectedDay) {
+      void loadRun(selectedDay, activeRun.id);
+      return;
+    }
+    selectTeachingDay(activeRun.dayNumber);
   }
 
   async function logout() {
@@ -187,17 +214,25 @@ export function ControlRoom({ email }: { email: string }) {
 
   if (!run) {
     return (
-      <section className={styles.controlEmpty}>
-        <p className={styles.eyebrow}>No classroom session yet</p>
-        <h2>Prepare the classroom</h2>
-        <p>
-          Activities begin closed, so no responses are collected until you open
-          a specific activity from this page.
-        </p>
-        <button type="button" onClick={() => void createRun()} disabled={busy === "create"}>
-          {busy === "create" ? "Preparing…" : "Create classroom session"}
-        </button>
-        {error && <p className={styles.formError} role="alert">{error}</p>}
+      <section className={styles.controlRoom}>
+        <InstructorDayTabs selectedDay={selectedDay} onSelect={selectTeachingDay} />
+        <section className={styles.controlEmpty}>
+          <p className={styles.eyebrow}>Day {selectedDay}</p>
+          <h2>No session for this day</h2>
+          <p>
+            {dayActivities.length > 0
+              ? "Create a session for this teaching day. Every activity will begin closed."
+              : "No activities have been added to this teaching day yet."}
+          </p>
+          {activeRun ? (
+            <button type="button" onClick={showActiveRun}>Go to Day {activeRun.dayNumber} live session</button>
+          ) : dayActivities.length > 0 ? (
+            <button type="button" onClick={() => void createRun()} disabled={busy === "create"}>
+              {busy === "create" ? "Preparing…" : `Start Day ${selectedDay} session`}
+            </button>
+          ) : null}
+          {error && <p className={styles.formError} role="alert">{error}</p>}
+        </section>
         <button className={styles.textButton} type="button" onClick={() => void logout()}>Sign out {email}</button>
       </section>
     );
@@ -205,12 +240,14 @@ export function ControlRoom({ email }: { email: string }) {
 
   return (
     <section className={styles.controlRoom}>
+      <InstructorDayTabs selectedDay={selectedDay} onSelect={selectTeachingDay} />
+
       {recentRuns.length > 1 && (
         <label className={styles.runSelector}>
           <span>Viewing session</span>
           <select
             value={run.id}
-            onChange={(event) => void loadRun(event.target.value)}
+            onChange={(event) => void loadRun(selectedDay, event.target.value)}
           >
             {recentRuns.map((option, index) => (
               <option key={option.id} value={option.id}>
@@ -223,53 +260,40 @@ export function ControlRoom({ email }: { email: string }) {
       )}
 
       <div className={styles.runStatus}>
-        <div><span>Session</span><strong>{run.isActive ? "Live" : "Completed"}</strong></div>
-        <div><span>Anonymous participants</span><strong>{run.participantCount}<small> / {run.capacity}</small></strong></div>
+        <div><span>Day {selectedDay} session</span><strong>{run.isActive ? "Live" : "Completed"}</strong></div>
+        <div>
+          <span>{dayHasResponseActivities ? "Anonymous participants" : "Anonymous completions"}</span>
+          <strong>
+            {dayHasResponseActivities ? run.participantCount : dayPrivateCompletionTotal}
+            {dayHasResponseActivities && <small> / {run.capacity}</small>}
+          </strong>
+        </div>
         <div className={styles.runActions}>
-          {(!activeRunId || activeRunId === run.id) && (
+          {run.isActive ? (
+            <>
             <button
               className={styles.freshSessionButton}
               type="button"
               disabled={Boolean(busy)}
               onClick={() => void startFreshRun()}
-            >{busy === "fresh" ? "Starting…" : "Start fresh session"}</button>
-          )}
-          {run.isActive ? (
+            >{busy === "fresh" ? "Starting…" : "Close and start fresh"}</button>
             <button className={styles.dangerButton} type="button" disabled={Boolean(busy)} onClick={() => {
               if (window.confirm("End this classroom session? All activities will close. You can still enable review mode afterwards.")) {
                 void updateRun({ action: "close-run" }, "close");
               }
             }}>End classroom session</button>
+            </>
           ) : (
-            activeRunId ? (
-              <button type="button" onClick={() => void loadRun(activeRunId)}>Return to live session</button>
+            activeRun ? (
+              <button type="button" onClick={showActiveRun}>Go to Day {activeRun.dayNumber} live session</button>
             ) : (
               <button type="button" disabled={Boolean(busy)} onClick={() => void createRun()}>
-                {busy === "create" ? "Preparing…" : "Start a new session"}
+                {busy === "create" ? "Preparing…" : `Start new Day ${selectedDay} session`}
               </button>
             )
           )}
         </div>
       </div>
-
-      <nav className={styles.instructorDayTabs} aria-label="Choose teaching day">
-        {teachingDayNumbers.map((day) => {
-          const activityCount = courseActivityCatalog.filter((activity) => activity.day === day).length;
-          return (
-            <button
-              className={selectedDay === day ? styles.selectedDayTab : undefined}
-              type="button"
-              key={day}
-              aria-current={selectedDay === day ? "page" : undefined}
-              onClick={() => setSelectedDay(day)}
-            >
-              <span>Day</span>
-              <strong>{String(day).padStart(2, "0")}</strong>
-              <small>{activityCount === 0 ? "No activities" : `${activityCount} ${activityCount === 1 ? "activity" : "activities"}`}</small>
-            </button>
-          );
-        })}
-      </nav>
 
       <div className={styles.controlSectionHeading}>
         <div>
@@ -437,5 +461,34 @@ export function ControlRoom({ email }: { email: string }) {
       {error && <p className={styles.formError} role="alert">{error}</p>}
       <button className={styles.textButton} type="button" onClick={() => void logout()}>Sign out {email}</button>
     </section>
+  );
+}
+
+function InstructorDayTabs({
+  selectedDay,
+  onSelect,
+}: {
+  selectedDay: TeachingDayNumber;
+  onSelect: (day: TeachingDayNumber) => void;
+}) {
+  return (
+    <nav className={styles.instructorDayTabs} aria-label="Choose teaching day">
+      {teachingDayNumbers.map((day) => {
+        const activityCount = courseActivityCatalog.filter((activity) => activity.day === day).length;
+        return (
+          <button
+            className={selectedDay === day ? styles.selectedDayTab : undefined}
+            type="button"
+            key={day}
+            aria-current={selectedDay === day ? "page" : undefined}
+            onClick={() => onSelect(day)}
+          >
+            <span>Day</span>
+            <strong>{String(day).padStart(2, "0")}</strong>
+            <small>{activityCount === 0 ? "No activities" : `${activityCount} ${activityCount === 1 ? "activity" : "activities"}`}</small>
+          </button>
+        );
+      })}
+    </nav>
   );
 }

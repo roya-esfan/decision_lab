@@ -13,17 +13,37 @@ export async function GET(request: Request) {
   try {
     await requireInstructor();
     const supabase = getSupabaseAdmin();
-    const requestedRunId = new URL(request.url).searchParams.get("run");
+    const searchParams = new URL(request.url).searchParams;
+    const requestedRunId = searchParams.get("run");
+    const dayNumber = Number(searchParams.get("day") ?? "1");
     if (requestedRunId && !uuidPattern.test(requestedRunId)) {
       throw new ApiError(400, "Classroom session not found.");
     }
+    if (!Number.isInteger(dayNumber) || dayNumber < 1 || dayNumber > 8) {
+      throw new ApiError(400, "Teaching day not found.");
+    }
 
-    const { data: recentRuns, error: recentRunsError } = await supabase
-      .from("classroom_runs")
-      .select("id, state, capacity, created_at, expires_at")
-      .order("created_at", { ascending: false })
-      .limit(25);
+    const [
+      { data: recentRuns, error: recentRunsError },
+      { data: activeRun, error: activeRunError },
+    ] = await Promise.all([
+      supabase
+        .from("classroom_runs")
+        .select("id, day_number, state, capacity, created_at, expires_at")
+        .eq("day_number", dayNumber)
+        .order("created_at", { ascending: false })
+        .limit(25),
+      supabase
+        .from("classroom_runs")
+        .select("id, day_number")
+        .eq("state", "open")
+        .gt("expires_at", new Date().toISOString())
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle(),
+    ]);
     if (recentRunsError) throw recentRunsError;
+    if (activeRunError) throw activeRunError;
 
     const now = Date.now();
     const run = requestedRunId
@@ -31,15 +51,18 @@ export async function GET(request: Request) {
       : recentRuns?.[0];
     const recentRunOptions = (recentRuns ?? []).map((candidate) => ({
       id: candidate.id,
+      dayNumber: candidate.day_number,
       state: candidate.state,
       createdAt: candidate.created_at,
       isActive: candidate.state === "open" && new Date(candidate.expires_at).getTime() > now,
     }));
-    const activeRunId = recentRunOptions.find((candidate) => candidate.isActive)?.id ?? null;
+    const activeRunInfo = activeRun
+      ? { id: activeRun.id, dayNumber: activeRun.day_number }
+      : null;
 
     if (!run) {
       return NextResponse.json(
-        { run: null, recentRuns: recentRunOptions, activeRunId },
+        { run: null, recentRuns: recentRunOptions, activeRun: activeRunInfo },
         { headers: { "Cache-Control": "no-store" } },
       );
     }
@@ -84,6 +107,7 @@ export async function GET(request: Request) {
     return NextResponse.json({
       run: {
         id: run.id,
+        dayNumber: run.day_number,
         state: run.state,
         isActive: run.state === "open" && new Date(run.expires_at).getTime() > now,
         capacity: run.capacity,
@@ -99,7 +123,7 @@ export async function GET(request: Request) {
         })),
       },
       recentRuns: recentRunOptions,
-      activeRunId,
+      activeRun: activeRunInfo,
     }, { headers: { "Cache-Control": "no-store" } });
   } catch (error) {
     return apiFailure(error);
@@ -112,7 +136,9 @@ export async function POST(request: Request) {
     await requireInstructor();
     const body = await readJson(request, 512);
     const capacity = body && typeof body === "object" && "capacity" in body ? Number(body.capacity) : 120;
+    const dayNumber = body && typeof body === "object" && "dayNumber" in body ? Number(body.dayNumber) : 1;
     if (!Number.isInteger(capacity) || capacity < 1 || capacity > 500) throw new ApiError(400, "Capacity must be between 1 and 500.");
+    if (!Number.isInteger(dayNumber) || dayNumber < 1 || dayNumber > 8) throw new ApiError(400, "Teaching day not found.");
 
     const supabase = getSupabaseAdmin();
     await supabase.rpc("cleanup_decision_lab_data");
@@ -127,12 +153,12 @@ export async function POST(request: Request) {
     if (existingRunError) throw existingRunError;
     if (existingRun) throw new ApiError(409, "An open classroom session already exists.");
 
-    let run: { id: string; join_code: string; state: string; joins_open: boolean; capacity: number; created_at: string; expires_at: string } | null = null;
+    let run: { id: string; day_number: number; join_code: string; state: string; joins_open: boolean; capacity: number; created_at: string; expires_at: string } | null = null;
     for (let attempt = 0; attempt < 5 && !run; attempt += 1) {
       const { data, error } = await supabase
         .from("classroom_runs")
-        .insert({ join_code: generateJoinCode(), capacity })
-        .select("id, join_code, state, joins_open, capacity, created_at, expires_at")
+        .insert({ join_code: generateJoinCode(), capacity, day_number: dayNumber })
+        .select("id, day_number, join_code, state, joins_open, capacity, created_at, expires_at")
         .single();
       if (!error && data) run = data;
       else if (error?.code !== "23505") throw error;
