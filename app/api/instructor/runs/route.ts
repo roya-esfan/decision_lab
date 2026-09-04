@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { ApiError, apiFailure, assertSameOrigin, readJson } from "@/lib/api";
+import { controlledActivityKeys } from "@/lib/activity-catalog";
 import { generateJoinCode } from "@/lib/classroom";
 import { requireInstructor } from "@/lib/instructor-session";
 import { getSupabaseAdmin } from "@/lib/supabase-admin";
@@ -138,11 +139,14 @@ export async function POST(request: Request) {
     }
     if (!run) throw new Error("JOIN_CODE_GENERATION_FAILED");
 
-    const { error: stateError } = await supabase.from("classroom_activity_states").insert([
-      { run_id: run.id, activity_key: "assignment-1", is_open: false, is_revealed: false },
-      { run_id: run.id, activity_key: "outcome-bias", is_open: false, is_revealed: false },
-      { run_id: run.id, activity_key: "assignment-2", is_open: false, is_revealed: false },
-    ]);
+    const { error: stateError } = await supabase.from("classroom_activity_states").insert(
+      controlledActivityKeys.map((activityKey) => ({
+        run_id: run.id,
+        activity_key: activityKey,
+        is_open: false,
+        is_revealed: false,
+      })),
+    );
     if (stateError) {
       await supabase.from("classroom_runs").delete().eq("id", run.id);
       throw stateError;

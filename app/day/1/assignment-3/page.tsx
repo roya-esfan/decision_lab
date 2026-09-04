@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { CourseShell } from "../../../components/course-shell";
+import { PrivateActivityAccess } from "../../../components/live-session";
 import { RationalDecisionTool } from "./rational-decision-tool";
 import styles from "../../../course.module.css";
 
@@ -26,7 +27,9 @@ export default function RationalDecisionAssignmentPage() {
           </div>
         </header>
 
-        <RationalDecisionTool />
+        <PrivateActivityAccess activityKey="rational-decision">
+          <RationalDecisionTool />
+        </PrivateActivityAccess>
       </main>
     </CourseShell>
   );

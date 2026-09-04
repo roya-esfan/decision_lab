@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { PrivateActivityAccess } from "../../../components/live-session";
 import { CourseShell } from "../../../components/course-shell";
 import { BingoCard } from "./bingo-card";
 import styles from "./life-experience-bingo.module.css";
@@ -18,7 +19,9 @@ export default function LifeExperienceBingoPage() {
 
         <section className={styles.cardSection} aria-labelledby="card-title">
           <h2 id="card-title">Your bingo card</h2>
-          <BingoCard />
+          <PrivateActivityAccess activityKey="life-experience-bingo">
+            <BingoCard />
+          </PrivateActivityAccess>
         </section>
       </main>
     </CourseShell>

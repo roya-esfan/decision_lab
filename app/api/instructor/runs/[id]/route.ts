@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { ApiError, apiFailure, assertSameOrigin, readJson } from "@/lib/api";
-import { isActivityKey } from "@/lib/classroom";
+import { isControlledActivityKey } from "@/lib/activity-catalog";
 import { requireInstructor } from "@/lib/instructor-session";
 import { getSupabaseAdmin } from "@/lib/supabase-admin";
 
@@ -27,7 +27,7 @@ export async function PATCH(
       const { error: activityError } = await supabase.from("classroom_activity_states").update({ is_open: false, is_revealed: false }).eq("run_id", id);
       if (activityError) throw activityError;
     } else if (body.action === "set-activity-mode") {
-      if (!("activityKey" in body) || !isActivityKey(body.activityKey)) throw new ApiError(400, "Activity not found.");
+      if (!("activityKey" in body) || !isControlledActivityKey(body.activityKey)) throw new ApiError(400, "Activity not found.");
       if (!("mode" in body) || !["closed", "live", "review"].includes(String(body.mode))) {
         throw new ApiError(400, "Activity mode is invalid.");
       }

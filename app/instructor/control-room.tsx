@@ -1,11 +1,18 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import {
+  courseActivityCatalog,
+  isResponseActivityKey,
+  teachingDayNumbers,
+  type ControlledActivityKey,
+  type TeachingDayNumber,
+} from "@/lib/activity-catalog";
 import type { ActivityKey } from "@/lib/classroom";
 import { summarizeOutcomeBiasCounts } from "@/lib/outcome-bias";
 import styles from "../course.module.css";
 
-type ActivityState = { key: ActivityKey; isOpen: boolean; isRevealed: boolean };
+type ActivityState = { key: ControlledActivityKey; isOpen: boolean; isRevealed: boolean };
 type ClassroomRun = {
   id: string;
   state: "open" | "closed";
@@ -26,45 +33,22 @@ type RunOption = {
   createdAt: string;
 };
 
-const activities: Array<{
-  key: ActivityKey;
-  number: number;
-  title: string;
-  activityHref: string;
-  resultsPath: string;
-}> = [
-  {
-    key: "assignment-1",
-    number: 2,
-    title: "A two-player bargain",
-    activityHref: "/day/1/assignment-1",
-    resultsPath: "/day/1/assignment-1/results",
-  },
-  {
-    key: "outcome-bias",
-    number: 3,
-    title: "Evaluate the decision",
-    activityHref: "/day/1/evaluate-the-decision",
-    resultsPath: "/day/1/evaluate-the-decision/results",
-  },
-  {
-    key: "assignment-2",
-    number: 4,
-    title: "Which exam results feel better?",
-    activityHref: "/day/1/assignment-2",
-    resultsPath: "/day/1/assignment-2/results",
-  },
-];
+const responseActivities = courseActivityCatalog.filter(
+  (activity): activity is typeof activity & { key: ActivityKey; kind: "responses" } =>
+    activity.kind === "responses" && isResponseActivityKey(activity.key),
+);
 
 export function ControlRoom({ email }: { email: string }) {
   const [run, setRun] = useState<ClassroomRun | null>(null);
   const [recentRuns, setRecentRuns] = useState<RunOption[]>([]);
   const [activeRunId, setActiveRunId] = useState<string | null>(null);
+  const [selectedDay, setSelectedDay] = useState<TeachingDayNumber>(1);
   const [results, setResults] = useState<Record<string, ResultRow[]>>({});
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState("");
   const [error, setError] = useState("");
   const currentRunId = run?.id;
+  const dayActivities = courseActivityCatalog.filter((activity) => activity.day === selectedDay);
 
   const loadRun = useCallback(async (runId?: string) => {
     try {
@@ -89,7 +73,7 @@ export function ControlRoom({ email }: { email: string }) {
   }, []);
 
   const loadResults = useCallback(async (runId: string) => {
-    const entries = await Promise.all(activities.map(async (activity) => {
+    const entries = await Promise.all(responseActivities.map(async (activity) => {
       const response = await fetch(`/api/instructor/results?run=${runId}&activity=${activity.key}`, { cache: "no-store" });
       if (!response.ok) return [activity.key, []] as const;
       const data = await response.json() as { results?: ResultRow[] };
@@ -268,173 +252,188 @@ export function ControlRoom({ email }: { email: string }) {
         </div>
       </div>
 
-      <div className={styles.controlSectionHeading}>
-        <div>
-          <p className={styles.eyebrow}>Day 1</p>
-          <h2>Live activities and results</h2>
-        </div>
-        <p>Totals update automatically every two seconds</p>
-      </div>
-
-      <div className={styles.controlActivities}>
-        {activities.map((activity) => {
-          const state = run.activities.find((item) => item.key === activity.key);
-          const activityResults = results[activity.key] ?? [];
-          const mode = state?.isOpen && run.isActive
-            ? "live"
-            : state?.isRevealed
-              ? "review"
-              : "closed";
-          const responseCount = activityResults.length === 0
-            ? 0
-            : Math.max(...activityResults.map((result) =>
-                Object.values(result.counts).reduce((sum, count) => sum + count, 0),
-              ));
-
+      <nav className={styles.instructorDayTabs} aria-label="Choose teaching day">
+        {teachingDayNumbers.map((day) => {
+          const activityCount = courseActivityCatalog.filter((activity) => activity.day === day).length;
           return (
-            <article key={activity.key}>
-              <header>
-                <div>
-                  <p className={styles.eyebrow}>Activity {activity.number}</p>
-                  <h3>{activity.title}</h3>
-                </div>
-                <div className={styles.activityState}>
-                  <span className={mode === "live" ? styles.stateLive : mode === "review" ? styles.stateRevealed : undefined}>
-                    {!state ? "Database update required" : mode === "live" ? "Live · collecting" : mode === "review" ? "Review mode" : "Closed"}
-                  </span>
-                </div>
-              </header>
-
-              <div className={styles.activityResultSummary}>
-                <div>
-                  <span>Responses</span>
-                  <strong>{responseCount}</strong>
-                </div>
-                <div className={styles.instructorResultRows}>
-                  {activityResults.map((result) => {
-                    const total = Object.values(result.counts).reduce((sum, count) => sum + count, 0);
-                    return (
-                      <section key={result.promptKey}>
-                        <header><strong>{result.label}</strong><span>{total} responses</span></header>
-                        {activity.key === "outcome-bias" ? (
-                          <div className={styles.instructorMeanRows}>
-                            {summarizeOutcomeBiasCounts(result.counts).map((summary) => (
-                              <div key={summary.condition}>
-                                <span>Condition {summary.conditionNumber} · {summary.label}</span>
-                                <strong>{summary.mean === null ? "—" : summary.mean.toFixed(2)}</strong>
-                                <em>n = {summary.count}</em>
-                              </div>
-                            ))}
-                          </div>
-                        ) : (
-                          Object.entries(result.counts).map(([choice, count]) => {
-                            const percentage = total === 0 ? 0 : Math.round((count / total) * 100);
-                            return (
-                              <div className={styles.instructorResultBar} key={choice}>
-                                <span>{choice}</span>
-                                <div aria-hidden="true"><i style={{ width: `${percentage}%` }} /></div>
-                                <strong>{percentage}%</strong>
-                                <em>{count}</em>
-                              </div>
-                            );
-                          })
-                        )}
-                      </section>
-                    );
-                  })}
-                  {activityResults.length === 0 && <p>Results could not be loaded yet.</p>}
-                </div>
-              </div>
-
-              <footer>
-                <a href={activity.activityHref} target="_blank" rel="noreferrer">Open student page</a>
-                <a
-                  href={`${activity.resultsPath}?projector=1&instructor=1&run=${encodeURIComponent(run.id)}`}
-                  target="_blank"
-                  rel="noreferrer"
-                >Open presentation view</a>
-                {!state ? (
-                  <p className={styles.activitySetupWarning}>Run the latest Supabase migration, then refresh this page.</p>
-                ) : mode === "live" ? (
-                  <button
-                    type="button"
-                    disabled={!state || Boolean(busy)}
-                    onClick={() => void updateRun(
-                      { action: "set-activity-mode", activityKey: activity.key, mode: "closed" },
-                      `${activity.key}-mode`,
-                    )}
-                  >Close & freeze responses</button>
-                ) : mode === "review" ? (
-                  <button
-                    className={styles.hideButton}
-                    type="button"
-                    disabled={!state || Boolean(busy)}
-                    onClick={() => void updateRun(
-                      { action: "set-activity-mode", activityKey: activity.key, mode: "closed" },
-                      `${activity.key}-mode`,
-                    )}
-                  >Close review mode</button>
-                ) : (
-                  <>
-                    {run.isActive && (
-                      <button
-                        type="button"
-                        disabled={!state || Boolean(busy)}
-                        onClick={() => void updateRun(
-                          { action: "set-activity-mode", activityKey: activity.key, mode: "live" },
-                          `${activity.key}-mode`,
-                        )}
-                      >Open live activity</button>
-                    )}
-                    <button
-                      className={styles.revealButton}
-                      type="button"
-                      disabled={!state || Boolean(busy)}
-                      onClick={() => void updateRun(
-                        { action: "set-activity-mode", activityKey: activity.key, mode: "review" },
-                        `${activity.key}-mode`,
-                      )}
-                    >Enable review mode</button>
-                  </>
-                )}
-              </footer>
-            </article>
+            <button
+              className={selectedDay === day ? styles.selectedDayTab : undefined}
+              type="button"
+              key={day}
+              aria-current={selectedDay === day ? "page" : undefined}
+              onClick={() => setSelectedDay(day)}
+            >
+              <span>Day</span>
+              <strong>{String(day).padStart(2, "0")}</strong>
+              <small>{activityCount === 0 ? "No activities" : `${activityCount} ${activityCount === 1 ? "activity" : "activities"}`}</small>
+            </button>
           );
         })}
+      </nav>
+
+      <div className={styles.controlSectionHeading}>
+        <div>
+          <p className={styles.eyebrow}>Day {selectedDay}</p>
+          <h2>Activities and results</h2>
+        </div>
+        {dayActivities.some((activity) => activity.kind === "responses") && (
+          <p>Totals update automatically every two seconds</p>
+        )}
       </div>
 
-      <section className={styles.privateCompletionSection}>
-        <header>
-          <div>
-            <p className={styles.eyebrow}>Private activities</p>
-            <h2>Anonymous completions</h2>
-          </div>
-          <p>Only anonymous completion totals are collected. Cards, marked squares, student work, answers and scores remain in each browser.</p>
-        </header>
-        <div className={styles.privateCompletionRows}>
-          <article>
-            <span>Day 1 · Activity 1</span>
-            <h3>Life experience bingo</h3>
-            <strong>{run.completionCounts?.["life-experience-bingo"] ?? 0}</strong>
-            <small>reached bingo</small>
-          </article>
-          <article>
-            <span>Day 1 · Activity 5</span>
-            <h3>Make a rational decision</h3>
-            <strong>{run.completionCounts?.["rational-decision"] ?? 0}</strong>
-            <small>finished</small>
-          </article>
-          <article>
-            <span>Day 2 · Activity 1</span>
-            <h3>How do you prefer to think?</h3>
-            <strong>{run.completionCounts?.["rei-10"] ?? 0}</strong>
-            <small>finished</small>
-          </article>
+      {dayActivities.length === 0 ? (
+        <section className={styles.dayControlEmpty}>
+          <h3>No activities have been added to Day {selectedDay} yet</h3>
+          <p>When an activity is prepared for this day, its availability controls will appear here.</p>
+        </section>
+      ) : (
+        <div className={styles.controlActivities}>
+          {dayActivities.map((activity) => {
+            const state = run.activities.find((item) => item.key === activity.key);
+            const responseActivity = isResponseActivityKey(activity.key);
+            const activityResults = responseActivity ? results[activity.key] ?? [] : [];
+            const mode = state?.isOpen && run.isActive
+              ? "live"
+              : state?.isRevealed
+                ? "review"
+                : "closed";
+            const responseCount = activityResults.length === 0
+              ? 0
+              : Math.max(...activityResults.map((result) =>
+                  Object.values(result.counts).reduce((sum, count) => sum + count, 0),
+                ));
+            const completionCount = activity.kind === "private"
+              ? run.completionCounts?.[activity.key as keyof ClassroomRun["completionCounts"]] ?? 0
+              : 0;
+
+            return (
+              <article key={activity.key}>
+                <header>
+                  <div>
+                    <p className={styles.eyebrow}>Activity {activity.number}</p>
+                    <h3>{activity.title}</h3>
+                  </div>
+                  <div className={styles.activityState}>
+                    <span className={mode === "live" ? styles.stateLive : mode === "review" ? styles.stateRevealed : undefined}>
+                      {!state ? "Database update required" : mode === "live" ? "Live" : mode === "review" ? "Review mode" : "Closed"}
+                    </span>
+                  </div>
+                </header>
+
+                {responseActivity ? (
+                  <div className={styles.activityResultSummary}>
+                    <div>
+                      <span>Responses</span>
+                      <strong>{responseCount}</strong>
+                    </div>
+                    <div className={styles.instructorResultRows}>
+                      {activityResults.map((result) => {
+                        const total = Object.values(result.counts).reduce((sum, count) => sum + count, 0);
+                        return (
+                          <section key={result.promptKey}>
+                            <header><strong>{result.label}</strong><span>{total} responses</span></header>
+                            {activity.key === "outcome-bias" ? (
+                              <div className={styles.instructorMeanRows}>
+                                {summarizeOutcomeBiasCounts(result.counts).map((summary) => (
+                                  <div key={summary.condition}>
+                                    <span>Condition {summary.conditionNumber} · {summary.label}</span>
+                                    <strong>{summary.mean === null ? "—" : summary.mean.toFixed(2)}</strong>
+                                    <em>n = {summary.count}</em>
+                                  </div>
+                                ))}
+                              </div>
+                            ) : (
+                              Object.entries(result.counts).map(([choice, count]) => {
+                                const percentage = total === 0 ? 0 : Math.round((count / total) * 100);
+                                return (
+                                  <div className={styles.instructorResultBar} key={choice}>
+                                    <span>{choice}</span>
+                                    <div aria-hidden="true"><i style={{ width: `${percentage}%` }} /></div>
+                                    <strong>{percentage}%</strong>
+                                    <em>{count}</em>
+                                  </div>
+                                );
+                              })
+                            )}
+                          </section>
+                        );
+                      })}
+                      {activityResults.length === 0 && <p>Results could not be loaded yet.</p>}
+                    </div>
+                  </div>
+                ) : (
+                  <div className={styles.privateActivitySummary}>
+                    <div>
+                      <span>Anonymous completions</span>
+                      <strong>{completionCount}</strong>
+                      <small>{activity.completionLabel}</small>
+                    </div>
+                    <p>Only this total is collected. Student work, answers, scores, cards and marked squares remain in each browser.</p>
+                    {!run.completionTrackingReady && (
+                      <p className={styles.activitySetupWarning}>Run the latest Supabase migration to activate completion counts.</p>
+                    )}
+                  </div>
+                )}
+
+                <footer>
+                  <a href={activity.activityHref} target="_blank" rel="noreferrer">Open student page</a>
+                  {activity.resultsPath && (
+                    <a
+                      href={`${activity.resultsPath}?projector=1&instructor=1&run=${encodeURIComponent(run.id)}`}
+                      target="_blank"
+                      rel="noreferrer"
+                    >Open presentation view</a>
+                  )}
+                  {!state ? (
+                    <p className={styles.activitySetupWarning}>Run the latest Supabase migration, then refresh this page.</p>
+                  ) : mode === "live" ? (
+                    <button
+                      type="button"
+                      disabled={Boolean(busy)}
+                      onClick={() => void updateRun(
+                        { action: "set-activity-mode", activityKey: activity.key, mode: "closed" },
+                        `${activity.key}-mode`,
+                      )}
+                    >{responseActivity ? "Close & freeze responses" : "Close activity"}</button>
+                  ) : mode === "review" ? (
+                    <button
+                      className={styles.hideButton}
+                      type="button"
+                      disabled={Boolean(busy)}
+                      onClick={() => void updateRun(
+                        { action: "set-activity-mode", activityKey: activity.key, mode: "closed" },
+                        `${activity.key}-mode`,
+                      )}
+                    >Close review mode</button>
+                  ) : (
+                    <>
+                      {run.isActive && (
+                        <button
+                          type="button"
+                          disabled={Boolean(busy)}
+                          onClick={() => void updateRun(
+                            { action: "set-activity-mode", activityKey: activity.key, mode: "live" },
+                            `${activity.key}-mode`,
+                          )}
+                        >Open live activity</button>
+                      )}
+                      <button
+                        className={styles.revealButton}
+                        type="button"
+                        disabled={Boolean(busy)}
+                        onClick={() => void updateRun(
+                          { action: "set-activity-mode", activityKey: activity.key, mode: "review" },
+                          `${activity.key}-mode`,
+                        )}
+                      >Enable review mode</button>
+                    </>
+                  )}
+                </footer>
+              </article>
+            );
+          })}
         </div>
-        {!run.completionTrackingReady && (
-          <p className={styles.activitySetupWarning}>Run the latest Supabase migration to activate completion counts.</p>
-        )}
-      </section>
+      )}
       {error && <p className={styles.formError} role="alert">{error}</p>}
       <button className={styles.textButton} type="button" onClick={() => void logout()}>Sign out {email}</button>
     </section>

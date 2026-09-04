@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { CourseShell } from "../../../components/course-shell";
+import { PrivateActivityAccess } from "../../../components/live-session";
 import { ReiQuestionnaire } from "../../../components/rei-questionnaire";
 import styles from "../../../course.module.css";
 
@@ -37,7 +38,9 @@ export default function Rei10Page() {
           </div>
         </section>
 
-        <ReiQuestionnaire />
+        <PrivateActivityAccess activityKey="rei-10">
+          <ReiQuestionnaire />
+        </PrivateActivityAccess>
 
         <aside className={styles.sourceNote} aria-labelledby="source-title">
           <h2 id="source-title">Source and interpretation</h2>

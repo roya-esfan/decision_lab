@@ -23,10 +23,14 @@ never sent to Supabase.
    - `supabase/migrations/202609040002_add_outcome_bias_activity.sql`
    - `supabase/migrations/202609040003_private_completion_counts.sql`
    - `supabase/migrations/202609040004_add_bingo_completion_count.sql`
+   - `supabase/migrations/202609040005_control_private_activity_availability.sql`
 
 The completion migrations store only anonymous, run-specific completion
 markers for Day 1 Activities 1 and 5 and Day 2 Activity 1. They do not store
 cards, marked squares, activity content or scores.
+
+The final migration adds open, closed and review availability controls for
+those private activities. It stores only the activity mode, never student work.
 
 The migration enables Row Level Security, removes access for the public
 database roles, creates server-only functions for joining and submitting, and

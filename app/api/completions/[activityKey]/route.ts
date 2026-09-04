@@ -32,6 +32,15 @@ export async function POST(
     if (runError) throw runError;
     if (!run) return NextResponse.json({ recorded: false });
 
+    const { data: activity, error: activityError } = await supabase
+      .from("classroom_activity_states")
+      .select("is_open")
+      .eq("run_id", run.id)
+      .eq("activity_key", activityKey)
+      .maybeSingle();
+    if (activityError) throw activityError;
+    if (!activity?.is_open) return NextResponse.json({ recorded: false });
+
     const cookieStore = await cookies();
     const existing = verifySession(cookieStore.get(completionCookieName)?.value);
     const existingMatchesRun = existing?.kind === "completion" && existing.runId === run.id;

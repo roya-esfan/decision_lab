@@ -1,7 +1,9 @@
 "use client";
 
+import type { ReactNode } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { ActivityKey } from "@/lib/classroom";
+import type { PrivateActivityKey } from "@/lib/private-activities";
 import styles from "../course.module.css";
 
 type SessionState = "loading" | "joining" | "joined" | "closed" | "review" | "unavailable";
@@ -94,5 +96,48 @@ export function LiveSessionGate({
       <p>{message || "Please try again."}</p>
       <button type="button" onClick={() => void onRetry()}>Try again</button>
     </section>
+  );
+}
+
+type PrivateActivityState = "loading" | "live" | "review" | "closed" | "unavailable";
+
+export function PrivateActivityAccess({
+  activityKey,
+  children,
+}: {
+  activityKey: PrivateActivityKey;
+  children: ReactNode;
+}) {
+  const [state, setState] = useState<PrivateActivityState>("loading");
+  const [message, setMessage] = useState("");
+
+  const check = useCallback(async () => {
+    setState("loading");
+    setMessage("");
+    try {
+      const response = await fetch(`/api/session?activity=${activityKey}`, { cache: "no-store" });
+      if (!response.ok) throw new Error();
+      const data = await response.json() as { mode?: "closed" | "live" | "review" };
+      if (data.mode === "live" || data.mode === "review") setState(data.mode);
+      else setState("closed");
+    } catch {
+      setMessage("The activity connection is temporarily unavailable.");
+      setState("unavailable");
+    }
+  }, [activityKey]);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => { void check(); }, 0);
+    return () => window.clearTimeout(timer);
+  }, [check]);
+
+  if (state === "live" || state === "review") return <>{children}</>;
+
+  return (
+    <LiveSessionGate
+      state={state}
+      message={message}
+      onRetry={check}
+    />
   );
 }

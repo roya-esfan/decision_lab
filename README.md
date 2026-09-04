@@ -6,10 +6,10 @@ A mobile-first teaching tool for **ØAADM3700 Decision-Making Processes in Organ
 
 - Precision Grid course hub with eight dated teaching days
 - Day pages with topics, readings, session plans and assignments
-- Day 1 bargain, exam-result choice, rational decision tool and REI-10 activities
+- Day 1 classroom activities and the Day 2 REI-10 reflection
 - Private, on-device scoring for REI-10 and the rational decision tool
 - Anonymous live response collection for the two classroom polls
-- Instructor controls with private preview and deliberate result reveal
+- Day-by-day instructor controls for closed, live and review availability
 - Three design directions retained at `/design`
 - Security headers configured for deployment
 
