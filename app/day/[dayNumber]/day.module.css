@@ -1,0 +1,434 @@
+.dayPage {
+  padding-bottom: 40px;
+}
+
+.breadcrumb {
+  display: flex;
+  min-height: 54px;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: center;
+  border-bottom: 1px solid var(--fine-line);
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.breadcrumb a {
+  color: var(--ink);
+  text-underline-offset: 4px;
+}
+
+.dayHeader {
+  display: grid;
+  padding: 52px 0 48px;
+  grid-template-columns: minmax(0, 1.4fr) minmax(310px, .7fr);
+  gap: clamp(50px, 8vw, 110px);
+  align-items: end;
+}
+
+.dayTitle > p {
+  margin: 0 0 12px;
+  color: var(--accent);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.dayTitle h1 {
+  max-width: 750px;
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(38px, 5vw, 58px);
+  font-weight: 400;
+  letter-spacing: -.035em;
+  line-height: 1.04;
+  text-wrap: pretty;
+}
+
+.dayFacts {
+  margin: 0;
+  border-top: 1px solid var(--ink);
+}
+
+.dayFacts > div {
+  display: grid;
+  min-height: 52px;
+  padding: 10px 0;
+  grid-template-columns: 62px 1fr;
+  gap: 16px;
+  align-items: baseline;
+  border-bottom: 1px solid var(--line);
+}
+
+.dayFacts dt {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.dayFacts dd {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.dayOverview {
+  display: grid;
+  padding: 28px 0 30px;
+  grid-template-columns: minmax(190px, .6fr) minmax(0, 1.5fr);
+  gap: clamp(36px, 7vw, 90px);
+  border-top: 2px solid var(--ink);
+  border-bottom: 1px solid var(--line);
+}
+
+.dayOverview h2,
+.sectionHeading h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -.02em;
+  line-height: 1.25;
+}
+
+.dayOverview > div > p {
+  max-width: 260px;
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.dayOverview ul {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 32px;
+  list-style: none;
+}
+
+.dayOverview li {
+  position: relative;
+  padding: 10px 0 10px 18px;
+  border-bottom: 1px solid var(--fine-line);
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+.dayOverview li::before {
+  position: absolute;
+  top: 18px;
+  left: 0;
+  width: 6px;
+  height: 6px;
+  background: var(--accent);
+  content: "";
+}
+
+.sessionSection,
+.assignmentSection,
+.readingSection {
+  padding-top: 54px;
+}
+
+.sectionHeading {
+  display: flex;
+  margin-bottom: 15px;
+  justify-content: space-between;
+  gap: 28px;
+  align-items: baseline;
+}
+
+.sectionHeading > p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.sessionList,
+.assignmentList {
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--ink);
+  list-style: none;
+}
+
+.sessionList li {
+  display: grid;
+  min-height: 92px;
+  padding: 18px 0;
+  grid-template-columns: 150px minmax(0, 1fr) 70px;
+  gap: 28px;
+  align-items: center;
+  background: #edf4f7;
+  border-bottom: 1px solid var(--line);
+}
+
+.sessionList time {
+  color: var(--accent);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.sessionList strong {
+  font-size: 17px;
+}
+
+.sessionList p {
+  max-width: 760px;
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.sessionList > li > span {
+  color: var(--muted);
+  font-size: 13px;
+  text-align: right;
+}
+
+.sessionList .breakRow {
+  min-height: 58px;
+  background: #f6f6f3;
+}
+
+.breakRow time,
+.breakRow strong {
+  color: var(--muted);
+}
+
+.assignmentList li {
+  display: grid;
+  min-height: 112px;
+  padding: 20px 0;
+  grid-template-columns: 38px minmax(0, 1fr) auto;
+  gap: 24px;
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+}
+
+.assignmentNumber {
+  align-self: start;
+  color: var(--accent);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 26px;
+}
+
+.assignmentList h3 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 22px;
+  font-weight: 400;
+  letter-spacing: -.015em;
+  line-height: 1.25;
+}
+
+.assignmentList div > p {
+  max-width: 700px;
+  margin: 7px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.assignmentLink {
+  display: inline-flex;
+  min-height: 42px;
+  padding: 0 16px;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.assignmentLink:hover {
+  background: var(--accent-dark);
+}
+
+.assignmentPending {
+  color: var(--muted);
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.readingGroups {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  border-top: 1px solid var(--ink);
+}
+
+.readingGroups > section {
+  padding: 22px 30px 24px 0;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.readingGroups > section:not(:first-child) {
+  padding-left: 30px;
+}
+
+.readingGroups > section:last-child {
+  border-right: 0;
+}
+
+.readingGroups h3 {
+  margin: 0 0 14px;
+  color: var(--accent);
+  font-size: 15px;
+}
+
+.readingGroups ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.readingGroups li {
+  margin-bottom: 12px;
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+.planPending {
+  padding: 22px 0;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--line);
+}
+
+.planPending p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 15px;
+}
+
+@media (max-width: 850px) {
+  .dayHeader {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .dayFacts {
+    display: grid;
+    grid-template-columns: 1.4fr .75fr .75fr;
+  }
+
+  .dayFacts > div {
+    padding: 12px 18px;
+    grid-template-columns: 1fr;
+    gap: 5px;
+    border-right: 1px solid var(--line);
+  }
+
+  .dayFacts > div:first-child {
+    padding-left: 0;
+  }
+
+  .dayFacts > div:last-child {
+    border-right: 0;
+  }
+
+  .assignmentList li {
+    grid-template-columns: 34px minmax(0, 1fr);
+  }
+
+  .assignmentLink {
+    grid-column: 2;
+    width: fit-content;
+  }
+
+  .assignmentPending {
+    grid-column: 2;
+  }
+}
+
+@media (max-width: 650px) {
+  .breadcrumb {
+    min-height: 50px;
+  }
+
+  .dayHeader {
+    padding: 38px 0 34px;
+  }
+
+  .dayTitle h1 {
+    font-size: 38px;
+  }
+
+  .dayFacts {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .dayFacts > div:first-child {
+    grid-column: 1 / -1;
+    padding-left: 0;
+    border-right: 0;
+  }
+
+  .dayFacts > div:nth-child(2) {
+    padding-left: 0;
+  }
+
+  .dayOverview {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .dayOverview > div > p {
+    max-width: 440px;
+  }
+
+  .dayOverview ul {
+    grid-template-columns: 1fr;
+  }
+
+  .sectionHeading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .sessionList li {
+    grid-template-columns: 1fr auto;
+    gap: 8px 16px;
+  }
+
+  .sessionList time {
+    grid-column: 1;
+  }
+
+  .sessionList li > div {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .sessionList > li > span {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .readingGroups {
+    grid-template-columns: 1fr;
+  }
+
+  .readingGroups > section,
+  .readingGroups > section:not(:first-child) {
+    padding: 22px 0;
+    border-right: 0;
+  }
+}
+
+@media (max-width: 430px) {
+  .assignmentList li {
+    grid-template-columns: 28px minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .assignmentLink {
+    grid-column: 2;
+  }
+}

@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CourseShell } from "../../components/course-shell";
 import { courseDays } from "@/content/course";
-import styles from "../../course.module.css";
+import styles from "./day.module.css";
 
 export function generateStaticParams() {
   return courseDays.map((day) => ({ dayNumber: String(day.number) }));
@@ -26,49 +26,44 @@ export default async function DayPage({
 
   return (
     <CourseShell>
-      <main>
+      <main className={styles.dayPage}>
         <nav className={styles.breadcrumb} aria-label="Breadcrumb">
-          <Link href="/">Course home</Link><span>/</span><span>Day {String(day.number).padStart(2, "0")}</span>
+          <Link href="/">← Course overview</Link>
         </nav>
 
         <header className={styles.dayHeader}>
-          <p className={styles.eyebrow}>Teaching day {String(day.number).padStart(2, "0")} · Week {day.week}</p>
-          <h1>{day.date}</h1>
+          <div className={styles.dayTitle}>
+            <p>Day {day.number} · Week {day.week}</p>
+            <h1>{day.title}</h1>
+          </div>
           <dl className={styles.dayFacts}>
-            <div><dt>Date</dt><dd>{day.date}</dd></div>
-            <div><dt>Time</dt><dd>{day.time}</dd></div>
+            <div>
+              <dt>Date</dt>
+              <dd>{day.date}</dd>
+            </div>
+            <div>
+              <dt>Time</dt>
+              <dd>{day.time}</dd>
+            </div>
+            <div>
+              <dt>Room</dt>
+              <dd>{day.room}</dd>
+            </div>
           </dl>
         </header>
 
         <section className={styles.dayOverview} aria-labelledby="topics-title">
           <div>
-            <p className={styles.sectionLabel}>Day overview</p>
-            <h2 id="topics-title">Relevant topics</h2>
+            <h2 id="topics-title">This day covers</h2>
           </div>
-          <ul className={styles.topicList}>
+          <ul>
             {day.topics.map((topic) => <li key={topic}>{topic}</li>)}
           </ul>
         </section>
 
-        <section className={styles.readingSection} aria-labelledby="reading-title">
-          <div className={styles.sectionTitle}>
-            <h2 id="reading-title">Reading list</h2>
-            <p>For this teaching day</p>
-          </div>
-          <div className={styles.readingGroups}>
-            {readingGroups.map((group) => (
-              <div key={group.label}>
-                <h3>{group.label}</h3>
-                <ul>{group.items.map((item) => <li key={item}>{item}</li>)}</ul>
-              </div>
-            ))}
-          </div>
-        </section>
-
         <section className={styles.sessionSection} aria-labelledby="session-title">
-          <div className={styles.sectionTitle}>
-            <h2 id="session-title">Today&apos;s session</h2>
-            <p>{day.sessions.length > 0 ? "Lecture blocks and breaks" : "Detailed plan to follow"}</p>
+          <div className={styles.sectionHeading}>
+            <h2 id="session-title">Today&apos;s plan</h2>
           </div>
           {day.sessions.length > 0 ? (
             <ol className={styles.sessionList}>
@@ -85,37 +80,53 @@ export default async function DayPage({
             </ol>
           ) : (
             <div className={styles.planPending}>
-              <span>{String(day.number).padStart(2, "0")}</span>
-              <p>The detailed 45-minute sessions and breaks will be added here.</p>
+              <p>The detailed plan for this teaching day will be added here.</p>
             </div>
           )}
         </section>
 
         <section className={styles.assignmentSection} aria-labelledby="assignments-title">
-          <div className={styles.sectionTitle}>
-            <h2 id="assignments-title">Assignments</h2>
-            <p>{day.assignments.length > 0 ? `${day.assignments.length} prepared` : "Added as the course develops"}</p>
+          <div className={styles.sectionHeading}>
+            <h2 id="assignments-title">Activities</h2>
           </div>
           {day.assignments.length > 0 ? (
             <ol className={styles.assignmentList}>
               {day.assignments.map((assignment) => (
                 <li key={assignment.number}>
-                  <span className={styles.activityNumber}>{String(assignment.number).padStart(2, "0")}</span>
+                  <span className={styles.assignmentNumber}>{assignment.number}</span>
                   <div>
-                    <p className={styles.eyebrow}>Assignment {assignment.number}</p>
                     <h3>{assignment.title}</h3>
                     <p>{assignment.description}</p>
                   </div>
-                  <Link className={styles.primaryLink} href={assignment.href}>Open assignment</Link>
+                  {assignment.status === "ready" ? (
+                    <Link className={styles.assignmentLink} href={assignment.href}>
+                      Open activity <span aria-hidden="true">→</span>
+                    </Link>
+                  ) : (
+                    <span className={styles.assignmentPending}>Details to follow</span>
+                  )}
                 </li>
               ))}
             </ol>
           ) : (
             <div className={styles.planPending}>
-              <span>—</span>
               <p>No assignments have been added to this day yet.</p>
             </div>
           )}
+        </section>
+
+        <section className={styles.readingSection} aria-labelledby="reading-title">
+          <div className={styles.sectionHeading}>
+            <h2 id="reading-title">Reading list</h2>
+          </div>
+          <div className={styles.readingGroups}>
+            {readingGroups.map((group) => (
+              <section key={group.label}>
+                <h3>{group.label}</h3>
+                <ul>{group.items.map((item) => <li key={item}>{item}</li>)}</ul>
+              </section>
+            ))}
+          </div>
         </section>
       </main>
     </CourseShell>
