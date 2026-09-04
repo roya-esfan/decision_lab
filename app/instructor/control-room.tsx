@@ -7,10 +7,8 @@ import styles from "../course.module.css";
 type ActivityState = { key: ActivityKey; isOpen: boolean; isRevealed: boolean };
 type ClassroomRun = {
   id: string;
-  joinCode: string;
   state: "open" | "closed";
   isActive: boolean;
-  joinsOpen: boolean;
   capacity: number;
   participantCount: number;
   createdAt: string;
@@ -30,21 +28,21 @@ const activities: Array<{
   number: number;
   title: string;
   activityHref: string;
-  resultsHref: string;
+  resultsPath: string;
 }> = [
   {
     key: "assignment-1",
     number: 2,
     title: "A two-player bargain",
     activityHref: "/day/1/assignment-1",
-    resultsHref: "/day/1/assignment-1/results?projector=1",
+    resultsPath: "/day/1/assignment-1/results",
   },
   {
     key: "assignment-2",
     number: 3,
     title: "Which exam results feel better?",
     activityHref: "/day/1/assignment-2",
-    resultsHref: "/day/1/assignment-2/results?projector=1",
+    resultsPath: "/day/1/assignment-2/results",
   },
 ];
 
@@ -162,8 +160,8 @@ export function ControlRoom({ email }: { email: string }) {
         <p className={styles.eyebrow}>No Day 1 session yet</p>
         <h2>Prepare the classroom</h2>
         <p>
-          Starting a session creates one class code. Activities begin closed,
-          so no responses are collected until you open a specific experiment.
+          Activities begin closed, so no responses are collected until you open
+          a specific activity from this page.
         </p>
         <button type="button" onClick={() => void createRun()} disabled={busy === "create"}>
           {busy === "create" ? "Preparing…" : "Create Day 1 session"}
@@ -179,9 +177,9 @@ export function ControlRoom({ email }: { email: string }) {
       <div className={styles.instructorGuide}>
         <p className={styles.eyebrow}>How it works</p>
         <ol>
-          <li>Students enter the class code once</li>
-          <li>Open the activity when you are ready to collect responses</li>
-          <li>Close responses to freeze the totals, then reveal them</li>
+          <li>Open an activity when you are ready to collect responses</li>
+          <li>Students answer directly; class results stay hidden from them</li>
+          <li>Close and present the frozen results, then enable review mode later</li>
         </ol>
       </div>
 
@@ -204,21 +202,14 @@ export function ControlRoom({ email }: { email: string }) {
 
       <div className={styles.runStatus}>
         <div><span>Session</span><strong>{run.isActive ? "Live" : "Completed"}</strong></div>
-        <div><span>Class code</span><strong>{run.joinCode}</strong></div>
-        <div><span>Participants</span><strong>{run.participantCount}<small> / {run.capacity}</small></strong></div>
-        <div><span>Joining</span><strong>{run.isActive && run.joinsOpen ? "Open" : "Locked"}</strong></div>
+        <div><span>Anonymous participants</span><strong>{run.participantCount}<small> / {run.capacity}</small></strong></div>
         <div className={styles.runActions}>
           {run.isActive ? (
-            <>
-              <button type="button" disabled={busy === "joins"} onClick={() => void updateRun({ action: "set-joins", open: !run.joinsOpen }, "joins")}>
-                {run.joinsOpen ? "Lock joining" : "Open joining"}
-              </button>
-              <button className={styles.dangerButton} type="button" disabled={busy === "close"} onClick={() => {
-                if (window.confirm("End Day 1? Responses will be frozen, but the results will remain available.")) {
-                  void updateRun({ action: "close-run" }, "close");
-                }
-              }}>End Day 1</button>
-            </>
+            <button className={styles.dangerButton} type="button" disabled={busy === "close"} onClick={() => {
+              if (window.confirm("End the Day 1 session? All activities will close. You can still enable review mode afterwards.")) {
+                void updateRun({ action: "close-run" }, "close");
+              }
+            }}>End Day 1 session</button>
           ) : (
             activeRunId ? (
               <button type="button" onClick={() => void loadRun(activeRunId)}>Return to live session</button>
@@ -243,6 +234,11 @@ export function ControlRoom({ email }: { email: string }) {
         {activities.map((activity) => {
           const state = run.activities.find((item) => item.key === activity.key);
           const activityResults = results[activity.key] ?? [];
+          const mode = state?.isOpen && run.isActive
+            ? "live"
+            : state?.isRevealed
+              ? "review"
+              : "closed";
           const responseCount = activityResults.length === 0
             ? 0
             : Math.max(...activityResults.map((result) =>
@@ -257,11 +253,8 @@ export function ControlRoom({ email }: { email: string }) {
                   <h3>{activity.title}</h3>
                 </div>
                 <div className={styles.activityState}>
-                  <span className={state?.isOpen && run.isActive ? styles.stateLive : undefined}>
-                    {state?.isOpen && run.isActive ? "Collecting" : "Responses closed"}
-                  </span>
-                  <span className={state?.isRevealed ? styles.stateRevealed : undefined}>
-                    {state?.isRevealed ? "Visible to students" : "Hidden from students"}
+                  <span className={mode === "live" ? styles.stateLive : mode === "review" ? styles.stateRevealed : undefined}>
+                    {mode === "live" ? "Live · collecting" : mode === "review" ? "Review mode" : "Closed"}
                   </span>
                 </div>
               </header>
@@ -297,28 +290,53 @@ export function ControlRoom({ email }: { email: string }) {
 
               <footer>
                 <a href={activity.activityHref} target="_blank" rel="noreferrer">Open student page</a>
-                <a href={activity.resultsHref} target="_blank" rel="noreferrer">Open presentation view</a>
-                <button
-                  type="button"
-                  disabled={!state || !run.isActive || busy === `${activity.key}-open`}
-                  onClick={() => void updateRun(
-                    { action: "set-activity", activityKey: activity.key, open: !state?.isOpen },
-                    `${activity.key}-open`,
-                  )}
-                >
-                  {state?.isOpen ? "Close & freeze responses" : "Open responses"}
-                </button>
-                <button
-                  className={state?.isRevealed ? styles.hideButton : styles.revealButton}
-                  type="button"
-                  disabled={!state || busy === `${activity.key}-reveal`}
-                  onClick={() => void updateRun(
-                    { action: "set-activity", activityKey: activity.key, revealed: !state?.isRevealed },
-                    `${activity.key}-reveal`,
-                  )}
-                >
-                  {state?.isRevealed ? "Hide from students" : "Reveal to students"}
-                </button>
+                <a
+                  href={`${activity.resultsPath}?projector=1&instructor=1&run=${encodeURIComponent(run.id)}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >Open presentation view</a>
+                {mode === "live" ? (
+                  <button
+                    type="button"
+                    disabled={!state || busy === `${activity.key}-mode`}
+                    onClick={() => void updateRun(
+                      { action: "set-activity-mode", activityKey: activity.key, mode: "closed" },
+                      `${activity.key}-mode`,
+                    )}
+                  >Close & freeze responses</button>
+                ) : mode === "review" ? (
+                  <button
+                    className={styles.hideButton}
+                    type="button"
+                    disabled={!state || busy === `${activity.key}-mode`}
+                    onClick={() => void updateRun(
+                      { action: "set-activity-mode", activityKey: activity.key, mode: "closed" },
+                      `${activity.key}-mode`,
+                    )}
+                  >Close review mode</button>
+                ) : (
+                  <>
+                    {run.isActive && (
+                      <button
+                        type="button"
+                        disabled={!state || busy === `${activity.key}-mode`}
+                        onClick={() => void updateRun(
+                          { action: "set-activity-mode", activityKey: activity.key, mode: "live" },
+                          `${activity.key}-mode`,
+                        )}
+                      >Open live activity</button>
+                    )}
+                    <button
+                      className={styles.revealButton}
+                      type="button"
+                      disabled={!state || busy === `${activity.key}-mode`}
+                      onClick={() => void updateRun(
+                        { action: "set-activity-mode", activityKey: activity.key, mode: "review" },
+                        `${activity.key}-mode`,
+                      )}
+                    >Enable review mode</button>
+                  </>
+                )}
               </footer>
             </article>
           );

@@ -19,7 +19,7 @@ export async function GET(request: Request) {
 
     const { data: recentRuns, error: recentRunsError } = await supabase
       .from("classroom_runs")
-      .select("id, join_code, state, joins_open, capacity, created_at, expires_at")
+      .select("id, state, capacity, created_at, expires_at")
       .order("created_at", { ascending: false })
       .limit(10);
     if (recentRunsError) throw recentRunsError;
@@ -60,10 +60,8 @@ export async function GET(request: Request) {
     return NextResponse.json({
       run: {
         id: run.id,
-        joinCode: run.join_code,
         state: run.state,
         isActive: run.state === "open" && new Date(run.expires_at).getTime() > now,
-        joinsOpen: run.joins_open,
         capacity: run.capacity,
         createdAt: run.created_at,
         expiresAt: run.expires_at,

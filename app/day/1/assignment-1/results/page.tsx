@@ -3,8 +3,10 @@ import { CourseShell } from "../../../../components/course-shell";
 import { LiveResults } from "../../../../components/live-results";
 import styles from "../bargain.module.css";
 
-export default async function BargainResultsPage({ searchParams }: { searchParams: Promise<{ projector?: string }> }) {
-  const projector = (await searchParams).projector === "1";
+export default async function BargainResultsPage({ searchParams }: { searchParams: Promise<{ projector?: string; instructor?: string; run?: string }> }) {
+  const params = await searchParams;
+  const projector = params.projector === "1";
+  const instructorRunId = params.instructor === "1" ? params.run : undefined;
   return (
     <CourseShell>
       <main className={styles.page}>
@@ -14,9 +16,9 @@ export default async function BargainResultsPage({ searchParams }: { searchParam
         <header className={styles.resultsHeader}>
           <p>Day 1 · Activity 2 · Class results</p>
           <h1>Accept or reject?</h1>
-          <p>{projector ? "This screen updates automatically when results are revealed." : "Results appear after the instructor reveals them."}</p>
+          <p>{instructorRunId ? "Instructor view · Updates automatically while this page is open." : "Results are available here in review mode."}</p>
         </header>
-        <LiveResults activityKey="assignment-1" projector={projector} />
+        <LiveResults activityKey="assignment-1" projector={projector} instructorRunId={instructorRunId} />
       </main>
     </CourseShell>
   );

@@ -1,7 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import { useRef, useState } from "react";
+import { LiveResults } from "../../../components/live-results";
 import { LiveSessionGate, useLiveSession } from "../../../components/live-session";
 import sharedStyles from "../../../course.module.css";
 import styles from "./bargain.module.css";
@@ -70,7 +70,7 @@ export function BargainActivity() {
   }
 
   if (session.state !== "joined" && session.state !== "review") {
-    return <LiveSessionGate state={session.state} message={session.message} onJoin={session.join} />;
+    return <LiveSessionGate state={session.state} message={session.message} onRetry={session.check} />;
   }
 
   if (complete) {
@@ -91,9 +91,17 @@ export function BargainActivity() {
             </div>
           ))}
         </div>
-        <div className={sharedStyles.resultActions}>
-          <Link href="/day/1/assignment-1/results">Class results when revealed</Link>
-        </div>
+        {session.state === "review" ? (
+          <div className={sharedStyles.reviewResults}>
+            <header>
+              <p className={sharedStyles.eyebrow}>From the classroom session</p>
+              <h2>Class results</h2>
+            </header>
+            <LiveResults activityKey="assignment-1" />
+          </div>
+        ) : (
+          <p className={sharedStyles.submissionStatus}>Class results will be discussed together.</p>
+        )}
       </section>
     );
   }

@@ -1,15 +1,39 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { ActivityKey } from "@/lib/classroom";
 import styles from "../course.module.css";
 
-type SessionState = "loading" | "joined" | "not-joined" | "closed" | "review" | "unavailable";
+type SessionState = "loading" | "joining" | "joined" | "closed" | "review" | "unavailable";
 
 export function useLiveSession(activityKey: ActivityKey) {
   const [state, setState] = useState<SessionState>("loading");
   const [runId, setRunId] = useState<string | null>(null);
   const [message, setMessage] = useState("");
+  const joiningRef = useRef(false);
+
+  const joinOpenActivity = useCallback(async () => {
+    if (joiningRef.current) return;
+    joiningRef.current = true;
+    setState("joining");
+    setMessage("");
+    try {
+      const response = await fetch("/api/join", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ activityKey }),
+      });
+      const data = await response.json() as { joined?: boolean; runId?: string; error?: string };
+      if (!response.ok || !data.joined) throw new Error(data.error ?? "The activity could not be opened.");
+      setRunId(data.runId ?? null);
+      setState("joined");
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "The activity could not be opened.");
+      setState("unavailable");
+    } finally {
+      joiningRef.current = false;
+    }
+  }, [activityKey]);
 
   const check = useCallback(async () => {
     try {
@@ -23,90 +47,52 @@ export function useLiveSession(activityKey: ActivityKey) {
       setRunId(data.runId ?? null);
       if (data.mode === "review") setState("review");
       else if (data.mode === "closed") setState("closed");
-      else setState(data.joined ? "joined" : "not-joined");
+      else if (data.joined) setState("joined");
+      else await joinOpenActivity();
     } catch {
       setMessage("The live classroom connection is temporarily unavailable.");
       setState("unavailable");
     }
-  }, [activityKey]);
+  }, [activityKey, joinOpenActivity]);
 
   useEffect(() => {
     const timer = window.setTimeout(() => { void check(); }, 0);
     return () => window.clearTimeout(timer);
   }, [check]);
 
-  async function join(code: string) {
-    setMessage("");
-    const response = await fetch("/api/join", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ code }),
-    });
-    const data = await response.json() as { joined?: boolean; runId?: string; error?: string };
-    if (!response.ok || !data.joined) {
-      setMessage(data.error ?? "The class code could not be accepted.");
-      return false;
-    }
-    setRunId(data.runId ?? null);
-    setState("joined");
-    return true;
-  }
-
-  return { state, runId, message, join };
+  return { state, runId, message, check };
 }
 
 export function LiveSessionGate({
   state,
   message,
-  onJoin,
+  onRetry,
 }: {
   state: SessionState;
   message: string;
-  onJoin: (code: string) => Promise<boolean>;
+  onRetry: () => Promise<void>;
 }) {
-  const [code, setCode] = useState("");
-  const [joining, setJoining] = useState(false);
-
-  if (state === "loading") {
-    return <section className={styles.joinPanel}><p>Checking the live classroom session…</p></section>;
+  if (state === "loading" || state === "joining") {
+    return <section className={styles.joinPanel}><p>{state === "joining" ? "Preparing the activity…" : "Checking the activity…"}</p></section>;
   }
 
   if (state === "closed") {
     return (
       <section className={styles.joinPanel} aria-labelledby="join-title">
         <p className={styles.eyebrow}>Activity closed</p>
-        <h2 id="join-title">This activity is not open yet</h2>
-        <p>The instructor will open it when the class is ready.</p>
+        <h2 id="join-title">This activity is currently closed</h2>
+        <p>The instructor will open it when the class is ready, or enable review mode after the class.</p>
+        <button type="button" onClick={() => void onRetry()}>Check again</button>
       </section>
     );
   }
 
   return (
     <section className={styles.joinPanel} aria-labelledby="join-title">
-      <p className={styles.eyebrow}>Live classroom</p>
-      <h2 id="join-title">Enter the class code</h2>
-      <p>The instructor will show an eight-character code when joining opens.</p>
-      <form onSubmit={async (event) => {
-        event.preventDefault();
-        setJoining(true);
-        await onJoin(code);
-        setJoining(false);
-      }}>
-        <label>
-          <span>Class code</span>
-          <input
-            autoCapitalize="characters"
-            autoComplete="off"
-            inputMode="text"
-            maxLength={8}
-            value={code}
-            onChange={(event) => setCode(event.target.value.toUpperCase().replace(/[^A-Z2-9]/g, ""))}
-            placeholder="ABCD2345"
-          />
-        </label>
-        <button type="submit" disabled={joining || code.length !== 8}>{joining ? "Joining…" : "Join session"}</button>
-      </form>
-      {message && <p className={styles.joinError} role="alert">{message}</p>}
+      <p className={styles.eyebrow}>Connection problem</p>
+      <h2 id="join-title">The activity could not be opened</h2>
+      <p>{message || "Please try again."}</p>
+      <button type="button" onClick={() => void onRetry()}>Try again</button>
     </section>
   );
 }

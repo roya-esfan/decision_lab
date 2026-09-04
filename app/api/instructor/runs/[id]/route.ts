@@ -21,28 +21,36 @@ export async function PATCH(
     }
 
     const supabase = getSupabaseAdmin();
-    if (body.action === "set-joins") {
-      if (!("open" in body) || typeof body.open !== "boolean") throw new ApiError(400, "Join state is invalid.");
-      const { error } = await supabase.from("classroom_runs").update({ joins_open: body.open }).eq("id", id).eq("state", "open");
-      if (error) throw error;
-    } else if (body.action === "close-run") {
+    if (body.action === "close-run") {
       const { error } = await supabase.from("classroom_runs").update({ state: "closed", joins_open: false }).eq("id", id);
       if (error) throw error;
-      const { error: activityError } = await supabase.from("classroom_activity_states").update({ is_open: false }).eq("run_id", id);
+      const { error: activityError } = await supabase.from("classroom_activity_states").update({ is_open: false, is_revealed: false }).eq("run_id", id);
       if (activityError) throw activityError;
-    } else if (body.action === "set-activity") {
+    } else if (body.action === "set-activity-mode") {
       if (!("activityKey" in body) || !isActivityKey(body.activityKey)) throw new ApiError(400, "Activity not found.");
-      const updates: { updated_at: string; is_open?: boolean; is_revealed?: boolean } = { updated_at: new Date().toISOString() };
-      if ("open" in body) {
-        if (typeof body.open !== "boolean") throw new ApiError(400, "Activity state is invalid.");
-        updates.is_open = body.open;
+      if (!("mode" in body) || !["closed", "live", "review"].includes(String(body.mode))) {
+        throw new ApiError(400, "Activity mode is invalid.");
       }
-      if ("revealed" in body) {
-        if (typeof body.revealed !== "boolean") throw new ApiError(400, "Reveal state is invalid.");
-        updates.is_revealed = body.revealed;
+      if (body.mode === "live") {
+        const { data: run, error: runError } = await supabase
+          .from("classroom_runs")
+          .select("id")
+          .eq("id", id)
+          .eq("state", "open")
+          .gt("expires_at", new Date().toISOString())
+          .maybeSingle();
+        if (runError) throw runError;
+        if (!run) throw new ApiError(409, "Start a new Day 1 session before opening a live activity.");
       }
-      if (updates.is_open === undefined && updates.is_revealed === undefined) throw new ApiError(400, "Activity state is invalid.");
-      const { error } = await supabase.from("classroom_activity_states").update(updates).eq("run_id", id).eq("activity_key", body.activityKey);
+      const { error } = await supabase
+        .from("classroom_activity_states")
+        .update({
+          is_open: body.mode === "live",
+          is_revealed: body.mode === "review",
+          updated_at: new Date().toISOString(),
+        })
+        .eq("run_id", id)
+        .eq("activity_key", body.activityKey);
       if (error) throw error;
     } else {
       throw new ApiError(400, "Unknown classroom action.");

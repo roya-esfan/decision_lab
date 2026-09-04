@@ -1,7 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import { useRef, useState } from "react";
+import { LiveResults } from "../../../components/live-results";
 import { LiveSessionGate, useLiveSession } from "../../../components/live-session";
 import styles from "../../../course.module.css";
 
@@ -43,7 +43,7 @@ export function ExamResultChoice() {
   }
 
   if (session.state !== "joined" && session.state !== "review") {
-    return <LiveSessionGate state={session.state} message={session.message} onJoin={session.join} />;
+    return <LiveSessionGate state={session.state} message={session.message} onRetry={session.check} />;
   }
 
   if (choice) {
@@ -55,9 +55,17 @@ export function ExamResultChoice() {
           You chose <strong>{choice}</strong>.
           {session.state === "review" && " This practice response was not added to the class results."}
         </p>
-        <div className={styles.resultActions}>
-          <Link href="/day/1/assignment-2/results">Class results when revealed</Link>
-        </div>
+        {session.state === "review" ? (
+          <div className={styles.reviewResults}>
+            <header>
+              <p className={styles.eyebrow}>From the classroom session</p>
+              <h2>Class results</h2>
+            </header>
+            <LiveResults activityKey="assignment-2" />
+          </div>
+        ) : (
+          <p className={styles.submissionStatus}>Class results will be discussed together.</p>
+        )}
       </section>
     );
   }

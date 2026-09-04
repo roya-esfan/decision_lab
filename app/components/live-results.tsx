@@ -12,21 +12,33 @@ type ResultState =
   | { status: "revealed"; results: ResultRow[] }
   | { status: "error"; message: string };
 
-export function LiveResults({ activityKey, projector = false }: { activityKey: ActivityKey; projector?: boolean }) {
+export function LiveResults({
+  activityKey,
+  projector = false,
+  instructorRunId,
+}: {
+  activityKey: ActivityKey;
+  projector?: boolean;
+  instructorRunId?: string;
+}) {
   const [state, setState] = useState<ResultState>({ status: "loading" });
 
   const load = useCallback(async () => {
     try {
-      const response = await fetch(`/api/results?activity=${activityKey}`, { cache: "no-store" });
+      const endpoint = instructorRunId
+        ? `/api/instructor/results?run=${encodeURIComponent(instructorRunId)}&activity=${activityKey}`
+        : `/api/results?activity=${activityKey}`;
+      const response = await fetch(endpoint, { cache: "no-store" });
       const data = await response.json() as { status?: string; results?: ResultRow[]; error?: string };
       if (!response.ok) throw new Error(data.error ?? "Results could not be loaded.");
-      if (data.status === "revealed" && data.results) setState({ status: "revealed", results: data.results });
+      if (instructorRunId && data.results) setState({ status: "revealed", results: data.results });
+      else if (data.status === "revealed" && data.results) setState({ status: "revealed", results: data.results });
       else if (data.status === "hidden") setState({ status: "hidden" });
       else setState({ status: "no-run" });
     } catch (error) {
       setState({ status: "error", message: error instanceof Error ? error.message : "Results could not be loaded." });
     }
-  }, [activityKey]);
+  }, [activityKey, instructorRunId]);
 
   useEffect(() => {
     const initial = window.setTimeout(() => { void load(); }, 0);

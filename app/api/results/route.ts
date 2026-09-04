@@ -22,12 +22,12 @@ export async function GET(request: Request) {
 
     const { data: activity, error: activityError } = await supabase
       .from("classroom_activity_states")
-      .select("is_revealed")
+      .select("is_open, is_revealed")
       .eq("run_id", run.id)
       .eq("activity_key", activityKey)
       .maybeSingle();
     if (activityError) throw activityError;
-    if (!activity?.is_revealed) {
+    if (activity?.is_open || !activity?.is_revealed) {
       return NextResponse.json({ status: "hidden" }, { headers: { "Cache-Control": "no-store" } });
     }
 

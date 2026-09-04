@@ -2551,6 +2551,10 @@
   line-height: 1.6;
 }
 
+.joinPanel > button {
+  margin-top: 4px;
+}
+
 .joinPanel form {
   display: grid;
   grid-template-columns: minmax(230px, 390px) 150px;
@@ -3071,7 +3075,7 @@
 }
 
 .runStatus {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   border-top-width: 1px;
 }
 
@@ -3287,6 +3291,24 @@
   color: var(--muted);
   font-size: 13px;
   line-height: 1.55;
+}
+
+.reviewResults {
+  margin-top: 42px;
+  padding-top: 28px;
+  border-top: 2px solid var(--ink);
+}
+
+.reviewResults > header {
+  margin-bottom: 24px;
+}
+
+.reviewResults > header h2 {
+  margin: 7px 0 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(28px, 3.5vw, 42px);
+  font-weight: 400;
+  letter-spacing: -.035em;
 }
 
 @media (max-width: 720px) {
