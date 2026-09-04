@@ -18,6 +18,12 @@ type ClassroomRun = {
   activities: ActivityState[];
 };
 type ResultRow = { promptKey: string; label: string; counts: Record<string, number> };
+type RunOption = {
+  id: string;
+  state: "open" | "closed";
+  isActive: boolean;
+  createdAt: string;
+};
 
 const activities: Array<{
   key: ActivityKey;
@@ -44,18 +50,28 @@ const activities: Array<{
 
 export function ControlRoom({ email }: { email: string }) {
   const [run, setRun] = useState<ClassroomRun | null>(null);
+  const [recentRuns, setRecentRuns] = useState<RunOption[]>([]);
+  const [activeRunId, setActiveRunId] = useState<string | null>(null);
   const [results, setResults] = useState<Record<string, ResultRow[]>>({});
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState("");
   const [error, setError] = useState("");
   const currentRunId = run?.id;
 
-  const loadRun = useCallback(async () => {
+  const loadRun = useCallback(async (runId?: string) => {
     try {
-      const response = await fetch("/api/instructor/runs", { cache: "no-store" });
-      const data = await response.json() as { run?: ClassroomRun | null; error?: string };
+      const query = runId ? `?run=${encodeURIComponent(runId)}` : "";
+      const response = await fetch(`/api/instructor/runs${query}`, { cache: "no-store" });
+      const data = await response.json() as {
+        run?: ClassroomRun | null;
+        recentRuns?: RunOption[];
+        activeRunId?: string | null;
+        error?: string;
+      };
       if (!response.ok) throw new Error(data.error ?? "The Day 1 session could not be loaded.");
       setRun(data.run ?? null);
+      setRecentRuns(data.recentRuns ?? []);
+      setActiveRunId(data.activeRunId ?? null);
       setError("");
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "The Day 1 session could not be loaded.");
@@ -83,7 +99,7 @@ export function ControlRoom({ email }: { email: string }) {
     if (!currentRunId) return;
     const initial = window.setTimeout(() => { void loadResults(currentRunId); }, 0);
     const timer = window.setInterval(() => {
-      void loadRun();
+      void loadRun(currentRunId);
       void loadResults(currentRunId);
     }, 2000);
     return () => {
@@ -123,7 +139,7 @@ export function ControlRoom({ email }: { email: string }) {
       });
       const data = await response.json() as { error?: string };
       if (!response.ok) throw new Error(data.error ?? "The Day 1 session could not be updated.");
-      await Promise.all([loadRun(), loadResults(run.id)]);
+      await Promise.all([loadRun(run.id), loadResults(run.id)]);
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "The Day 1 session could not be updated.");
     } finally {
@@ -169,6 +185,23 @@ export function ControlRoom({ email }: { email: string }) {
         </ol>
       </div>
 
+      {recentRuns.length > 1 && (
+        <label className={styles.runSelector}>
+          <span>Viewing session</span>
+          <select
+            value={run.id}
+            onChange={(event) => void loadRun(event.target.value)}
+          >
+            {recentRuns.map((option, index) => (
+              <option key={option.id} value={option.id}>
+                {option.isActive ? "Live session" : index === 0 ? "Latest completed session" : "Previous session"}
+                {` · ${new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }).format(new Date(option.createdAt))}`}
+              </option>
+            ))}
+          </select>
+        </label>
+      )}
+
       <div className={styles.runStatus}>
         <div><span>Session</span><strong>{run.isActive ? "Live" : "Completed"}</strong></div>
         <div><span>Class code</span><strong>{run.joinCode}</strong></div>
@@ -187,9 +220,13 @@ export function ControlRoom({ email }: { email: string }) {
               }}>End Day 1</button>
             </>
           ) : (
-            <button type="button" disabled={busy === "create"} onClick={() => void createRun()}>
-              {busy === "create" ? "Preparing…" : "Start a new session"}
-            </button>
+            activeRunId ? (
+              <button type="button" onClick={() => void loadRun(activeRunId)}>Return to live session</button>
+            ) : (
+              <button type="button" disabled={busy === "create"} onClick={() => void createRun()}>
+                {busy === "create" ? "Preparing…" : "Start a new session"}
+              </button>
+            )
           )}
         </div>
       </div>

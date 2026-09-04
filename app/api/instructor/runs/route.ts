@@ -4,20 +4,44 @@ import { generateJoinCode } from "@/lib/classroom";
 import { requireInstructor } from "@/lib/instructor-session";
 import { getSupabaseAdmin } from "@/lib/supabase-admin";
 
+const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
 export const dynamic = "force-dynamic";
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
     await requireInstructor();
     const supabase = getSupabaseAdmin();
-    const { data: run, error: runError } = await supabase
+    const requestedRunId = new URL(request.url).searchParams.get("run");
+    if (requestedRunId && !uuidPattern.test(requestedRunId)) {
+      throw new ApiError(400, "Classroom session not found.");
+    }
+
+    const { data: recentRuns, error: recentRunsError } = await supabase
       .from("classroom_runs")
       .select("id, join_code, state, joins_open, capacity, created_at, expires_at")
       .order("created_at", { ascending: false })
-      .limit(1)
-      .maybeSingle();
-    if (runError) throw runError;
-    if (!run) return NextResponse.json({ run: null }, { headers: { "Cache-Control": "no-store" } });
+      .limit(10);
+    if (recentRunsError) throw recentRunsError;
+
+    const now = Date.now();
+    const run = requestedRunId
+      ? (recentRuns ?? []).find((candidate) => candidate.id === requestedRunId)
+      : recentRuns?.[0];
+    const recentRunOptions = (recentRuns ?? []).map((candidate) => ({
+      id: candidate.id,
+      state: candidate.state,
+      createdAt: candidate.created_at,
+      isActive: candidate.state === "open" && new Date(candidate.expires_at).getTime() > now,
+    }));
+    const activeRunId = recentRunOptions.find((candidate) => candidate.isActive)?.id ?? null;
+
+    if (!run) {
+      return NextResponse.json(
+        { run: null, recentRuns: recentRunOptions, activeRunId },
+        { headers: { "Cache-Control": "no-store" } },
+      );
+    }
 
     const [{ data: activities, error: activityError }, { count, error: countError }] = await Promise.all([
       supabase
@@ -38,7 +62,7 @@ export async function GET() {
         id: run.id,
         joinCode: run.join_code,
         state: run.state,
-        isActive: run.state === "open" && new Date(run.expires_at).getTime() > Date.now(),
+        isActive: run.state === "open" && new Date(run.expires_at).getTime() > now,
         joinsOpen: run.joins_open,
         capacity: run.capacity,
         createdAt: run.created_at,
@@ -50,6 +74,8 @@ export async function GET() {
           isRevealed: activity.is_revealed,
         })),
       },
+      recentRuns: recentRunOptions,
+      activeRunId,
     }, { headers: { "Cache-Control": "no-store" } });
   } catch (error) {
     return apiFailure(error);

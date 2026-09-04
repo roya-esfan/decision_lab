@@ -3043,6 +3043,33 @@
   content: "0" counter(instructor-step);
 }
 
+.runSelector {
+  display: grid;
+  grid-template-columns: 150px minmax(260px, 460px);
+  gap: 32px;
+  align-items: center;
+  padding: 15px 0;
+  border-top: 1px solid var(--fine-line);
+}
+
+.runSelector > span {
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.runSelector select {
+  min-height: 42px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  font-size: 13px;
+}
+
 .runStatus {
   grid-template-columns: repeat(4, minmax(0, 1fr));
   border-top-width: 1px;
@@ -3319,7 +3346,8 @@
 
   .instructorGuide,
   .activityResultSummary,
-  .localActivitiesNote {
+  .localActivitiesNote,
+  .runSelector {
     grid-template-columns: 1fr;
   }
 
