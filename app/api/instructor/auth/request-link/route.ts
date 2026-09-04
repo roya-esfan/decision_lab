@@ -14,7 +14,7 @@ export async function POST(request: Request) {
 
     if (isInstructorEmail(email)) {
       const redirectOrigin = process.env.NODE_ENV === "production"
-        ? "https://decision-lab-oaadm.vercel.app"
+        ? "https://oaadm.vercel.app"
         : new URL(request.url).origin;
       const redirectTo = `${redirectOrigin}/instructor/auth/confirm`;
       const supabase = createSupabaseAuthClient();
