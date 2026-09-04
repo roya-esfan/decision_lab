@@ -193,7 +193,6 @@ export function EvaluateDecisionActivity() {
           <p>Scenario {scenarioIndex + 1} of {scenarios.length}</p>
           <h2 id="scenario-title">{scenario.title}</h2>
         </div>
-        <span>Number {conditionNumber}</span>
       </header>
 
       <div className={styles.scenarioText}>
@@ -202,7 +201,6 @@ export function EvaluateDecisionActivity() {
       </div>
 
       <div className={styles.evaluationPrompt}>
-        <p>Evaluate the decision itself—the quality of thinking that went into it.</p>
         <h3>{scenario.question}</h3>
       </div>
 

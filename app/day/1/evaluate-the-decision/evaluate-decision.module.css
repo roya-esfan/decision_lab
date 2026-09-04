@@ -42,12 +42,21 @@
   line-height: 1.05;
 }
 
-.header > p:last-child,
+.header > p:last-child {
+  max-width: 730px;
+  margin: 18px 0 0;
+  color: var(--ink);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(25px, 3.2vw, 38px);
+  letter-spacing: -.025em;
+  line-height: 1.25;
+}
+
 .resultsHeader > p:last-child {
   max-width: 730px;
   margin: 18px 0 0;
   color: var(--muted);
-  font-size: 17px;
+  font-size: 15px;
   line-height: 1.55;
 }
 
@@ -111,14 +120,6 @@
   letter-spacing: -.035em;
 }
 
-.scenarioHeader > span {
-  color: var(--muted);
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: .05em;
-  text-transform: uppercase;
-}
-
 .scenarioText {
   max-width: 900px;
   padding: 28px 0;
@@ -159,22 +160,12 @@
 }
 
 .scenarioText .outcome {
-  margin: 28px 0 0;
-  padding: 18px 20px;
-  border-left: 4px solid var(--accent);
-  background: #edf4f7;
-  font-weight: 700;
+  margin: 20px 0 0;
 }
 
 .evaluationPrompt {
   padding: 24px 0;
   border-top: 1px solid var(--line);
-}
-
-.evaluationPrompt p {
-  margin: 0 0 9px;
-  color: var(--muted);
-  font-size: 14px;
 }
 
 .evaluationPrompt h3 {
