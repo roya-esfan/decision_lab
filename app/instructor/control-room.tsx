@@ -12,7 +12,7 @@ type ClassroomRun = {
   isActive: boolean;
   capacity: number;
   participantCount: number;
-  completionCounts: Record<"rational-decision" | "rei-10", number>;
+  completionCounts: Record<"life-experience-bingo" | "rational-decision" | "rei-10", number>;
   completionTrackingReady: boolean;
   createdAt: string;
   expiresAt: string;
@@ -409,9 +409,15 @@ export function ControlRoom({ email }: { email: string }) {
             <p className={styles.eyebrow}>Private activities</p>
             <h2>Anonymous completions</h2>
           </div>
-          <p>Only the number finished is collected. Student work, answers and scores remain in each browser.</p>
+          <p>Only anonymous completion totals are collected. Cards, marked squares, student work, answers and scores remain in each browser.</p>
         </header>
         <div className={styles.privateCompletionRows}>
+          <article>
+            <span>Day 1 · Activity 1</span>
+            <h3>Life experience bingo</h3>
+            <strong>{run.completionCounts?.["life-experience-bingo"] ?? 0}</strong>
+            <small>reached bingo</small>
+          </article>
           <article>
             <span>Day 1 · Activity 5</span>
             <h3>Make a rational decision</h3>

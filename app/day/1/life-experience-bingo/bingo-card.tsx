@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { recordAnonymousCompletion } from "../../../components/anonymous-completion";
 import {
   bingoExperiences,
   generateBingoCard,
@@ -105,6 +106,7 @@ async function requestAllocatedCard() {
 }
 
 export function BingoCard() {
+  const completionRecorded = useRef(false);
   const [card, setCard] = useState<BingoExperience[]>([]);
   const [markedIds, setMarkedIds] = useState<Set<number>>(new Set());
   const [ready, setReady] = useState(false);
@@ -160,6 +162,12 @@ export function BingoCard() {
   useEffect(() => {
     if (ready && card.length === 16) saveCard(card, markedIds);
   }, [card, markedIds, ready]);
+
+  useEffect(() => {
+    if (!ready || winningIds.size === 0 || completionRecorded.current) return;
+    completionRecorded.current = true;
+    void recordAnonymousCompletion("life-experience-bingo");
+  }, [ready, winningIds]);
 
   function toggleSquare(id: number) {
     setMarkedIds((current) => {

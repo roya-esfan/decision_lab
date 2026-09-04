@@ -69,7 +69,11 @@ export async function GET(request: Request) {
       && ["PGRST205", "42P01"].includes(completionError.code);
     if (completionError && !completionTableMissing) throw completionError;
 
-    const completionCounts = { "rational-decision": 0, "rei-10": 0 };
+    const completionCounts = {
+      "life-experience-bingo": 0,
+      "rational-decision": 0,
+      "rei-10": 0,
+    };
     for (const completion of completions ?? []) {
       if (completion.activity_key in completionCounts) {
         completionCounts[completion.activity_key as keyof typeof completionCounts] += 1;
