@@ -4,14 +4,10 @@ import styles from "../course.module.css";
 export function CourseHeader() {
   return (
     <header className={styles.siteHeader}>
-      <Link className={styles.wordmark} href="/" aria-label="Decision Lab home">
-        <span>DL</span>
-        <strong>Decision Lab</strong>
+      <Link className={styles.wordmark} href="/" aria-label="ØAADM3700 course home">
+        <strong>ØAADM3700</strong>
       </Link>
-      <div className={styles.courseMark}>
-        <span>ØAADM3700</span>
-        <span>Autumn 2026</span>
-      </div>
+      <span className={styles.headerTerm}>Autumn 2026</span>
     </header>
   );
 }
@@ -19,7 +15,7 @@ export function CourseHeader() {
 export function CourseFooter() {
   return (
     <footer className={styles.siteFooter}>
-      <span>ØAADM3700 · Decision-Making Processes in Organizations</span>
+      <span>ØAADM3700 · Judgement and decision making in organizations</span>
       <div><Link href="/instructor">Instructor</Link><span>Autumn 2026</span></div>
     </footer>
   );

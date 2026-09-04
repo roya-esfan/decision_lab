@@ -1,294 +1,192 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
+import { courseDays } from "@/content/course";
 import styles from "./showcase.module.css";
 
-const themes = [
-  { id: "editorial", number: "01", name: "Editorial Lab", note: "Measured, academic, distinctive" },
-  { id: "precision", number: "02", name: "Precision Grid", note: "Technical, direct, data-led" },
-  { id: "seminar", number: "03", name: "Warm Seminar", note: "Approachable, calm, spacious" },
+const directions = [
+  { id: "guide", label: "Option 1", name: "Course guide", note: "Calm, academic and easy to scan" },
+  { id: "brief", label: "Option 2", name: "Daily brief", note: "Puts the relevant teaching day first" },
+  { id: "schedule", label: "Option 3", name: "Schedule first", note: "Compact and timetable-led" },
 ] as const;
 
-const screens = [
-  { id: "hub", label: "Course hub" },
-  { id: "activity", label: "Student activity" },
-  { id: "results", label: "Live results" },
-] as const;
+type DirectionId = (typeof directions)[number]["id"];
+const previewDay = courseDays[0];
 
-type ThemeId = (typeof themes)[number]["id"];
-type ScreenId = (typeof screens)[number]["id"];
+function shortDate(date: string) {
+  return date.replace(", 2026", "");
+}
 
-const days = [
-  { day: "01", topic: "Decision approaches and anatomy", sessions: "14 Sep" },
-  { day: "02", topic: "Heuristics, biases and noise", sessions: "15 Sep" },
-  { day: "03", topic: "Framing and preferences", sessions: "16 Sep" },
-  { day: "04", topic: "Attention, expertise and emotion", sessions: "17 Sep" },
-  { day: "05", topic: "Overconfidence and escalation", sessions: "22 Sep" },
-  { day: "06", topic: "Fairness and ethics", sessions: "23 Sep" },
-  { day: "07", topic: "Improving decisions", sessions: "24 Sep" },
-  { day: "08", topic: "Presentations and synthesis", sessions: "28 Sep" },
-];
+function CourseTitle() {
+  return <h1>Judgement and decision making in organizations</h1>;
+}
 
-function CourseHeader({ compact = false }: { compact?: boolean }) {
+function FeedbackLink() {
   return (
-    <header className={styles.courseHeader}>
-      <div className={styles.wordmark} aria-label="Decision Lab">
-        <span className={styles.wordmarkIndex}>DL</span>
-        <span>Decision Lab</span>
-      </div>
-      <div className={styles.courseIdentity}>
-        <span>ØAADM3700</span>
-        {!compact && <span>Autumn 2026</span>}
-      </div>
-    </header>
+    <div className={styles.feedbackLine}>
+      <span>Constructive feedback is always appreciated.</span>
+      <a href="https://www.menti.com/al67du6pv352" target="_blank" rel="noreferrer">
+        Give anonymous feedback <span aria-hidden="true">↗</span>
+      </a>
+    </div>
   );
 }
 
-function HubScreen() {
+function DayLink({ dayNumber, quiet = false }: { dayNumber: number; quiet?: boolean }) {
   return (
-    <div className={styles.productPage}>
-      <CourseHeader />
+    <Link className={quiet ? styles.quietLink : styles.dayLink} href={`/day/${dayNumber}`}>
+      Open day <span aria-hidden="true">→</span>
+    </Link>
+  );
+}
+
+function GuideOption() {
+  return (
+    <article className={`${styles.sitePreview} ${styles.guide}`} aria-label="Course guide design preview">
+      <header className={styles.guideHeader}>
+        <span>ØAADM3700</span>
+        <span>Autumn 2026</span>
+      </header>
       <main>
-        <section className={styles.hubIntro}>
-          <div>
-            <p className={styles.eyebrow}>Course workspace · Autumn 2026</p>
-            <h1>Decision-Making Processes<br />in Organizations</h1>
-          </div>
-          <p className={styles.introCopy}>Eight teaching days from 14 to 28 September 2026.</p>
+        <section className={styles.guideIntro}>
+          <div><CourseTitle /></div>
         </section>
-
-        <section className={styles.nextSession} aria-labelledby="next-session-title">
-          <div className={styles.nextMeta}>
-            <span>Next in class</span>
-            <span>Day 01 · Session 1</span>
+        <section className={styles.guideUpcoming} aria-labelledby="guide-upcoming-title">
+          <div className={styles.guideUpcomingDate}>
+            <span>Upcoming class</span><strong>14</strong><span>September</span>
           </div>
-          <div className={styles.nextContent}>
-            <div>
-              <p className={styles.kicker}>Opening experiment</p>
-              <h2 id="next-session-title">How noisy is our judgment?</h2>
-              <p>Make an individual estimate, inspect the class distribution, then discuss what the disagreement means.</p>
-            </div>
-            <button className={styles.primaryButton} type="button">Open session</button>
+          <div className={styles.guideUpcomingContent}>
+            <p className={styles.guideLogistics}><span>{previewDay.time}</span><span>{previewDay.room}</span></p>
+            <h2 id="guide-upcoming-title">Day 1: {previewDay.title}</h2>
           </div>
+          <DayLink dayNumber={1} />
         </section>
-
-        <section className={styles.courseMap} aria-labelledby="course-map-title">
+        <section className={styles.guideOverview} aria-labelledby="guide-overview-title">
           <div className={styles.sectionHeading}>
-            <h2 id="course-map-title">Course map</h2>
-            <p>Eight teaching days</p>
+            <h2 id="guide-overview-title">Course overview</h2>
           </div>
-          <ol className={styles.dayList}>
-            {days.map((item, index) => (
-              <li key={item.day}>
-                <span className={styles.dayNumber}>{item.day}</span>
-                <span className={styles.dayTopic}>{item.topic}</span>
-                <span className={styles.daySessions}>{item.sessions}</span>
-                <span className={styles.dayStatus}>{index === 0 ? "Next" : "Planned"}</span>
+          <ol className={styles.guideDayList}>
+            {courseDays.map((day) => (
+              <li key={day.number}>
+                <span className={styles.listNumber}>{day.number}</span>
+                <div className={styles.listDate}>
+                  <strong>{shortDate(day.date)}</strong>
+                  <span className={styles.guideLogistics}><span>{day.time}</span><span>{day.room}</span></span>
+                </div>
+                <p className={styles.guideDayTitle}>Day {day.number}: {day.title}</p>
+                <DayLink dayNumber={day.number} quiet />
               </li>
             ))}
           </ol>
         </section>
       </main>
-      <ProductFooter />
-    </div>
+      <FeedbackLink />
+    </article>
   );
 }
 
-function ActivityScreen() {
-  const [estimate, setEstimate] = useState(62);
-  const [submitted, setSubmitted] = useState(false);
-
+function BriefOption() {
   return (
-    <div className={styles.productPage}>
-      <CourseHeader compact />
-      <main className={styles.activityLayout}>
-        <aside className={styles.activityAside}>
-          <p className={styles.eyebrow}>Day 01 · Live activity</p>
-          <p className={styles.activityCount}>01 <span>/ 03</span></p>
-          <div className={styles.progressTrack} aria-label="Activity progress: step 1 of 3">
-            <span style={{ width: "33.33%" }} />
+    <article className={`${styles.sitePreview} ${styles.brief}`} aria-label="Daily brief design preview">
+      <header className={styles.briefHeader}>
+        <div><span className={styles.briefCode}>ØAADM3700</span><span>Autumn 2026</span></div>
+        <a href="https://www.menti.com/al67du6pv352" target="_blank" rel="noreferrer">Anonymous feedback</a>
+      </header>
+      <main>
+        <section className={styles.briefIntro}>
+          <div><CourseTitle /></div>
+          <p>Everything you need for each teaching day, in one place.</p>
+        </section>
+        <section className={styles.briefCurrent} aria-labelledby="brief-current-title">
+          <div className={styles.briefLabel}>Upcoming class</div>
+          <div className={styles.briefDate}><strong>Monday</strong><span>14 September</span><span>{previewDay.time}</span></div>
+          <div className={styles.briefDetails}>
+            <h2 id="brief-current-title">Day 1</h2>
+            <ul>{previewDay.topics.slice(0, 3).map((topic) => <li key={topic}>{topic}</li>)}</ul>
           </div>
-          <p className={styles.privacyNote}>Anonymous response<br />Session P7K3 M2Q9</p>
-        </aside>
-
-        <section className={styles.questionArea} aria-labelledby="question-title">
-          <p className={styles.kicker}>Noise audit · Individual estimate</p>
-          <h1 id="question-title">What is the probability that the project will be completed on schedule?</h1>
-          <p className={styles.scenarioText}>
-            A cross-functional team is introducing a new planning system. The
-            project is halfway through its schedule; two milestones were late,
-            staffing is now stable, and the pilot produced mixed results.
-          </p>
-
-          <div className={styles.estimateBlock}>
-            <div className={styles.estimateReadout} aria-live="polite">
-              <span>Your estimate</span>
-              <strong>{estimate}%</strong>
-            </div>
-            <label className={styles.srOnly} htmlFor="estimate">Probability estimate</label>
-            <input
-              id="estimate"
-              className={styles.range}
-              type="range"
-              min="0"
-              max="100"
-              value={estimate}
-              onChange={(event) => {
-                setEstimate(Number(event.target.value));
-                setSubmitted(false);
-              }}
-            />
-            <div className={styles.rangeLabels} aria-hidden="true">
-              <span>0 · Impossible</span>
-              <span>50 · Even chance</span>
-              <span>100 · Certain</span>
-            </div>
+          <DayLink dayNumber={1} />
+        </section>
+        <section className={styles.briefOverview} aria-labelledby="brief-overview-title">
+          <div className={styles.sectionHeading}>
+            <h2 id="brief-overview-title">All teaching days</h2><span>14–28 September</span>
           </div>
+          <ol className={styles.briefDayList}>
+            {courseDays.map((day) => (
+              <li key={day.number}>
+                <div className={styles.briefDayDate}><span>Day {day.number}</span><strong>{shortDate(day.date)}</strong></div>
+                <div className={styles.briefDayTopic}><strong>{day.topics[0]}</strong><span>{day.time}</span></div>
+                <DayLink dayNumber={day.number} quiet />
+              </li>
+            ))}
+          </ol>
+        </section>
+      </main>
+      <FeedbackLink />
+    </article>
+  );
+}
 
-          <div className={styles.submitRow}>
-            <button className={styles.primaryButton} type="button" onClick={() => setSubmitted(true)}>
-              {submitted ? "Response received" : "Submit estimate"}
-            </button>
-            <p aria-live="polite">{submitted ? "Saved anonymously. Wait for the class discussion." : "You can change your answer until you submit."}</p>
+function ScheduleOption() {
+  return (
+    <article className={`${styles.sitePreview} ${styles.schedule}`} aria-label="Schedule-first design preview">
+      <header className={styles.scheduleHeader}>
+        <div><p className={styles.courseCode}>ØAADM3700</p><CourseTitle /></div>
+        <div><strong>Autumn 2026</strong><span>14–28 September</span></div>
+      </header>
+      <main>
+        <section className={styles.scheduleNext} aria-labelledby="schedule-next-title">
+          <span>Upcoming</span>
+          <div><strong id="schedule-next-title">Monday, 14 September</strong><span>{previewDay.time}</span></div>
+          <p>{previewDay.topics[0]}</p>
+          <DayLink dayNumber={1} />
+        </section>
+        <section className={styles.scheduleOverview} aria-labelledby="schedule-overview-title">
+          <div className={styles.sectionHeading}>
+            <h2 id="schedule-overview-title">Course overview</h2><span>Select a day for sessions, readings and assignments</span>
+          </div>
+          <div className={styles.scheduleTable} role="table" aria-label="Teaching days">
+            <div className={styles.tableHeader} role="row">
+              <span role="columnheader">Day</span><span role="columnheader">Date and time</span>
+              <span role="columnheader">Topics</span><span role="columnheader" className={styles.srOnly}>Open page</span>
+            </div>
+            {courseDays.map((day) => (
+              <div className={styles.tableRow} role="row" key={day.number}>
+                <strong role="cell">{String(day.number).padStart(2, "0")}</strong>
+                <div role="cell"><strong>{shortDate(day.date)}</strong><span>{day.time}</span></div>
+                <p role="cell">{day.topics.slice(0, 2).join("; ")}</p>
+                <div role="cell"><DayLink dayNumber={day.number} quiet /></div>
+              </div>
+            ))}
           </div>
         </section>
       </main>
-      <ProductFooter />
-    </div>
-  );
-}
-
-const resultBars = [
-  { range: "0–20", value: 4 },
-  { range: "21–40", value: 12 },
-  { range: "41–60", value: 26 },
-  { range: "61–80", value: 24 },
-  { range: "81–100", value: 10 },
-];
-
-function ResultsScreen() {
-  const [locked, setLocked] = useState(false);
-
-  return (
-    <div className={`${styles.productPage} ${styles.presentationPage}`}>
-      <CourseHeader compact />
-      <main className={styles.resultsLayout}>
-        <section className={styles.resultsTitle}>
-          <div>
-            <p className={styles.eyebrow}>Noise audit · Live results</p>
-            <h1>We read the same case.<br />We reached different judgments.</h1>
-          </div>
-          <div className={styles.liveCount}>
-            <strong>76</strong>
-            <span>responses</span>
-            <span className={locked ? styles.closedDot : styles.liveDot}>{locked ? "Locked" : "Open"}</span>
-          </div>
-        </section>
-
-        <section className={styles.chartSection} aria-labelledby="chart-title">
-          <div className={styles.chartHeading}>
-            <h2 id="chart-title">Estimated probability of on-time completion</h2>
-            <span>Share of class · %</span>
-          </div>
-          <div className={styles.chart} role="img" aria-label="Distribution of 76 estimates. Most responses are between 41 and 80 percent.">
-            <div className={styles.yAxis}><span>30</span><span>20</span><span>10</span><span>0</span></div>
-            <div className={styles.plot}>
-              <span className={styles.gridLine} style={{ bottom: "33.33%" }} />
-              <span className={styles.gridLine} style={{ bottom: "66.66%" }} />
-              <span className={styles.gridLine} style={{ bottom: "100%" }} />
-              {resultBars.map((bar) => (
-                <div className={styles.barColumn} key={bar.range}>
-                  <span className={styles.barValue}>{bar.value}</span>
-                  <span className={styles.bar} style={{ height: `${(bar.value / 30) * 100}%` }} />
-                  <span className={styles.barLabel}>{bar.range}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className={styles.resultSummary} aria-label="Summary statistics">
-          <div><span>Median estimate</span><strong>60%</strong></div>
-          <div><span>Middle 50%</span><strong>43–74%</strong></div>
-          <div><span>Full range</span><strong>12–96%</strong></div>
-          <p>What explains a spread this wide when everyone received the same information?</p>
-        </section>
-
-        <div className={styles.presentationControls}>
-          <span>Instructor controls</span>
-          <button type="button" onClick={() => setLocked((value) => !value)}>{locked ? "Reopen responses" : "Lock responses"}</button>
-          <button type="button">Reveal discussion prompt</button>
-        </div>
-      </main>
-    </div>
-  );
-}
-
-function ProductFooter() {
-  return (
-    <footer className={styles.productFooter}>
-      <span>ØAADM3700</span>
-      <span>No account · No personal information</span>
-    </footer>
+      <FeedbackLink />
+    </article>
   );
 }
 
 export function DesignShowcase() {
-  const [theme, setTheme] = useState<ThemeId>("precision");
-  const [screen, setScreen] = useState<ScreenId>("hub");
-  const selectedTheme = themes.find((item) => item.id === theme) ?? themes[0];
-
+  const [direction, setDirection] = useState<DirectionId>("guide");
   return (
-    <main className={styles.showcase}>
+    <div className={styles.reviewPage}>
       <header className={styles.reviewHeader}>
-        <div>
-          <p className={styles.reviewEyebrow}>Decision Lab · Design review 01</p>
-          <h1>Choose the character of the course</h1>
-          <p>Compare the same content and interactions across three deliberately different directions.</p>
-        </div>
-        <div className={styles.reviewStatus}>
-          <span>First milestone</span>
-          <strong>Visual direction</strong>
-        </div>
+        <div><h1>Homepage directions</h1><p>Three information-first approaches for the student course page.</p></div>
+        <Link href="/">View current homepage</Link>
       </header>
-
-      <section className={styles.selectionArea} aria-label="Design preview controls">
-        <div className={styles.themePicker} role="group" aria-label="Visual direction">
-          {themes.map((item) => (
-            <button key={item.id} type="button" aria-pressed={theme === item.id} onClick={() => setTheme(item.id)}>
-              <span>{item.number}</span>
-              <strong>{item.name}</strong>
-              <small>{item.note}</small>
-            </button>
-          ))}
-        </div>
-
-        <div className={styles.screenPicker} role="tablist" aria-label="Preview screen">
-          <span>View</span>
-          {screens.map((item) => (
-            <button key={item.id} type="button" role="tab" aria-selected={screen === item.id} onClick={() => setScreen(item.id)}>
-              {item.label}
-            </button>
-          ))}
-        </div>
-      </section>
-
-      <div className={styles.previewLabel}>
-        <span>{selectedTheme.number}</span>
-        <strong>{selectedTheme.name}</strong>
-        <span>{screens.find((item) => item.id === screen)?.label}</span>
+      <nav className={styles.directionPicker} aria-label="Choose a homepage direction">
+        {directions.map((item) => (
+          <button type="button" key={item.id} aria-pressed={direction === item.id} onClick={() => setDirection(item.id)}>
+            <span>{item.label}</span><strong>{item.name}</strong><small>{item.note}</small>
+          </button>
+        ))}
+      </nav>
+      <div className={styles.previewFrame}>
+        {direction === "guide" && <GuideOption />}
+        {direction === "brief" && <BriefOption />}
+        {direction === "schedule" && <ScheduleOption />}
       </div>
-
-      <section className={`${styles.previewFrame} ${styles[theme]}`} data-theme={theme}>
-        {screen === "hub" && <HubScreen />}
-        {screen === "activity" && <ActivityScreen />}
-        {screen === "results" && <ResultsScreen />}
-      </section>
-
-      <footer className={styles.reviewFooter}>
-        <p>All content is representative. Activities and dates will be added after the design system is selected.</p>
-        <p>ØAADM3700 · Autumn 2026</p>
-      </footer>
-    </main>
+      <p className={styles.reviewNote}>These are structural directions, not three different color themes. Choose the one that makes the course easiest to understand.</p>
+    </div>
   );
 }

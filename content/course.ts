@@ -1,6 +1,8 @@
 export type CourseDay = {
   number: number;
   week: number;
+  title: string;
+  room: string;
   dateISO: string;
   date: string;
   time: string;
@@ -41,6 +43,8 @@ export const courseDays: CourseDay[] = [
   {
     number: 1,
     week: 38,
+    title: "Foundations of Decision Making",
+    room: "P35 PI254",
     dateISO: "2026-09-14",
     date: "Monday, 14 September 2026",
     time: "08:30–10:15",
@@ -115,6 +119,8 @@ export const courseDays: CourseDay[] = [
   {
     number: 2,
     week: 38,
+    title: "Bounded Rationality, Dual-Process Thinking, Biases, and Heuristics",
+    room: "P50 G233",
     dateISO: "2026-09-15",
     date: "Tuesday, 15 September 2026",
     time: "12:30–17:15",
@@ -145,6 +151,8 @@ export const courseDays: CourseDay[] = [
   {
     number: 3,
     week: 38,
+    title: "Risk, Framing, and Decisions Under Uncertainty",
+    room: "P48 P372",
     dateISO: "2026-09-16",
     date: "Wednesday, 16 September 2026",
     time: "08:30–12:15",
@@ -166,6 +174,8 @@ export const courseDays: CourseDay[] = [
   {
     number: 4,
     week: 38,
+    title: "Attention, Expertise, and Emotion",
+    room: "P35 PI254",
     dateISO: "2026-09-17",
     date: "Thursday, 17 September 2026",
     time: "08:30–12:30",
@@ -192,6 +202,8 @@ export const courseDays: CourseDay[] = [
   {
     number: 5,
     week: 39,
+    title: "Overconfidence, Influence, and Escalation of Commitment",
+    room: "P35 PI251",
     dateISO: "2026-09-22",
     date: "Tuesday, 22 September 2026",
     time: "12:30–17:15",
@@ -219,6 +231,8 @@ export const courseDays: CourseDay[] = [
   {
     number: 6,
     week: 39,
+    title: "Social Decision Making: Trust, Fairness, and Groups",
+    room: "P48 P168",
     dateISO: "2026-09-23",
     date: "Wednesday, 23 September 2026",
     time: "12:30–15:15",
@@ -242,6 +256,8 @@ export const courseDays: CourseDay[] = [
   {
     number: 7,
     week: 39,
+    title: "Improving Decisions: Debiasing and Decision Design",
+    room: "P35 PI658",
     dateISO: "2026-09-24",
     date: "Thursday, 24 September 2026",
     time: "11:30–15:15",
@@ -266,6 +282,8 @@ export const courseDays: CourseDay[] = [
   {
     number: 8,
     week: 40,
+    title: "Presentations and Course Summary",
+    room: "P35 PI559",
     dateISO: "2026-09-28",
     date: "Monday, 28 September 2026",
     time: "08:30–13:15",

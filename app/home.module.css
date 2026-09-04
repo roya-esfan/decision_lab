@@ -1,0 +1,287 @@
+.hero {
+  padding: 54px 0 46px;
+}
+
+.hero h1 {
+  max-width: 860px;
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(38px, 5vw, 58px);
+  font-weight: 400;
+  letter-spacing: -.035em;
+  line-height: 1.04;
+  text-wrap: pretty;
+}
+
+.featuredDay {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr) auto;
+  gap: 30px;
+  align-items: center;
+  padding: 24px 0;
+  border-top: 2px solid var(--ink);
+  border-bottom: 1px solid var(--line);
+}
+
+.featuredDate {
+  display: grid;
+  padding-right: 28px;
+  border-right: 1px solid var(--line);
+}
+
+.featuredDate span {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.featuredDate strong {
+  margin: 3px 0;
+  color: var(--accent);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 42px;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.featuredContent > .logistics {
+  margin-bottom: 6px;
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.featuredContent h2 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(22px, 2.4vw, 28px);
+  font-weight: 400;
+  letter-spacing: -.02em;
+  line-height: 1.2;
+}
+
+.logistics {
+  display: flex;
+  gap: 38px;
+  align-items: baseline;
+}
+
+.primaryLink {
+  display: inline-flex;
+  min-height: 44px;
+  padding: 0 18px;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.primaryLink:hover,
+.feedback a:hover {
+  background: var(--accent-dark);
+}
+
+.courseMap {
+  padding: 46px 0 54px;
+}
+
+.sectionTitle {
+  margin-bottom: 14px;
+}
+
+.sectionTitle h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -.02em;
+  line-height: 1.25;
+}
+
+.overviewList {
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--ink);
+  list-style: none;
+}
+
+.overviewList li {
+  display: grid;
+  min-height: 72px;
+  grid-template-columns: 32px 250px minmax(0, 1fr) auto;
+  gap: 20px;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.dayNumber {
+  color: var(--accent);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 21px;
+}
+
+.dayMeta {
+  display: grid;
+  gap: 5px;
+}
+
+.dayMeta strong {
+  font-size: 15px;
+  line-height: 1.35;
+}
+
+.dayMeta .logistics {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.overviewList p {
+  margin: 0;
+  color: var(--ink);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 17px;
+  line-height: 1.35;
+}
+
+.overviewButton {
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+  white-space: nowrap;
+}
+
+.feedback {
+  display: flex;
+  min-height: 102px;
+  padding: 24px;
+  justify-content: space-between;
+  gap: 26px;
+  align-items: center;
+  border-top: 2px solid var(--ink);
+  background: #e7eef4;
+}
+
+.feedback h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.feedback a {
+  display: inline-flex;
+  min-height: 44px;
+  padding: 0 18px;
+  align-items: center;
+  gap: 8px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+@media (max-width: 850px) {
+  .featuredDay {
+    grid-template-columns: 100px minmax(0, 1fr);
+  }
+
+  .featuredDay > .primaryLink {
+    grid-column: 2;
+    width: fit-content;
+  }
+
+  .overviewList li {
+    grid-template-columns: 28px minmax(0, 1fr) auto;
+    padding: 16px 0;
+  }
+
+  .dayNumber {
+    grid-row: 1 / 3;
+    align-self: start;
+  }
+
+  .dayMeta,
+  .overviewList p {
+    grid-column: 2;
+  }
+
+  .overviewButton {
+    grid-column: 3;
+    grid-row: 1 / 3;
+  }
+}
+
+@media (max-width: 600px) {
+  .hero {
+    padding: 38px 0 32px;
+  }
+
+  .hero h1 {
+    font-size: 38px;
+  }
+
+  .featuredDay {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .featuredDate {
+    display: flex;
+    gap: 8px;
+    align-items: baseline;
+    padding: 0 0 14px;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .featuredDate strong {
+    font-size: 30px;
+  }
+
+  .featuredDay > .primaryLink {
+    grid-column: 1;
+  }
+
+  .logistics {
+    gap: 24px;
+  }
+
+  .courseMap {
+    padding-top: 40px;
+  }
+
+  .overviewList li {
+    gap: 13px;
+  }
+
+  .dayMeta .logistics {
+    gap: 22px;
+  }
+
+  .feedback {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 430px) {
+  .overviewList li {
+    grid-template-columns: 24px minmax(0, 1fr);
+  }
+
+  .overviewButton {
+    grid-column: 2;
+    grid-row: auto;
+    width: fit-content;
+  }
+}

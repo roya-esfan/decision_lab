@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { DesignShowcase } from "./showcase";
 
 export const metadata: Metadata = {
-  title: "Choose a visual direction — Decision Lab",
-  description: "Compare three visual directions for the ØAADM3700 Decision Lab.",
+  title: "Homepage directions — ØAADM3700",
+  description: "Compare three student-focused homepage directions for ØAADM3700.",
 };
 
 export default function DesignPage() {
