@@ -8,13 +8,18 @@ import styles from "../../../course.module.css";
 const results = ["70/100", "96/137"] as const;
 
 export function ExamResultChoice() {
-  const session = useLiveSession();
+  const session = useLiveSession("assignment-2");
   const idempotencyKey = useRef<string | null>(null);
   const [choice, setChoice] = useState<(typeof results)[number] | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [submissionError, setSubmissionError] = useState("");
 
   async function choose(result: (typeof results)[number]) {
+    if (session.state === "review") {
+      setChoice(result);
+      return;
+    }
+
     idempotencyKey.current ??= crypto.randomUUID();
     setSubmitting(true);
     setSubmissionError("");
@@ -37,14 +42,19 @@ export function ExamResultChoice() {
     }
   }
 
-  if (session.state !== "joined") return <LiveSessionGate state={session.state} message={session.message} onJoin={session.join} />;
+  if (session.state !== "joined" && session.state !== "review") {
+    return <LiveSessionGate state={session.state} message={session.message} onJoin={session.join} />;
+  }
 
   if (choice) {
     return (
       <section className={styles.choiceComplete} aria-live="polite">
         <p className={styles.eyebrow}>Response complete</p>
         <h2>Thank you.</h2>
-        <p>You chose <strong>{choice}</strong>.</p>
+        <p>
+          You chose <strong>{choice}</strong>.
+          {session.state === "review" && " This practice response was not added to the class results."}
+        </p>
         <div className={styles.resultActions}>
           <Link href="/day/1/assignment-2/results">Class results when revealed</Link>
         </div>

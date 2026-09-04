@@ -1,0 +1,310 @@
+.page {
+  padding-bottom: 40px;
+}
+
+.breadcrumb {
+  display: flex;
+  min-height: 54px;
+  align-items: center;
+  border-bottom: 1px solid var(--fine-line);
+  font-size: 14px;
+}
+
+.breadcrumb a {
+  color: var(--ink);
+  text-underline-offset: 4px;
+}
+
+.header {
+  max-width: 980px;
+  padding: 48px 0 44px;
+}
+
+.header > p,
+.scenarioTitle > p,
+.questionMeta p,
+.kicker {
+  margin: 0 0 12px;
+  color: var(--accent);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.header h1 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(38px, 5vw, 58px);
+  font-weight: 400;
+  letter-spacing: -.035em;
+  line-height: 1.05;
+  text-wrap: pretty;
+}
+
+.scenario {
+  display: grid;
+  grid-template-columns: minmax(180px, .55fr) minmax(0, 1.45fr);
+  gap: clamp(34px, 6vw, 78px);
+  padding: 29px 0 33px;
+  border-top: 2px solid var(--ink);
+  border-bottom: 1px solid var(--line);
+}
+
+.scenarioTitle h2 {
+  margin: 0;
+  font-size: 25px;
+  font-weight: 650;
+  letter-spacing: -.025em;
+}
+
+.scenarioBody > p {
+  max-width: 770px;
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.55;
+}
+
+.outcomes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin: 27px 0 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--fine-line);
+}
+
+.outcomes > div {
+  padding: 18px 26px 19px 0;
+}
+
+.outcomes > div + div {
+  padding-left: 26px;
+  border-left: 1px solid var(--fine-line);
+}
+
+.outcomes dt {
+  margin-bottom: 7px;
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.outcomes dd {
+  margin: 0;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.bargainQuestion,
+.bargainComplete {
+  margin-top: 54px;
+  padding: 31px 0 42px;
+  border-top: 2px solid var(--ink);
+  border-bottom: 1px solid var(--line);
+}
+
+.bargainQuestion > div {
+  max-width: 920px;
+}
+
+.questionMeta {
+  display: flex;
+  gap: 24px;
+  align-items: baseline;
+}
+
+.questionMeta p {
+  margin-bottom: 0;
+}
+
+.bargainQuestion h2 {
+  margin: 17px 0 22px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(32px, 4.3vw, 55px);
+  font-weight: 400;
+  letter-spacing: -.035em;
+  line-height: 1.08;
+  text-wrap: pretty;
+}
+
+.bargainQuestion h2 em {
+  color: var(--accent);
+  font-style: normal;
+}
+
+.decisionPrompt {
+  margin: 0 0 25px;
+  font-size: clamp(22px, 2.4vw, 30px);
+  font-weight: 650;
+  letter-spacing: -.025em;
+}
+
+.decisionButtons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.decisionButtons button {
+  min-height: 82px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  font: inherit;
+  font-size: 20px;
+  font-weight: 700;
+  transition: border-color .12s ease, background .12s ease, color .12s ease;
+}
+
+.decisionButtons button:hover {
+  border-color: var(--accent);
+  background: #f2f6f8;
+}
+
+.decisionButtons button:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.decisionButtons .selectedDecision {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: white;
+}
+
+.bargainComplete h2 {
+  margin: 8px 0 12px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(35px, 4vw, 52px);
+  font-weight: 400;
+  letter-spacing: -.035em;
+}
+
+.resultsHeader {
+  max-width: 980px;
+  padding: 48px 0 38px;
+}
+
+.resultsHeader > p:first-child {
+  margin: 0 0 12px;
+  color: var(--accent);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.resultsHeader h1 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(38px, 5vw, 58px);
+  font-weight: 400;
+  letter-spacing: -.035em;
+  line-height: 1.05;
+}
+
+.resultsHeader > p:last-child {
+  margin: 18px 0 0;
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.bargainComplete > p:nth-child(3) {
+  color: var(--muted);
+  font-size: 16px;
+}
+
+.decisionSummary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  max-width: 920px;
+  margin-top: 29px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.decisionSummary > div {
+  display: grid;
+  gap: 6px;
+  padding: 17px 20px 17px 0;
+  border-right: 1px solid var(--fine-line);
+}
+
+.decisionSummary > div:not(:first-child) {
+  padding-left: 20px;
+}
+
+.decisionSummary > div:last-child {
+  border-right: 0;
+}
+
+.decisionSummary span {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.decisionSummary strong {
+  color: var(--accent);
+  font-size: 15px;
+  text-transform: capitalize;
+}
+
+@media (max-width: 720px) {
+  .scenario {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .outcomes {
+    grid-template-columns: 1fr;
+  }
+
+  .outcomes > div,
+  .outcomes > div + div {
+    padding: 16px 0;
+    border-left: 0;
+  }
+
+  .outcomes > div + div {
+    border-top: 1px solid var(--fine-line);
+  }
+}
+
+@media (max-width: 520px) {
+  .header {
+    padding: 38px 0 34px;
+  }
+
+  .header h1 {
+    font-size: 38px;
+  }
+
+  .scenarioBody > p {
+    font-size: 16px;
+  }
+
+  .bargainQuestion,
+  .bargainComplete {
+    margin-top: 42px;
+  }
+
+  .decisionButtons,
+  .decisionSummary {
+    grid-template-columns: 1fr;
+  }
+
+  .decisionButtons button {
+    min-height: 66px;
+  }
+
+  .decisionSummary > div,
+  .decisionSummary > div:not(:first-child) {
+    padding: 13px 0;
+    border-right: 0;
+    border-bottom: 1px solid var(--fine-line);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .decisionButtons button {
+    transition: none;
+  }
+}

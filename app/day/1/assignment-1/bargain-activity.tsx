@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { useRef, useState } from "react";
 import { LiveSessionGate, useLiveSession } from "../../../components/live-session";
-import styles from "../../../course.module.css";
+import sharedStyles from "../../../course.module.css";
+import styles from "./bargain.module.css";
 
 const offers = [
   { id: "equal", offered: 50, kept: 50 },
@@ -14,7 +15,7 @@ const offers = [
 type Decision = "accept" | "reject";
 
 export function BargainActivity() {
-  const session = useLiveSession();
+  const session = useLiveSession("assignment-1");
   const idempotencyKey = useRef<string | null>(null);
   const [index, setIndex] = useState(0);
   const [decisions, setDecisions] = useState<Record<string, Decision>>({});
@@ -36,6 +37,12 @@ export function BargainActivity() {
     }
 
     const finished = { ...decisions, [offer.id]: selected };
+    if (session.state === "review") {
+      setDecisions(finished);
+      setComplete(true);
+      return;
+    }
+
     idempotencyKey.current ??= crypto.randomUUID();
     setSubmitting(true);
     setSubmissionError("");
@@ -62,14 +69,20 @@ export function BargainActivity() {
     }
   }
 
-  if (session.state !== "joined") return <LiveSessionGate state={session.state} message={session.message} onJoin={session.join} />;
+  if (session.state !== "joined" && session.state !== "review") {
+    return <LiveSessionGate state={session.state} message={session.message} onJoin={session.join} />;
+  }
 
   if (complete) {
     return (
       <section className={styles.bargainComplete} aria-live="polite">
-        <p className={styles.eyebrow}>Response complete</p>
-        <h2>Thank you.</h2>
-        <p>You have responded to all three offers.</p>
+        <p className={styles.kicker}>{session.state === "review" ? "Review complete" : "Response recorded"}</p>
+        <h2>{session.state === "review" ? "Your decisions" : "Thank you"}</h2>
+        <p>
+          {session.state === "review"
+            ? "This was a practice response and was not added to the class results."
+            : "You have responded to all three offers."}
+        </p>
         <div className={styles.decisionSummary}>
           {offers.map((item) => (
             <div key={item.id}>
@@ -78,7 +91,7 @@ export function BargainActivity() {
             </div>
           ))}
         </div>
-        <div className={styles.resultActions}>
+        <div className={sharedStyles.resultActions}>
           <Link href="/day/1/assignment-1/results">Class results when revealed</Link>
         </div>
       </section>
@@ -88,9 +101,11 @@ export function BargainActivity() {
   return (
     <section className={styles.bargainQuestion} aria-labelledby="offer-title">
       <div>
-        <p className={styles.eyebrow}>Eve proposes</p>
+        <div className={styles.questionMeta}>
+          <p>Eve proposes</p>
+        </div>
         <h2 id="offer-title">
-          Eve offers you <em>{offer.offered} kr</em> and keeps <em>{offer.kept} kr</em>.
+          Eve offers you <em>{offer.offered} kr</em> and keeps <em>{offer.kept} kr</em>
         </h2>
         <p className={styles.decisionPrompt}>Would you accept or reject the offer?</p>
         <div className={styles.decisionButtons} role="group" aria-label="Choose whether to accept or reject">
@@ -111,13 +126,13 @@ export function BargainActivity() {
             Reject
           </button>
         </div>
-        <div className={styles.questionActions}>
+        <div className={sharedStyles.questionActions}>
           <button type="button" onClick={() => setIndex((current) => current - 1)} disabled={index === 0}>Back</button>
-          <button className={styles.nextButton} type="button" onClick={() => void next()} disabled={!selected || submitting}>
-            {submitting ? "Submitting…" : index === offers.length - 1 ? "Submit responses" : "Next offer"}
+          <button className={sharedStyles.nextButton} type="button" onClick={() => void next()} disabled={!selected || submitting}>
+            {submitting ? "Submitting…" : index === offers.length - 1 ? (session.state === "review" ? "Finish" : "Submit responses") : "Next offer"}
           </button>
         </div>
-        {submissionError && <p className={styles.formError} role="alert">{submissionError}</p>}
+        {submissionError && <p className={sharedStyles.formError} role="alert">{submissionError}</p>}
       </div>
     </section>
   );

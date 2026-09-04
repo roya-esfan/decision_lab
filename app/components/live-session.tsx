@@ -1,27 +1,34 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import type { ActivityKey } from "@/lib/classroom";
 import styles from "../course.module.css";
 
-type SessionState = "loading" | "joined" | "not-joined" | "unavailable";
+type SessionState = "loading" | "joined" | "not-joined" | "closed" | "review" | "unavailable";
 
-export function useLiveSession() {
+export function useLiveSession(activityKey: ActivityKey) {
   const [state, setState] = useState<SessionState>("loading");
   const [runId, setRunId] = useState<string | null>(null);
   const [message, setMessage] = useState("");
 
   const check = useCallback(async () => {
     try {
-      const response = await fetch("/api/session", { cache: "no-store" });
+      const response = await fetch(`/api/session?activity=${activityKey}`, { cache: "no-store" });
       if (!response.ok) throw new Error();
-      const data = await response.json() as { joined?: boolean; runId?: string };
+      const data = await response.json() as {
+        mode?: "closed" | "join" | "live" | "review";
+        joined?: boolean;
+        runId?: string;
+      };
       setRunId(data.runId ?? null);
-      setState(data.joined ? "joined" : "not-joined");
+      if (data.mode === "review") setState("review");
+      else if (data.mode === "closed") setState("closed");
+      else setState(data.joined ? "joined" : "not-joined");
     } catch {
       setMessage("The live classroom connection is temporarily unavailable.");
       setState("unavailable");
     }
-  }, []);
+  }, [activityKey]);
 
   useEffect(() => {
     const timer = window.setTimeout(() => { void check(); }, 0);
@@ -62,6 +69,16 @@ export function LiveSessionGate({
 
   if (state === "loading") {
     return <section className={styles.joinPanel}><p>Checking the live classroom session…</p></section>;
+  }
+
+  if (state === "closed") {
+    return (
+      <section className={styles.joinPanel} aria-labelledby="join-title">
+        <p className={styles.eyebrow}>Activity closed</p>
+        <h2 id="join-title">This activity is not open yet</h2>
+        <p>The instructor will open it when the class is ready.</p>
+      </section>
+    );
   }
 
   return (

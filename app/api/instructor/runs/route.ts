@@ -13,8 +13,6 @@ export async function GET() {
     const { data: run, error: runError } = await supabase
       .from("classroom_runs")
       .select("id, join_code, state, joins_open, capacity, created_at, expires_at")
-      .eq("state", "open")
-      .gt("expires_at", new Date().toISOString())
       .order("created_at", { ascending: false })
       .limit(1)
       .maybeSingle();
@@ -30,8 +28,7 @@ export async function GET() {
       supabase
         .from("classroom_participants")
         .select("id", { count: "exact", head: true })
-        .eq("run_id", run.id)
-        .gt("expires_at", new Date().toISOString()),
+        .eq("run_id", run.id),
     ]);
     if (activityError) throw activityError;
     if (countError) throw countError;
@@ -41,6 +38,7 @@ export async function GET() {
         id: run.id,
         joinCode: run.join_code,
         state: run.state,
+        isActive: run.state === "open" && new Date(run.expires_at).getTime() > Date.now(),
         joinsOpen: run.joins_open,
         capacity: run.capacity,
         createdAt: run.created_at,
@@ -92,8 +90,8 @@ export async function POST(request: Request) {
     if (!run) throw new Error("JOIN_CODE_GENERATION_FAILED");
 
     const { error: stateError } = await supabase.from("classroom_activity_states").insert([
-      { run_id: run.id, activity_key: "assignment-1" },
-      { run_id: run.id, activity_key: "assignment-2" },
+      { run_id: run.id, activity_key: "assignment-1", is_open: false, is_revealed: false },
+      { run_id: run.id, activity_key: "assignment-2", is_open: false, is_revealed: false },
     ]);
     if (stateError) {
       await supabase.from("classroom_runs").delete().eq("id", run.id);

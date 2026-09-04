@@ -9,17 +9,37 @@ type ClassroomRun = {
   id: string;
   joinCode: string;
   state: "open" | "closed";
+  isActive: boolean;
   joinsOpen: boolean;
   capacity: number;
   participantCount: number;
+  createdAt: string;
   expiresAt: string;
   activities: ActivityState[];
 };
 type ResultRow = { promptKey: string; label: string; counts: Record<string, number> };
 
-const activities: Array<{ key: ActivityKey; title: string; resultsHref: string }> = [
-  { key: "assignment-1", title: "Assignment 1 · Two-player bargain", resultsHref: "/day/1/assignment-1/results?projector=1" },
-  { key: "assignment-2", title: "Assignment 2 · Exam result", resultsHref: "/day/1/assignment-2/results?projector=1" },
+const activities: Array<{
+  key: ActivityKey;
+  number: number;
+  title: string;
+  activityHref: string;
+  resultsHref: string;
+}> = [
+  {
+    key: "assignment-1",
+    number: 2,
+    title: "A two-player bargain",
+    activityHref: "/day/1/assignment-1",
+    resultsHref: "/day/1/assignment-1/results?projector=1",
+  },
+  {
+    key: "assignment-2",
+    number: 3,
+    title: "Which exam results feel better?",
+    activityHref: "/day/1/assignment-2",
+    resultsHref: "/day/1/assignment-2/results?projector=1",
+  },
 ];
 
 export function ControlRoom({ email }: { email: string }) {
@@ -28,17 +48,17 @@ export function ControlRoom({ email }: { email: string }) {
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState("");
   const [error, setError] = useState("");
-  const activeRunId = run?.id;
+  const currentRunId = run?.id;
 
   const loadRun = useCallback(async () => {
     try {
       const response = await fetch("/api/instructor/runs", { cache: "no-store" });
       const data = await response.json() as { run?: ClassroomRun | null; error?: string };
-      if (!response.ok) throw new Error(data.error ?? "The classroom session could not be loaded.");
+      if (!response.ok) throw new Error(data.error ?? "The Day 1 session could not be loaded.");
       setRun(data.run ?? null);
       setError("");
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "The classroom session could not be loaded.");
+      setError(caught instanceof Error ? caught.message : "The Day 1 session could not be loaded.");
     } finally {
       setLoading(false);
     }
@@ -58,18 +78,19 @@ export function ControlRoom({ email }: { email: string }) {
     const timer = window.setTimeout(() => { void loadRun(); }, 0);
     return () => window.clearTimeout(timer);
   }, [loadRun]);
+
   useEffect(() => {
-    if (!activeRunId) return;
-    const initial = window.setTimeout(() => { void loadResults(activeRunId); }, 0);
+    if (!currentRunId) return;
+    const initial = window.setTimeout(() => { void loadResults(currentRunId); }, 0);
     const timer = window.setInterval(() => {
       void loadRun();
-      void loadResults(activeRunId);
+      void loadResults(currentRunId);
     }, 2000);
     return () => {
       window.clearTimeout(initial);
       window.clearInterval(timer);
     };
-  }, [activeRunId, loadResults, loadRun]);
+  }, [currentRunId, loadResults, loadRun]);
 
   async function createRun() {
     setBusy("create");
@@ -81,10 +102,10 @@ export function ControlRoom({ email }: { email: string }) {
         body: JSON.stringify({ capacity: 120 }),
       });
       const data = await response.json() as { error?: string };
-      if (!response.ok) throw new Error(data.error ?? "The classroom session could not be created.");
+      if (!response.ok) throw new Error(data.error ?? "The Day 1 session could not be created.");
       await loadRun();
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "The classroom session could not be created.");
+      setError(caught instanceof Error ? caught.message : "The Day 1 session could not be created.");
     } finally {
       setBusy("");
     }
@@ -101,10 +122,10 @@ export function ControlRoom({ email }: { email: string }) {
         body: JSON.stringify(payload),
       });
       const data = await response.json() as { error?: string };
-      if (!response.ok) throw new Error(data.error ?? "The classroom session could not be updated.");
-      await loadRun();
+      if (!response.ok) throw new Error(data.error ?? "The Day 1 session could not be updated.");
+      await Promise.all([loadRun(), loadResults(run.id)]);
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "The classroom session could not be updated.");
+      setError(caught instanceof Error ? caught.message : "The Day 1 session could not be updated.");
     } finally {
       setBusy("");
     }
@@ -115,15 +136,22 @@ export function ControlRoom({ email }: { email: string }) {
     window.location.reload();
   }
 
-  if (loading) return <section className={styles.controlEmpty}><p>Loading classroom control…</p></section>;
+  if (loading) {
+    return <section className={styles.controlEmpty}><p>Loading the Day 1 classroom…</p></section>;
+  }
 
   if (!run) {
     return (
       <section className={styles.controlEmpty}>
-        <p className={styles.eyebrow}>No active session</p>
-        <h2>Start when the class is ready</h2>
-        <p>A new eight-character join code will be created. It expires after eight hours.</p>
-        <button type="button" onClick={() => void createRun()} disabled={busy === "create"}>{busy === "create" ? "Starting…" : "Start classroom session"}</button>
+        <p className={styles.eyebrow}>No Day 1 session yet</p>
+        <h2>Prepare the classroom</h2>
+        <p>
+          Starting a session creates one class code. Activities begin closed,
+          so no responses are collected until you open a specific experiment.
+        </p>
+        <button type="button" onClick={() => void createRun()} disabled={busy === "create"}>
+          {busy === "create" ? "Preparing…" : "Create Day 1 session"}
+        </button>
         {error && <p className={styles.formError} role="alert">{error}</p>}
         <button className={styles.textButton} type="button" onClick={() => void logout()}>Sign out {email}</button>
       </section>
@@ -132,44 +160,137 @@ export function ControlRoom({ email }: { email: string }) {
 
   return (
     <section className={styles.controlRoom}>
+      <div className={styles.instructorGuide}>
+        <p className={styles.eyebrow}>How it works</p>
+        <ol>
+          <li>Students enter the class code once</li>
+          <li>Open the activity when you are ready to collect responses</li>
+          <li>Close responses to freeze the totals, then reveal them</li>
+        </ol>
+      </div>
+
       <div className={styles.runStatus}>
-        <div><span>Join code</span><strong>{run.joinCode}</strong></div>
+        <div><span>Session</span><strong>{run.isActive ? "Live" : "Completed"}</strong></div>
+        <div><span>Class code</span><strong>{run.joinCode}</strong></div>
         <div><span>Participants</span><strong>{run.participantCount}<small> / {run.capacity}</small></strong></div>
-        <div><span>Joining</span><strong>{run.joinsOpen && run.state === "open" ? "Open" : "Locked"}</strong></div>
+        <div><span>Joining</span><strong>{run.isActive && run.joinsOpen ? "Open" : "Locked"}</strong></div>
         <div className={styles.runActions}>
-          {run.state === "open" && <button type="button" disabled={busy === "joins"} onClick={() => void updateRun({ action: "set-joins", open: !run.joinsOpen }, "joins")}>{run.joinsOpen ? "Lock joining" : "Open joining"}</button>}
-          {run.state === "open" && <button className={styles.dangerButton} type="button" disabled={busy === "close"} onClick={() => {
-            if (window.confirm("Close this classroom session? Students will no longer be able to submit.")) void updateRun({ action: "close-run" }, "close");
-          }}>Close session</button>}
+          {run.isActive ? (
+            <>
+              <button type="button" disabled={busy === "joins"} onClick={() => void updateRun({ action: "set-joins", open: !run.joinsOpen }, "joins")}>
+                {run.joinsOpen ? "Lock joining" : "Open joining"}
+              </button>
+              <button className={styles.dangerButton} type="button" disabled={busy === "close"} onClick={() => {
+                if (window.confirm("End Day 1? Responses will be frozen, but the results will remain available.")) {
+                  void updateRun({ action: "close-run" }, "close");
+                }
+              }}>End Day 1</button>
+            </>
+          ) : (
+            <button type="button" disabled={busy === "create"} onClick={() => void createRun()}>
+              {busy === "create" ? "Preparing…" : "Start a new session"}
+            </button>
+          )}
         </div>
+      </div>
+
+      <div className={styles.controlSectionHeading}>
+        <div>
+          <p className={styles.eyebrow}>Day 1</p>
+          <h2>Live activities and results</h2>
+        </div>
+        <p>Totals update automatically every two seconds</p>
       </div>
 
       <div className={styles.controlActivities}>
         {activities.map((activity) => {
           const state = run.activities.find((item) => item.key === activity.key);
           const activityResults = results[activity.key] ?? [];
+          const responseCount = activityResults.length === 0
+            ? 0
+            : Math.max(...activityResults.map((result) =>
+                Object.values(result.counts).reduce((sum, count) => sum + count, 0),
+              ));
+
           return (
             <article key={activity.key}>
               <header>
-                <div><p className={styles.eyebrow}>{activity.key}</p><h2>{activity.title}</h2></div>
-                <a href={activity.resultsHref} target="_blank" rel="noreferrer">Open projector view</a>
+                <div>
+                  <p className={styles.eyebrow}>Activity {activity.number}</p>
+                  <h3>{activity.title}</h3>
+                </div>
+                <div className={styles.activityState}>
+                  <span className={state?.isOpen && run.isActive ? styles.stateLive : undefined}>
+                    {state?.isOpen && run.isActive ? "Collecting" : "Responses closed"}
+                  </span>
+                  <span className={state?.isRevealed ? styles.stateRevealed : undefined}>
+                    {state?.isRevealed ? "Visible to students" : "Hidden from students"}
+                  </span>
+                </div>
               </header>
-              <div className={styles.previewResults}>
-                {activityResults.map((result) => (
-                  <div key={result.promptKey}>
-                    <strong>{result.label}</strong>
-                    <p>{Object.entries(result.counts).map(([choice, count]) => `${choice}: ${count}`).join(" · ")}</p>
-                  </div>
-                ))}
-                {activityResults.length === 0 && <p>No responses yet.</p>}
+
+              <div className={styles.activityResultSummary}>
+                <div>
+                  <span>Responses</span>
+                  <strong>{responseCount}</strong>
+                </div>
+                <div className={styles.instructorResultRows}>
+                  {activityResults.map((result) => {
+                    const total = Object.values(result.counts).reduce((sum, count) => sum + count, 0);
+                    return (
+                      <section key={result.promptKey}>
+                        <header><strong>{result.label}</strong><span>{total} responses</span></header>
+                        {Object.entries(result.counts).map(([choice, count]) => {
+                          const percentage = total === 0 ? 0 : Math.round((count / total) * 100);
+                          return (
+                            <div className={styles.instructorResultBar} key={choice}>
+                              <span>{choice}</span>
+                              <div aria-hidden="true"><i style={{ width: `${percentage}%` }} /></div>
+                              <strong>{percentage}%</strong>
+                              <em>{count}</em>
+                            </div>
+                          );
+                        })}
+                      </section>
+                    );
+                  })}
+                  {activityResults.length === 0 && <p>Results could not be loaded yet.</p>}
+                </div>
               </div>
+
               <footer>
-                <button type="button" disabled={!state || run.state === "closed" || busy === `${activity.key}-open`} onClick={() => void updateRun({ action: "set-activity", activityKey: activity.key, open: !state?.isOpen }, `${activity.key}-open`)}>{state?.isOpen ? "Close responses" : "Open responses"}</button>
-                <button className={state?.isRevealed ? styles.hideButton : styles.revealButton} type="button" disabled={!state || busy === `${activity.key}-reveal`} onClick={() => void updateRun({ action: "set-activity", activityKey: activity.key, revealed: !state?.isRevealed }, `${activity.key}-reveal`)}>{state?.isRevealed ? "Hide results" : "Reveal results"}</button>
+                <a href={activity.activityHref} target="_blank" rel="noreferrer">Open student page</a>
+                <a href={activity.resultsHref} target="_blank" rel="noreferrer">Open presentation view</a>
+                <button
+                  type="button"
+                  disabled={!state || !run.isActive || busy === `${activity.key}-open`}
+                  onClick={() => void updateRun(
+                    { action: "set-activity", activityKey: activity.key, open: !state?.isOpen },
+                    `${activity.key}-open`,
+                  )}
+                >
+                  {state?.isOpen ? "Close & freeze responses" : "Open responses"}
+                </button>
+                <button
+                  className={state?.isRevealed ? styles.hideButton : styles.revealButton}
+                  type="button"
+                  disabled={!state || busy === `${activity.key}-reveal`}
+                  onClick={() => void updateRun(
+                    { action: "set-activity", activityKey: activity.key, revealed: !state?.isRevealed },
+                    `${activity.key}-reveal`,
+                  )}
+                >
+                  {state?.isRevealed ? "Hide from students" : "Reveal to students"}
+                </button>
               </footer>
             </article>
           );
         })}
+      </div>
+
+      <div className={styles.localActivitiesNote}>
+        <strong>Other Day 1 activities</strong>
+        <p>Life-experience bingo, the rational decision tool and REI-10 stay on each student’s device and do not produce class results here.</p>
       </div>
       {error && <p className={styles.formError} role="alert">{error}</p>}
       <button className={styles.textButton} type="button" onClick={() => void logout()}>Sign out {email}</button>

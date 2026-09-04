@@ -11,12 +11,9 @@ export async function GET(request: Request) {
     if (!isActivityKey(activityKey)) throw new ApiError(400, "Activity not found.");
 
     const supabase = getSupabaseAdmin();
-    const now = new Date().toISOString();
     const { data: run, error: runError } = await supabase
       .from("classroom_runs")
       .select("id")
-      .eq("state", "open")
-      .gt("expires_at", now)
       .order("created_at", { ascending: false })
       .limit(1)
       .maybeSingle();

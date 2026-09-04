@@ -44,7 +44,7 @@ export function InstructorLogin() {
       <div>
         <span>01</span>
         <h2 id="login-title">Sign in by email</h2>
-        <p>Only configured instructor addresses can access this page.</p>
+        <p>Only configured instructor addresses can access this page. After signing in, this browser stays signed in for 30 days unless you sign out.</p>
       </div>
       <form onSubmit={(event) => { event.preventDefault(); void requestLink(); }}>
         <label>

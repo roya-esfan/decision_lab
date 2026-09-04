@@ -17,7 +17,7 @@ export async function POST(request: Request) {
     const email = data.user?.email?.trim().toLowerCase();
     if (error || !email || !isInstructorEmail(email)) throw new ApiError(401, "The sign-in link is invalid or has expired.");
 
-    const expiresAt = Date.now() + 8 * 60 * 60 * 1000;
+    const expiresAt = Date.now() + 30 * 24 * 60 * 60 * 1000;
     const response = NextResponse.json({ authenticated: true });
     response.cookies.set(instructorCookieName, signSession({ kind: "instructor", email, expiresAt }), {
       ...secureCookieOptions,
