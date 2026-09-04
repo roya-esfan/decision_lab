@@ -80,14 +80,28 @@ function cardFromIds(cardIds: number[], experienceById: Map<number, BingoExperie
 }
 
 async function requestAllocatedCard() {
-  const response = await fetch("/api/bingo-card", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: "{}",
-    cache: "no-store",
-  });
-  if (!response.ok) throw new Error("BINGO_CARD_ALLOCATION_FAILED");
-  return response.json() as Promise<AllocatedCard>;
+  for (let attempt = 0; attempt < 2; attempt += 1) {
+    try {
+      const response = await fetch("/api/bingo-card", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: "{}",
+        cache: "no-store",
+      });
+      if (response.ok) return response.json() as Promise<AllocatedCard>;
+      if (response.status < 500) throw new Error("BINGO_CARD_ALLOCATION_REJECTED");
+    } catch (error) {
+      if (attempt === 1) throw error;
+    }
+
+    if (attempt === 0) {
+      await new Promise((resolve) =>
+        window.setTimeout(resolve, 200 + Math.random() * 200),
+      );
+    }
+  }
+
+  throw new Error("BINGO_CARD_ALLOCATION_FAILED");
 }
 
 export function BingoCard() {
