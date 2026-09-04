@@ -12,6 +12,11 @@ device and are never sent to Supabase.
    `supabase/migrations/202608260001_live_classroom.sql` into the editor.
 4. Select **Run** once.
 
+5. Create another query, copy the complete contents of
+   `supabase/migrations/202609040001_bingo_card_allocator.sql`, and select
+   **Run** once. This creates only an anonymous counter used to distribute the
+   prepared bingo cards in order.
+
 The migration enables Row Level Security, removes access for the public
 database roles, creates server-only functions for joining and submitting, and
 schedules daily deletion of classroom data older than 30 days.
@@ -20,8 +25,8 @@ schedules daily deletion of classroom data older than 30 days.
 
 Open **Authentication → URL Configuration** and set:
 
-- Site URL: `https://decision-lab-oaadm.vercel.app`
-- Redirect URL: `https://decision-lab-oaadm.vercel.app/**`
+- Site URL: `https://oaadm.vercel.app`
+- Redirect URL: `https://oaadm.vercel.app/**`
 - Development redirect: `http://localhost:3000/**`
 
 The default Supabase magic-link template can remain unchanged. No custom SMTP

@@ -41,6 +41,12 @@ yarn-error.log*
 /AGENTS.md
 /CLAUDE.md
 
+# local print and test artifacts
+/printables/
+/tmp/
+/scripts/build-printable-bingo-cards.py
+/scripts/build-printable-bingo-cards-image.py
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

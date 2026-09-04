@@ -15,7 +15,13 @@ type InstructorSession = {
   expiresAt: number;
 };
 
-export type SignedSession = ParticipantSession | InstructorSession;
+type BingoSession = {
+  kind: "bingo";
+  cardIndex: number;
+  expiresAt: number;
+};
+
+export type SignedSession = ParticipantSession | InstructorSession | BingoSession;
 
 function signingSecret() {
   const secret = process.env.SESSION_SIGNING_SECRET;
@@ -47,6 +53,7 @@ export function verifySession(token: string | undefined): SignedSession | null {
     if (!session || typeof session.expiresAt !== "number" || session.expiresAt <= Date.now()) return null;
     if (session.kind === "participant" && typeof session.participantId === "string" && typeof session.runId === "string") return session;
     if (session.kind === "instructor" && typeof session.email === "string") return session;
+    if (session.kind === "bingo" && Number.isInteger(session.cardIndex) && session.cardIndex >= 0 && session.cardIndex < 100) return session;
   } catch {
     return null;
   }
@@ -55,6 +62,7 @@ export function verifySession(token: string | undefined): SignedSession | null {
 
 export const participantCookieName = "decision_lab_participant";
 export const instructorCookieName = "decision_lab_instructor";
+export const bingoCookieName = "decision_lab_bingo_card";
 
 export const secureCookieOptions = {
   httpOnly: true,

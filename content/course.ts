@@ -87,7 +87,7 @@ export const courseDays: CourseDay[] = [
     assignments: [
       {
         number: 1,
-        title: "Life experience bingo",
+        title: "Life experience bingo – Judgement and decision making edition",
         description: "What decision-making experiences can you relate to?",
         href: "/day/1/life-experience-bingo",
         status: "ready",

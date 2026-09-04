@@ -1,0 +1,196 @@
+.page {
+  padding-bottom: 40px;
+}
+
+.breadcrumb {
+  display: flex;
+  min-height: 54px;
+  align-items: center;
+  border-bottom: 1px solid var(--fine-line);
+  font-size: 14px;
+}
+
+.breadcrumb a {
+  color: var(--ink);
+  text-underline-offset: 4px;
+}
+
+.header {
+  max-width: 980px;
+  padding: 48px 0 44px;
+}
+
+.header > p {
+  margin: 0 0 12px;
+  color: var(--accent);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.header h1 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(38px, 5vw, 58px);
+  font-weight: 400;
+  letter-spacing: -.035em;
+  line-height: 1.05;
+  text-wrap: pretty;
+}
+
+.cardSection {
+  padding-top: 28px;
+  border-top: 2px solid var(--ink);
+}
+
+.cardSection h2 {
+  margin: 0 0 18px;
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -.02em;
+}
+
+.cardMeta {
+  display: flex;
+  min-height: 44px;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: center;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.cardMeta p {
+  margin: 0;
+}
+
+.cardMeta strong {
+  color: var(--accent);
+  font-size: 18px;
+}
+
+.bingoGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  padding: 1px;
+  background: var(--line);
+}
+
+.bingoGrid button {
+  position: relative;
+  min-height: 166px;
+  padding: 28px 20px 20px;
+  border: 0;
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  font: inherit;
+  font-size: 15px;
+  line-height: 1.4;
+  text-align: left;
+  transition: background .12s ease, color .12s ease;
+}
+
+.bingoGrid button:hover {
+  background: #f2f6f8;
+}
+
+.bingoGrid button:focus-visible {
+  z-index: 1;
+  outline: 3px solid var(--accent);
+  outline-offset: -3px;
+}
+
+.bingoGrid button.marked {
+  background: var(--surface);
+}
+
+.bingoGrid button.winning {
+  background: #dcebdc;
+  color: #173f21;
+}
+
+.cross {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  color: #6f777c;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(138px, 16vw, 220px);
+  line-height: .75;
+  opacity: 0;
+  transform: translate(-50%, -50%) rotate(-5deg);
+}
+
+.marked .cross {
+  opacity: .18;
+}
+
+.experience {
+  position: relative;
+  z-index: 1;
+}
+
+.storageNote {
+  margin: 13px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.preparing {
+  min-height: 300px;
+  padding: 28px 0;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 14px;
+}
+
+@media (max-width: 760px) {
+  .bingoGrid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .bingoGrid button {
+    min-height: 188px;
+    padding: 25px 7px 12px;
+    font-size: 10px;
+    line-height: 1.28;
+    overflow-wrap: anywhere;
+  }
+
+  .cross {
+    font-size: clamp(92px, 28vw, 126px);
+  }
+}
+
+@media (max-width: 430px) {
+  .header {
+    padding: 38px 0 34px;
+  }
+
+  .header h1 {
+    font-size: 36px;
+  }
+
+  .cardMeta {
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: center;
+    padding: 10px 0;
+    gap: 4px;
+  }
+
+  .bingoGrid button {
+    min-height: 194px;
+    padding: 24px 6px 10px;
+    font-size: 9.5px;
+    line-height: 1.25;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bingoGrid button {
+    transition: none;
+  }
+}
