@@ -76,13 +76,13 @@ export function ControlRoom({ email }: { email: string }) {
         activeRunId?: string | null;
         error?: string;
       };
-      if (!response.ok) throw new Error(data.error ?? "The Day 1 session could not be loaded.");
+      if (!response.ok) throw new Error(data.error ?? "The classroom session could not be loaded.");
       setRun(data.run ?? null);
       setRecentRuns(data.recentRuns ?? []);
       setActiveRunId(data.activeRunId ?? null);
       setError("");
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "The Day 1 session could not be loaded.");
+      setError(caught instanceof Error ? caught.message : "The classroom session could not be loaded.");
     } finally {
       setLoading(false);
     }
@@ -126,10 +126,10 @@ export function ControlRoom({ email }: { email: string }) {
         body: JSON.stringify({ capacity: 120 }),
       });
       const data = await response.json() as { error?: string };
-      if (!response.ok) throw new Error(data.error ?? "The Day 1 session could not be created.");
+      if (!response.ok) throw new Error(data.error ?? "The classroom session could not be created.");
       await loadRun();
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "The Day 1 session could not be created.");
+      setError(caught instanceof Error ? caught.message : "The classroom session could not be created.");
     } finally {
       setBusy("");
     }
@@ -146,13 +146,22 @@ export function ControlRoom({ email }: { email: string }) {
         body: JSON.stringify(payload),
       });
       const data = await response.json() as { error?: string };
-      if (!response.ok) throw new Error(data.error ?? "The Day 1 session could not be updated.");
+      if (!response.ok) throw new Error(data.error ?? "The classroom session could not be updated.");
       await Promise.all([loadRun(run.id), loadResults(run.id)]);
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "The Day 1 session could not be updated.");
+      setError(caught instanceof Error ? caught.message : "The classroom session could not be updated.");
     } finally {
       setBusy("");
     }
+  }
+
+  function resetRun() {
+    if (!run) return;
+    const confirmed = window.confirm(
+      "Reset this classroom session? All anonymous participants, responses, completion counts and activity states in this session will be permanently deleted. The session will then reopen empty.",
+    );
+    if (!confirmed) return;
+    void updateRun({ action: "reset-run" }, "reset");
   }
 
   async function logout() {
@@ -161,20 +170,20 @@ export function ControlRoom({ email }: { email: string }) {
   }
 
   if (loading) {
-    return <section className={styles.controlEmpty}><p>Loading the Day 1 classroom…</p></section>;
+    return <section className={styles.controlEmpty}><p>Loading the classroom…</p></section>;
   }
 
   if (!run) {
     return (
       <section className={styles.controlEmpty}>
-        <p className={styles.eyebrow}>No Day 1 session yet</p>
+        <p className={styles.eyebrow}>No classroom session yet</p>
         <h2>Prepare the classroom</h2>
         <p>
           Activities begin closed, so no responses are collected until you open
           a specific activity from this page.
         </p>
         <button type="button" onClick={() => void createRun()} disabled={busy === "create"}>
-          {busy === "create" ? "Preparing…" : "Create Day 1 session"}
+          {busy === "create" ? "Preparing…" : "Create classroom session"}
         </button>
         {error && <p className={styles.formError} role="alert">{error}</p>}
         <button className={styles.textButton} type="button" onClick={() => void logout()}>Sign out {email}</button>
@@ -205,17 +214,25 @@ export function ControlRoom({ email }: { email: string }) {
         <div><span>Session</span><strong>{run.isActive ? "Live" : "Completed"}</strong></div>
         <div><span>Anonymous participants</span><strong>{run.participantCount}<small> / {run.capacity}</small></strong></div>
         <div className={styles.runActions}>
+          {(!activeRunId || activeRunId === run.id) && (
+            <button
+              className={styles.resetButton}
+              type="button"
+              disabled={Boolean(busy)}
+              onClick={resetRun}
+            >{busy === "reset" ? "Resetting…" : "Reset & start over"}</button>
+          )}
           {run.isActive ? (
-            <button className={styles.dangerButton} type="button" disabled={busy === "close"} onClick={() => {
-              if (window.confirm("End the Day 1 session? All activities will close. You can still enable review mode afterwards.")) {
+            <button className={styles.dangerButton} type="button" disabled={Boolean(busy)} onClick={() => {
+              if (window.confirm("End this classroom session? All activities will close. You can still enable review mode afterwards.")) {
                 void updateRun({ action: "close-run" }, "close");
               }
-            }}>End Day 1 session</button>
+            }}>End classroom session</button>
           ) : (
             activeRunId ? (
               <button type="button" onClick={() => void loadRun(activeRunId)}>Return to live session</button>
             ) : (
-              <button type="button" disabled={busy === "create"} onClick={() => void createRun()}>
+              <button type="button" disabled={Boolean(busy)} onClick={() => void createRun()}>
                 {busy === "create" ? "Preparing…" : "Start a new session"}
               </button>
             )
@@ -313,7 +330,7 @@ export function ControlRoom({ email }: { email: string }) {
                 ) : mode === "live" ? (
                   <button
                     type="button"
-                    disabled={!state || busy === `${activity.key}-mode`}
+                    disabled={!state || Boolean(busy)}
                     onClick={() => void updateRun(
                       { action: "set-activity-mode", activityKey: activity.key, mode: "closed" },
                       `${activity.key}-mode`,
@@ -323,7 +340,7 @@ export function ControlRoom({ email }: { email: string }) {
                   <button
                     className={styles.hideButton}
                     type="button"
-                    disabled={!state || busy === `${activity.key}-mode`}
+                    disabled={!state || Boolean(busy)}
                     onClick={() => void updateRun(
                       { action: "set-activity-mode", activityKey: activity.key, mode: "closed" },
                       `${activity.key}-mode`,
@@ -334,7 +351,7 @@ export function ControlRoom({ email }: { email: string }) {
                     {run.isActive && (
                       <button
                         type="button"
-                        disabled={!state || busy === `${activity.key}-mode`}
+                        disabled={!state || Boolean(busy)}
                         onClick={() => void updateRun(
                           { action: "set-activity-mode", activityKey: activity.key, mode: "live" },
                           `${activity.key}-mode`,
@@ -344,7 +361,7 @@ export function ControlRoom({ email }: { email: string }) {
                     <button
                       className={styles.revealButton}
                       type="button"
-                      disabled={!state || busy === `${activity.key}-mode`}
+                      disabled={!state || Boolean(busy)}
                       onClick={() => void updateRun(
                         { action: "set-activity-mode", activityKey: activity.key, mode: "review" },
                         `${activity.key}-mode`,
@@ -368,13 +385,13 @@ export function ControlRoom({ email }: { email: string }) {
         </header>
         <div className={styles.privateCompletionRows}>
           <article>
-            <span>Activity 5</span>
+            <span>Day 1 · Activity 5</span>
             <h3>Make a rational decision</h3>
             <strong>{run.completionCounts?.["rational-decision"] ?? 0}</strong>
             <small>finished</small>
           </article>
           <article>
-            <span>Activity 6</span>
+            <span>Day 2 · Activity 1</span>
             <h3>How do you prefer to think?</h3>
             <strong>{run.completionCounts?.["rei-10"] ?? 0}</strong>
             <small>finished</small>

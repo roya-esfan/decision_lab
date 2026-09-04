@@ -120,14 +120,6 @@ export const courseDays: CourseDay[] = [
         href: "/day/1/assignment-3",
         status: "ready",
       },
-      {
-        number: 6,
-        title: "How do you prefer to think?",
-        description:
-          "Complete the REI-10 and explore your cognitive style",
-        href: "/day/1/rei-10",
-        status: "ready",
-      },
     ],
   },
   {
@@ -160,7 +152,16 @@ export const courseDays: CourseDay[] = [
       ],
     },
     sessions: [],
-    assignments: [],
+    assignments: [
+      {
+        number: 1,
+        title: "How do you prefer to think?",
+        description:
+          "Complete the REI-10 and explore your cognitive style",
+        href: "/day/2/rei-10",
+        status: "ready",
+      },
+    ],
   },
   {
     number: 3,

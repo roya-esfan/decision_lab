@@ -24,7 +24,8 @@ never sent to Supabase.
    - `supabase/migrations/202609040003_private_completion_counts.sql`
 
 The last migration stores only an anonymous, run-specific completion marker
-for Activities 5 and 6. It does not store any activity content or scores.
+for Day 1 Activity 5 and Day 2 Activity 1. It does not store any activity
+content or scores.
 
 The migration enables Row Level Security, removes access for the public
 database roles, creates server-only functions for joining and submitting, and
@@ -60,7 +61,7 @@ in client-side code. Redeploy Vercel after adding or changing variables.
 
 1. Open `/instructor` on the deployed website.
 2. Request the secure email link and open it in the browser you want to use for classroom control.
-3. Create the Day 1 session.
+3. Create a classroom session.
 4. Open a specific live activity immediately before the class answers it.
 5. Use **Open presentation view** to show the automatically updating results.
 6. Close the activity to freeze its classroom responses, then enable review mode when students should be able to revisit it.

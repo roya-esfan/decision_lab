@@ -3180,6 +3180,13 @@
   color: #8c2e25;
 }
 
+.runActions .resetButton {
+  margin-right: auto;
+  border-color: #b8a38f;
+  background: transparent;
+  color: #70472f;
+}
+
 .controlActivities {
   padding-top: 46px;
 }
@@ -3750,6 +3757,10 @@
 
   .runActions button {
     flex: 1;
+  }
+
+  .runActions .resetButton {
+    margin-right: 0;
   }
 
   .controlActivities article > header {

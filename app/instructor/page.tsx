@@ -13,7 +13,7 @@ export default async function InstructorPage() {
       <main>
         <header className={styles.instructorHeader}>
           <p className={styles.eyebrow}>Instructor only</p>
-          <h1>Day 1 classroom</h1>
+          <h1>Classroom control</h1>
         </header>
         {instructor ? <ControlRoom email={instructor.email} /> : <InstructorLogin />}
       </main>

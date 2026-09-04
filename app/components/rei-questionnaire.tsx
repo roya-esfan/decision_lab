@@ -2,8 +2,8 @@
 
 import { useMemo, useState } from "react";
 import { rei10Items, rei10ResponseLabels } from "@/content/course";
-import { recordAnonymousCompletion } from "../../../components/anonymous-completion";
-import styles from "../../../course.module.css";
+import { recordAnonymousCompletion } from "./anonymous-completion";
+import styles from "../course.module.css";
 
 type Answers = Record<string, number>;
 
