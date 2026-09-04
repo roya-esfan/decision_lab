@@ -152,15 +152,23 @@
   list-style: none;
 }
 
+.sessionList {
+  border: 1px solid var(--line);
+}
+
 .sessionList li {
   display: grid;
   min-height: 92px;
-  padding: 18px 0;
+  padding: 18px 24px;
   grid-template-columns: 150px minmax(0, 1fr) 70px;
   gap: 28px;
   align-items: center;
   background: #edf4f7;
   border-bottom: 1px solid var(--line);
+}
+
+.sessionList li:last-child {
+  border-bottom: 0;
 }
 
 .sessionList time {
@@ -393,6 +401,7 @@
   }
 
   .sessionList li {
+    padding: 16px;
     grid-template-columns: 1fr auto;
     gap: 8px 16px;
   }

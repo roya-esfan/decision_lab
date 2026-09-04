@@ -41,9 +41,7 @@
 }
 
 .scenario {
-  display: grid;
-  grid-template-columns: minmax(180px, .55fr) minmax(0, 1.45fr);
-  gap: clamp(34px, 6vw, 78px);
+  display: block;
   padding: 29px 0 33px;
   border-top: 2px solid var(--ink);
   border-bottom: 1px solid var(--line);
@@ -248,11 +246,6 @@
 }
 
 @media (max-width: 720px) {
-  .scenario {
-    grid-template-columns: 1fr;
-    gap: 24px;
-  }
-
   .outcomes {
     grid-template-columns: 1fr;
   }

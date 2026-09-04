@@ -62,15 +62,21 @@ export function LiveResults({
         return (
           <article key={result.promptKey}>
             <header><span>{String(index + 1).padStart(2, "0")}</span><h2>{result.label}</h2><strong>{total} responses</strong></header>
-            <div>
+            <div className={styles.liveResultChart}>
               {Object.entries(result.counts).map(([choice, count]) => {
                 const percentage = total === 0 ? 0 : Math.round((count / total) * 100);
                 return (
-                  <div className={styles.liveResultBar} key={choice}>
-                    <span>{choice}</span>
-                    <div aria-hidden="true"><i style={{ width: `${percentage}%` }} /></div>
+                  <div
+                    className={styles.liveResultColumn}
+                    key={choice}
+                    aria-label={`${choice}: ${percentage}% (${count} ${count === 1 ? "response" : "responses"})`}
+                  >
                     <strong>{percentage}%</strong>
-                    <em>{count}</em>
+                    <div aria-hidden="true">
+                      <i style={{ height: percentage === 0 ? "2px" : `${percentage}%` }} />
+                    </div>
+                    <span>{choice}</span>
+                    <em>{count} {count === 1 ? "response" : "responses"}</em>
                   </div>
                 );
               })}

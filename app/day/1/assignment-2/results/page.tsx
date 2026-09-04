@@ -16,7 +16,7 @@ export default async function ExamResultResultsPage({ searchParams }: { searchPa
         <header className={styles.resultsHeader}>
           <p className={styles.eyebrow}>Day 1 · Activity 3 · Class results</p>
           <h1>Which result felt better?</h1>
-          <p>{instructorRunId ? "Instructor view · Updates automatically while this page is open." : "Results are available here in review mode."}</p>
+          {!instructorRunId && <p>Results are available here in review mode.</p>}
         </header>
         <LiveResults activityKey="assignment-2" projector={projector} instructorRunId={instructorRunId} />
       </main>

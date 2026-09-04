@@ -2712,42 +2712,52 @@
   text-transform: uppercase;
 }
 
-.liveResultBar {
+.liveResultChart {
   display: grid;
-  grid-template-columns: 105px 1fr 70px 42px;
-  gap: 17px;
-  align-items: center;
-  min-height: 52px;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 220px));
+  gap: clamp(38px, 8vw, 100px);
+  justify-content: center;
+  padding: 15px 0 20px;
 }
 
-.liveResultBar > span {
-  font-size: 13px;
+.liveResultColumn {
+  display: grid;
+  grid-template-rows: 42px 260px auto auto;
+  text-align: center;
+}
+
+.liveResultColumn > strong {
+  color: var(--accent);
+  font-size: 28px;
+  letter-spacing: -.035em;
+}
+
+.liveResultColumn > div {
+  position: relative;
+  border-bottom: 1px solid var(--ink);
+}
+
+.liveResultColumn i {
+  position: absolute;
+  right: 12%;
+  bottom: 0;
+  left: 12%;
+  display: block;
+  background: var(--accent);
+}
+
+.liveResultColumn > span {
+  margin-top: 14px;
+  font-size: 14px;
   font-weight: 850;
   text-transform: uppercase;
 }
 
-.liveResultBar > div {
-  height: 26px;
-  background: var(--fine-line);
-}
-
-.liveResultBar i {
-  display: block;
-  height: 100%;
-  background: var(--accent);
-}
-
-.liveResultBar > strong {
-  color: var(--accent);
-  font-size: 26px;
-  text-align: right;
-}
-
-.liveResultBar > em {
+.liveResultColumn > em {
+  margin-top: 5px;
   color: var(--muted);
   font-size: 11px;
   font-style: normal;
-  text-align: right;
 }
 
 .instructorHeader {
@@ -3331,13 +3341,13 @@
     grid-column: 2;
   }
 
-  .liveResultBar {
-    grid-template-columns: 82px 1fr 54px;
-    gap: 10px;
+  .liveResultChart {
+    grid-template-columns: repeat(2, minmax(110px, 190px));
+    gap: 24px;
   }
 
-  .liveResultBar > em {
-    display: none;
+  .liveResultColumn {
+    grid-template-rows: 38px 210px auto auto;
   }
 
   .instructorLogin {

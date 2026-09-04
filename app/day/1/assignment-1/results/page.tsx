@@ -16,7 +16,7 @@ export default async function BargainResultsPage({ searchParams }: { searchParam
         <header className={styles.resultsHeader}>
           <p>Day 1 · Activity 2 · Class results</p>
           <h1>Accept or reject?</h1>
-          <p>{instructorRunId ? "Instructor view · Updates automatically while this page is open." : "Results are available here in review mode."}</p>
+          {!instructorRunId && <p>Results are available here in review mode.</p>}
         </header>
         <LiveResults activityKey="assignment-1" projector={projector} instructorRunId={instructorRunId} />
       </main>

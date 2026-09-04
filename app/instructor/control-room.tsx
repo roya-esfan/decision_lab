@@ -174,15 +174,6 @@ export function ControlRoom({ email }: { email: string }) {
 
   return (
     <section className={styles.controlRoom}>
-      <div className={styles.instructorGuide}>
-        <p className={styles.eyebrow}>How it works</p>
-        <ol>
-          <li>Open an activity when you are ready to collect responses</li>
-          <li>Students answer directly; class results stay hidden from them</li>
-          <li>Close and present the frozen results, then enable review mode later</li>
-        </ol>
-      </div>
-
       {recentRuns.length > 1 && (
         <label className={styles.runSelector}>
           <span>Viewing session</span>

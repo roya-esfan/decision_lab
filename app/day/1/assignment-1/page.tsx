@@ -16,16 +16,11 @@ export default function BargainAssignmentPage() {
           <h1>A two-player bargain</h1>
         </header>
 
-        <section className={styles.scenario} aria-labelledby="scenario-title">
-          <div className={styles.scenarioTitle}>
-            <p>Before you begin</p>
-            <h2 id="scenario-title">The situation</h2>
-          </div>
+        <section className={styles.scenario} aria-label="Activity instructions">
           <div className={styles.scenarioBody}>
             <p>
               Eve receives <strong>100 kr</strong> and decides how to divide it
-              between herself and you. You are the responder, and you do not
-              know each other.
+              between herself and you.
             </p>
             <dl className={styles.outcomes}>
               <div>
