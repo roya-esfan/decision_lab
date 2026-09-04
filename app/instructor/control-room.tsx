@@ -253,7 +253,7 @@ export function ControlRoom({ email }: { email: string }) {
                 </div>
                 <div className={styles.activityState}>
                   <span className={mode === "live" ? styles.stateLive : mode === "review" ? styles.stateRevealed : undefined}>
-                    {mode === "live" ? "Live · collecting" : mode === "review" ? "Review mode" : "Closed"}
+                    {!state ? "Database update required" : mode === "live" ? "Live · collecting" : mode === "review" ? "Review mode" : "Closed"}
                   </span>
                 </div>
               </header>
@@ -306,7 +306,9 @@ export function ControlRoom({ email }: { email: string }) {
                   target="_blank"
                   rel="noreferrer"
                 >Open presentation view</a>
-                {mode === "live" ? (
+                {!state ? (
+                  <p className={styles.activitySetupWarning}>Run the latest Supabase migration, then refresh this page.</p>
+                ) : mode === "live" ? (
                   <button
                     type="button"
                     disabled={!state || busy === `${activity.key}-mode`}

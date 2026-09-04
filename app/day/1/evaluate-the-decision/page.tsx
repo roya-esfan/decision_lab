@@ -13,7 +13,7 @@ export default function EvaluateDecisionPage() {
         <header className={styles.header}>
           <p>Day 1 · Activity 3</p>
           <h1>Evaluate the decision</h1>
-          <p>Consider three decisions made under uncertainty and rate the quality of each decision.</p>
+          <p>Consider three decisions and rate the quality of each decision.</p>
         </header>
         <EvaluateDecisionActivity />
       </main>

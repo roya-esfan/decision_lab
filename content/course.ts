@@ -102,7 +102,7 @@ export const courseDays: CourseDay[] = [
       {
         number: 3,
         title: "Evaluate the decision",
-        description: "Rate three decisions made under uncertainty",
+        description: "Rate three decisions",
         href: "/day/1/evaluate-the-decision",
         status: "ready",
       },
