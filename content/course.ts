@@ -101,20 +101,27 @@ export const courseDays: CourseDay[] = [
       },
       {
         number: 3,
+        title: "Evaluate the decision",
+        description: "Rate three decisions made under uncertainty",
+        href: "/day/1/evaluate-the-decision",
+        status: "ready",
+      },
+      {
+        number: 4,
         title: "Which exam results feel better?",
         description: "Choose based on your immediate reaction",
         href: "/day/1/assignment-2",
         status: "ready",
       },
       {
-        number: 4,
+        number: 5,
         title: "Make a rational decision",
         description: "Apply six steps to a problem of your own and compare weighted alternatives",
         href: "/day/1/assignment-3",
         status: "ready",
       },
       {
-        number: 5,
+        number: 6,
         title: "How do you prefer to think?",
         description:
           "Complete the REI-10 and explore your cognitive style",

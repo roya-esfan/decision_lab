@@ -2760,6 +2760,91 @@
   font-style: normal;
 }
 
+.outcomeMeanChart {
+  display: grid;
+  grid-template-columns: 36px repeat(2, minmax(180px, 250px));
+  gap: clamp(24px, 5vw, 64px);
+  justify-content: center;
+  padding: 15px 0 24px;
+}
+
+.outcomeScaleLabels,
+.outcomeMeanColumn {
+  display: grid;
+  grid-template-rows: 280px auto auto auto;
+}
+
+.outcomeScaleLabels > span {
+  grid-row: 1;
+  align-self: start;
+  color: var(--muted);
+  font-size: 10px;
+  text-align: right;
+}
+
+.outcomeScaleLabels > span:nth-child(2) {
+  align-self: center;
+}
+
+.outcomeScaleLabels > span:nth-child(3) {
+  align-self: end;
+}
+
+.outcomeMeanColumn {
+  text-align: center;
+}
+
+.outcomeMeanPlot {
+  position: relative;
+  border-bottom: 1px solid var(--line);
+}
+
+.outcomeMeanPlot > span {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  left: 0;
+  border-top: 1px solid var(--ink);
+}
+
+.outcomeMeanPlot i {
+  position: absolute;
+  right: 18%;
+  left: 18%;
+  display: block;
+  background: var(--accent);
+}
+
+.outcomeMeanPlot .positiveMean {
+  bottom: 50%;
+}
+
+.outcomeMeanPlot .negativeMean {
+  top: 50%;
+  background: #6b7d89;
+}
+
+.outcomeMeanColumn > strong {
+  margin-top: 13px;
+  color: var(--accent);
+  font-size: 28px;
+  letter-spacing: -.035em;
+}
+
+.outcomeMeanColumn > span {
+  margin-top: 3px;
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.outcomeMeanColumn > em {
+  margin-top: 5px;
+  color: var(--muted);
+  font-size: 11px;
+  font-style: normal;
+}
+
 .instructorHeader {
   max-width: 960px;
   padding: 48px 0 40px;
@@ -3266,6 +3351,44 @@
   text-align: right;
 }
 
+.instructorMeanRows {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-top: 1px solid var(--fine-line);
+  border-bottom: 1px solid var(--fine-line);
+}
+
+.instructorMeanRows > div {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 5px 16px;
+  padding: 13px 18px 13px 0;
+  align-items: baseline;
+}
+
+.instructorMeanRows > div + div {
+  padding-left: 18px;
+  border-left: 1px solid var(--fine-line);
+}
+
+.instructorMeanRows span {
+  font-size: 11px;
+  font-weight: 750;
+}
+
+.instructorMeanRows strong {
+  grid-row: 1 / 3;
+  grid-column: 2;
+  color: var(--accent);
+  font-size: 24px;
+}
+
+.instructorMeanRows em {
+  color: var(--muted);
+  font-size: 10px;
+  font-style: normal;
+}
+
 .controlActivities article > footer {
   flex-wrap: wrap;
   align-items: center;
@@ -3350,6 +3473,16 @@
     grid-template-rows: 38px 210px auto auto;
   }
 
+  .outcomeMeanChart {
+    grid-template-columns: 28px repeat(2, minmax(110px, 1fr));
+    gap: 14px;
+  }
+
+  .outcomeScaleLabels,
+  .outcomeMeanColumn {
+    grid-template-rows: 220px auto auto auto;
+  }
+
   .instructorLogin {
     gap: 28px;
   }
@@ -3423,6 +3556,20 @@
 
   .activityResultSummary > div:first-child strong {
     font-size: 30px;
+  }
+
+  .instructorMeanRows {
+    grid-template-columns: 1fr;
+  }
+
+  .instructorMeanRows > div,
+  .instructorMeanRows > div + div {
+    padding: 12px 0;
+    border-left: 0;
+  }
+
+  .instructorMeanRows > div + div {
+    border-top: 1px solid var(--fine-line);
   }
 
   .controlSectionHeading {

@@ -1,0 +1,382 @@
+.page {
+  padding-bottom: 44px;
+}
+
+.breadcrumb {
+  display: flex;
+  min-height: 54px;
+  align-items: center;
+  border-bottom: 1px solid var(--fine-line);
+  font-size: 14px;
+}
+
+.breadcrumb a {
+  color: var(--ink);
+  text-underline-offset: 4px;
+}
+
+.header,
+.resultsHeader {
+  max-width: 980px;
+  padding: 48px 0 42px;
+}
+
+.header > p:first-child,
+.resultsHeader > p:first-child,
+.conditionPicker > p,
+.complete > p,
+.scenarioHeader p {
+  margin: 0 0 12px;
+  color: var(--accent);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.header h1,
+.resultsHeader h1 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(38px, 5vw, 58px);
+  font-weight: 400;
+  letter-spacing: -.035em;
+  line-height: 1.05;
+}
+
+.header > p:last-child,
+.resultsHeader > p:last-child {
+  max-width: 730px;
+  margin: 18px 0 0;
+  color: var(--muted);
+  font-size: 17px;
+  line-height: 1.55;
+}
+
+.conditionPicker,
+.activity,
+.complete {
+  padding: 32px 0 42px;
+  border-top: 2px solid var(--ink);
+  border-bottom: 1px solid var(--line);
+}
+
+.conditionPicker h2,
+.complete h2 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(34px, 4.5vw, 52px);
+  font-weight: 400;
+  letter-spacing: -.035em;
+}
+
+.conditionPicker > div {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(120px, 230px));
+  gap: 14px;
+  margin-top: 30px;
+}
+
+.conditionPicker button {
+  min-height: 112px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--accent);
+  cursor: pointer;
+  font: 700 42px/1 Georgia, "Times New Roman", serif;
+}
+
+.conditionPicker button:hover,
+.conditionPicker button:focus-visible {
+  border-color: var(--accent);
+  background: #edf4f7;
+}
+
+.scenarioHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 30px;
+  align-items: baseline;
+  padding-bottom: 23px;
+  border-bottom: 1px solid var(--line);
+}
+
+.scenarioHeader p {
+  margin-bottom: 7px;
+}
+
+.scenarioHeader h2 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(30px, 4vw, 46px);
+  font-weight: 400;
+  letter-spacing: -.035em;
+}
+
+.scenarioHeader > span {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+
+.scenarioText {
+  max-width: 900px;
+  padding: 28px 0;
+  font-size: 17px;
+  line-height: 1.65;
+}
+
+.scenarioText p {
+  margin: 0 0 20px;
+}
+
+.options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin: 24px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.options > div {
+  padding: 18px 22px 18px 0;
+}
+
+.options > div + div {
+  padding-left: 22px;
+  border-left: 1px solid var(--line);
+}
+
+.options dt {
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.options dd {
+  margin: 7px 0 0;
+  font-size: 15px;
+}
+
+.scenarioText .outcome {
+  margin: 28px 0 0;
+  padding: 18px 20px;
+  border-left: 4px solid var(--accent);
+  background: #edf4f7;
+  font-weight: 700;
+}
+
+.evaluationPrompt {
+  padding: 24px 0;
+  border-top: 1px solid var(--line);
+}
+
+.evaluationPrompt p {
+  margin: 0 0 9px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.evaluationPrompt h3 {
+  max-width: 900px;
+  margin: 0;
+  font-size: clamp(22px, 3vw, 31px);
+  letter-spacing: -.025em;
+}
+
+.ratingScale {
+  display: grid;
+  border-top: 1px solid var(--line);
+}
+
+.ratingScale button {
+  display: grid;
+  grid-template-columns: 62px 1fr;
+  gap: 18px;
+  min-height: 58px;
+  padding: 12px 16px;
+  align-items: center;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+}
+
+.ratingScale button:hover {
+  background: #f3f6f7;
+}
+
+.ratingScale button strong {
+  color: var(--accent);
+  font-size: 21px;
+  text-align: center;
+}
+
+.ratingScale button span {
+  font-size: 15px;
+}
+
+.ratingScale .selectedRating {
+  background: var(--accent);
+  color: white;
+}
+
+.ratingScale .selectedRating strong {
+  color: white;
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.actions button {
+  min-height: 50px;
+  padding: 0 20px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.actions button:last-child {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: white;
+}
+
+.actions button:disabled {
+  cursor: not-allowed;
+  opacity: .45;
+}
+
+.responseSummary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin-top: 28px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.responseSummary > div {
+  display: grid;
+  gap: 7px;
+  padding: 18px 22px 18px 0;
+  border-right: 1px solid var(--line);
+}
+
+.responseSummary > div:not(:first-child) {
+  padding-left: 22px;
+}
+
+.responseSummary > div:last-child {
+  border-right: 0;
+}
+
+.responseSummary span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.responseSummary strong {
+  color: var(--accent);
+  font-size: 26px;
+}
+
+.source {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 28px;
+  margin-top: 42px;
+  padding: 22px 0;
+  border-top: 1px solid var(--line);
+}
+
+.source strong {
+  font-size: 13px;
+}
+
+.source p {
+  max-width: 850px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.source a {
+  color: var(--accent);
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 650px) {
+  .header,
+  .resultsHeader {
+    padding: 38px 0 34px;
+  }
+
+  .conditionPicker > div,
+  .options,
+  .responseSummary,
+  .source {
+    grid-template-columns: 1fr;
+  }
+
+  .conditionPicker > div {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .conditionPicker button {
+    min-height: 90px;
+  }
+
+  .scenarioHeader {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .scenarioText {
+    font-size: 16px;
+  }
+
+  .options > div,
+  .options > div + div {
+    padding: 15px 0;
+    border-left: 0;
+  }
+
+  .options > div + div {
+    border-top: 1px solid var(--line);
+  }
+
+  .ratingScale button {
+    grid-template-columns: 44px 1fr;
+    gap: 10px;
+    padding: 11px 6px;
+  }
+
+  .ratingScale button span {
+    font-size: 14px;
+  }
+
+  .actions button {
+    flex: 1;
+  }
+
+  .responseSummary > div,
+  .responseSummary > div:not(:first-child) {
+    padding: 14px 0;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+}

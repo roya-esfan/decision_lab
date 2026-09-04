@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import type { ActivityKey } from "@/lib/classroom";
+import { summarizeOutcomeBiasCounts } from "@/lib/outcome-bias";
 import styles from "../course.module.css";
 
 type ActivityState = { key: ActivityKey; isOpen: boolean; isRevealed: boolean };
@@ -38,8 +39,15 @@ const activities: Array<{
     resultsPath: "/day/1/assignment-1/results",
   },
   {
-    key: "assignment-2",
+    key: "outcome-bias",
     number: 3,
+    title: "Evaluate the decision",
+    activityHref: "/day/1/evaluate-the-decision",
+    resultsPath: "/day/1/evaluate-the-decision/results",
+  },
+  {
+    key: "assignment-2",
+    number: 4,
     title: "Which exam results feel better?",
     activityHref: "/day/1/assignment-2",
     resultsPath: "/day/1/assignment-2/results",
@@ -261,17 +269,29 @@ export function ControlRoom({ email }: { email: string }) {
                     return (
                       <section key={result.promptKey}>
                         <header><strong>{result.label}</strong><span>{total} responses</span></header>
-                        {Object.entries(result.counts).map(([choice, count]) => {
-                          const percentage = total === 0 ? 0 : Math.round((count / total) * 100);
-                          return (
-                            <div className={styles.instructorResultBar} key={choice}>
-                              <span>{choice}</span>
-                              <div aria-hidden="true"><i style={{ width: `${percentage}%` }} /></div>
-                              <strong>{percentage}%</strong>
-                              <em>{count}</em>
-                            </div>
-                          );
-                        })}
+                        {activity.key === "outcome-bias" ? (
+                          <div className={styles.instructorMeanRows}>
+                            {summarizeOutcomeBiasCounts(result.counts).map((summary) => (
+                              <div key={summary.condition}>
+                                <span>Condition {summary.conditionNumber} · {summary.label}</span>
+                                <strong>{summary.mean === null ? "—" : summary.mean.toFixed(2)}</strong>
+                                <em>n = {summary.count}</em>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          Object.entries(result.counts).map(([choice, count]) => {
+                            const percentage = total === 0 ? 0 : Math.round((count / total) * 100);
+                            return (
+                              <div className={styles.instructorResultBar} key={choice}>
+                                <span>{choice}</span>
+                                <div aria-hidden="true"><i style={{ width: `${percentage}%` }} /></div>
+                                <strong>{percentage}%</strong>
+                                <em>{count}</em>
+                              </div>
+                            );
+                          })
+                        )}
                       </section>
                     );
                   })}

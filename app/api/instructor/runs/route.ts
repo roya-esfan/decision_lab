@@ -115,6 +115,7 @@ export async function POST(request: Request) {
 
     const { error: stateError } = await supabase.from("classroom_activity_states").insert([
       { run_id: run.id, activity_key: "assignment-1", is_open: false, is_revealed: false },
+      { run_id: run.id, activity_key: "outcome-bias", is_open: false, is_revealed: false },
       { run_id: run.id, activity_key: "assignment-2", is_open: false, is_revealed: false },
     ]);
     if (stateError) {

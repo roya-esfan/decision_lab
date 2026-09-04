@@ -9,12 +9,12 @@ export default function RationalDecisionAssignmentPage() {
       <main>
         <nav className={styles.breadcrumb} aria-label="Breadcrumb">
           <Link href="/">Course home</Link><span>/</span>
-          <Link href="/day/1">Day 01</Link><span>/</span><span>Assignment 03</span>
+          <Link href="/day/1">Day 1</Link><span>/</span><span>Activity 5</span>
         </nav>
 
         <header className={styles.activityHeader}>
           <div>
-            <p className={styles.eyebrow}>Day 01 · Assignment 03</p>
+            <p className={styles.eyebrow}>Day 1 · Activity 5</p>
             <h1>Build a rational decision</h1>
           </div>
           <div className={styles.activityIntro}>

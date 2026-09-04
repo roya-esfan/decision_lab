@@ -19,7 +19,7 @@ export default function Rei10Page() {
         </nav>
         <header className={styles.activityHeader}>
           <div>
-            <p className={styles.eyebrow}>Day 01 · Assignment 04 · Individual</p>
+            <p className={styles.eyebrow}>Day 1 · Activity 6 · Individual</p>
             <h1>How do you tend to think?</h1>
           </div>
           <div className={styles.activityIntro}>

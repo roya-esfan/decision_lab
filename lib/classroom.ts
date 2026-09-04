@@ -1,4 +1,6 @@
-export const activityKeys = ["assignment-1", "assignment-2"] as const;
+import { outcomeBiasResponseChoices } from "./outcome-bias";
+
+export const activityKeys = ["assignment-1", "outcome-bias", "assignment-2"] as const;
 export type ActivityKey = (typeof activityKeys)[number];
 
 export const promptDefinitions = {
@@ -9,6 +11,11 @@ export const promptDefinitions = {
   ],
   "assignment-2": [
     { key: "exam-result", label: "Exam result", choices: ["70/100", "96/137"] },
+  ],
+  "outcome-bias": [
+    { key: "outcome-bypass", label: "Scenario 1 · Bypass operation", choices: outcomeBiasResponseChoices },
+    { key: "outcome-diagnostic-test", label: "Scenario 2 · Diagnostic test", choices: outcomeBiasResponseChoices },
+    { key: "outcome-gamble", label: "Scenario 3 · Prize choice", choices: outcomeBiasResponseChoices },
   ],
 } as const;
 
