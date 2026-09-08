@@ -468,17 +468,45 @@ export function ControlRoom({ email }: { email: string }) {
 }
 
 function InstructorCauseRanking({ results }: { results: ResultRow[] }) {
+  const summaries = summarizeCauseRankings(results);
+
   return (
     <section>
       <header><strong>Class ranking</strong><span>Ordered by average rank</span></header>
-      <div className={styles.instructorRankSummary}>
-        {summarizeCauseRankings(results).map((summary, index) => (
-          <div key={summary.promptKey}>
-            <span>{index + 1}</span>
-            <span>{summary.label}</span>
-            <strong>{summary.meanRank === null ? "—" : summary.meanRank.toFixed(2)}</strong>
+      <div className={styles.instructorHeatmapScroll}>
+        <div className={styles.instructorRankHeatmap} role="table" aria-label="Distribution of class rankings">
+          <div role="row" className={styles.instructorHeatmapHead}>
+            <span role="columnheader">Cause</span>
+            {["1", "2", "3", "4", "5"].map((rank) => <span role="columnheader" key={rank}>{rank}</span>)}
+            <span role="columnheader">Average</span>
           </div>
-        ))}
+          {summaries.map((summary) => (
+            <div role="row" key={summary.promptKey}>
+              <strong role="cell">{summary.label}</strong>
+              {["1", "2", "3", "4", "5"].map((rank) => {
+                const count = summary.counts[rank] ?? 0;
+                const percentage = summary.total === 0 ? 0 : Math.round((count / summary.total) * 100);
+                const opacity = percentage === 0 ? 0.035 : 0.12 + (percentage / 100) * 0.78;
+                return (
+                  <span
+                    className={styles.instructorHeatCell}
+                    role="cell"
+                    key={rank}
+                    style={{
+                      backgroundColor: `rgba(30, 68, 158, ${opacity})`,
+                      color: percentage >= 45 ? "#ffffff" : "#14213d",
+                    }}
+                    aria-label={`Rank ${rank}: ${percentage}%, ${count} ${count === 1 ? "response" : "responses"}`}
+                    title={`Rank ${rank}: ${percentage}% (${count})`}
+                  >
+                    {percentage}%
+                  </span>
+                );
+              })}
+              <strong role="cell">{summary.meanRank === null ? "—" : summary.meanRank.toFixed(2)}</strong>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );

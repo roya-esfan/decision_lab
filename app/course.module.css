@@ -2967,15 +2967,21 @@
 }
 
 .causeRankTable {
+  min-width: 960px;
   border-top: 1px solid var(--ink);
+}
+
+.causeRankTableScroll {
+  overflow-x: auto;
+  scrollbar-width: thin;
 }
 
 .causeRankTable > div {
   display: grid;
   min-height: 82px;
   padding: 13px 0;
-  grid-template-columns: 90px minmax(260px, 1fr) 130px 180px;
-  gap: 22px;
+  grid-template-columns: 72px minmax(210px, 1fr) repeat(5, 64px) 105px 155px;
+  gap: 10px;
   align-items: center;
   border-bottom: 1px solid var(--fine-line);
 }
@@ -2997,41 +3003,84 @@
   font-weight: 400;
 }
 
-.causeRankTable > div > div > span {
-  display: block;
+.causeRankLabel {
   font-size: 14px;
   font-weight: 750;
 }
 
-.causeRankTable > div > strong:nth-child(3) {
+.causeMeanRank {
   color: var(--accent);
   font-size: 23px;
+  text-align: center;
 }
 
-.causeRankTable > div > span:last-child {
+.causePublishedDeaths {
   font-size: 14px;
   font-weight: 700;
+  text-align: center;
 }
 
-.rankDistribution {
-  display: flex;
-  width: 100%;
-  height: 7px;
-  margin-top: 10px;
-  overflow: hidden;
-  background: var(--fine-line);
+.rankHeatCell {
+  display: grid;
+  min-height: 48px;
+  place-items: center;
+  font-size: 12px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
 }
 
-.rankDistribution i {
-  min-width: 0;
-  height: 100%;
-  background: var(--accent);
+.instructorHeatmapScroll {
+  overflow-x: auto;
+  scrollbar-width: thin;
 }
 
-.rankDistribution i:nth-child(2) { background: #4e72d9; }
-.rankDistribution i:nth-child(3) { background: #7d96d7; }
-.rankDistribution i:nth-child(4) { background: #aab9d9; }
-.rankDistribution i:nth-child(5) { background: #d2d8e1; }
+.instructorRankHeatmap {
+  min-width: 620px;
+  margin-top: 8px;
+  border-top: 1px solid var(--line);
+}
+
+.instructorRankHeatmap > div {
+  display: grid;
+  grid-template-columns: minmax(185px, 1fr) repeat(5, 54px) 70px;
+  gap: 6px;
+  align-items: center;
+  min-height: 48px;
+  border-bottom: 1px solid var(--fine-line);
+}
+
+.instructorRankHeatmap > div > strong:first-child {
+  font-size: 12px;
+  line-height: 1.3;
+}
+
+.instructorRankHeatmap > div > strong:last-child {
+  color: var(--accent);
+  text-align: center;
+  font-size: 15px;
+}
+
+.instructorRankHeatmap .instructorHeatmapHead {
+  min-height: 32px;
+  color: var(--muted);
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: .045em;
+  text-transform: uppercase;
+}
+
+.instructorHeatmapHead > span:not(:first-child) {
+  text-align: center;
+}
+
+.instructorHeatCell {
+  display: grid;
+  min-height: 34px;
+  place-items: center;
+  font-size: 10px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
 
 .resultSourceNote {
   margin: 0;
@@ -4004,16 +4053,6 @@
     align-items: flex-start;
     flex-direction: column;
     justify-content: center;
-  }
-
-  .causeRankTable > div {
-    grid-template-columns: 36px minmax(0, 1fr) 72px;
-    gap: 10px;
-  }
-
-  .causeRankTable .causeRankHead > span:last-child,
-  .causeRankTable > div > span:last-child {
-    display: none;
   }
 
   .causeRankTable .causeRankHead {
