@@ -2967,21 +2967,15 @@
 }
 
 .causeRankTable {
-  min-width: 960px;
   border-top: 1px solid var(--ink);
-}
-
-.causeRankTableScroll {
-  overflow-x: auto;
-  scrollbar-width: thin;
 }
 
 .causeRankTable > div {
   display: grid;
   min-height: 82px;
   padding: 13px 0;
-  grid-template-columns: 72px minmax(210px, 1fr) repeat(5, 64px) 105px 155px;
-  gap: 10px;
+  grid-template-columns: 90px minmax(260px, 1fr) 130px 180px;
+  gap: 22px;
   align-items: center;
   border-bottom: 1px solid var(--fine-line);
 }
@@ -3003,81 +2997,102 @@
   font-weight: 400;
 }
 
-.causeRankLabel {
+.causeRankTable > div > div > span {
+  display: block;
   font-size: 14px;
   font-weight: 750;
 }
 
-.causeMeanRank {
+.causeRankTable > div > strong:nth-child(3) {
   color: var(--accent);
   font-size: 23px;
-  text-align: center;
 }
 
-.causePublishedDeaths {
+.causeRankTable > div > span:last-child {
   font-size: 14px;
   font-weight: 700;
-  text-align: center;
 }
 
-.rankHeatCell {
-  display: grid;
-  min-height: 48px;
-  place-items: center;
-  font-size: 12px;
-  font-weight: 800;
-  font-variant-numeric: tabular-nums;
+.rankDistribution {
+  display: flex;
+  width: 100%;
+  height: 7px;
+  margin-top: 10px;
+  overflow: hidden;
+  background: var(--fine-line);
 }
 
-.instructorHeatmapScroll {
+.rankDistribution i {
+  min-width: 0;
+  height: 100%;
+  background: var(--accent);
+}
+
+.rankDistribution i:nth-child(2) { background: #4e72d9; }
+.rankDistribution i:nth-child(3) { background: #7d96d7; }
+.rankDistribution i:nth-child(4) { background: #aab9d9; }
+.rankDistribution i:nth-child(5) { background: #d2d8e1; }
+
+.rankHeatmapSection {
+  margin-top: 58px;
+  padding-top: 28px;
+  border-top: 2px solid var(--ink);
+}
+
+.rankHeatmapSection > header {
+  margin-bottom: 24px;
+}
+
+.rankHeatmapSection > header h2 {
+  margin: 7px 0 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(25px, 3vw, 36px);
+  font-weight: 400;
+  letter-spacing: -.03em;
+}
+
+.rankHeatmapScroll {
   overflow-x: auto;
   scrollbar-width: thin;
 }
 
-.instructorRankHeatmap {
-  min-width: 620px;
-  margin-top: 8px;
-  border-top: 1px solid var(--line);
+.rankHeatmap {
+  min-width: 720px;
+  border-top: 1px solid var(--ink);
 }
 
-.instructorRankHeatmap > div {
+.rankHeatmap > div {
   display: grid;
-  grid-template-columns: minmax(185px, 1fr) repeat(5, 54px) 70px;
-  gap: 6px;
+  min-height: 68px;
+  grid-template-columns: minmax(260px, 1fr) repeat(5, minmax(70px, 100px));
+  gap: 8px;
   align-items: center;
-  min-height: 48px;
   border-bottom: 1px solid var(--fine-line);
 }
 
-.instructorRankHeatmap > div > strong:first-child {
-  font-size: 12px;
-  line-height: 1.3;
+.rankHeatmap > div > strong {
+  font-size: 14px;
+  line-height: 1.35;
 }
 
-.instructorRankHeatmap > div > strong:last-child {
-  color: var(--accent);
-  text-align: center;
-  font-size: 15px;
-}
-
-.instructorRankHeatmap .instructorHeatmapHead {
-  min-height: 32px;
+.rankHeatmap .rankHeatmapHead {
+  min-height: 40px;
   color: var(--muted);
-  font-size: 8px;
+  font-size: 9px;
   font-weight: 800;
   letter-spacing: .045em;
   text-transform: uppercase;
 }
 
-.instructorHeatmapHead > span:not(:first-child) {
+.rankHeatmapHead > span:not(:first-child) {
   text-align: center;
 }
 
-.instructorHeatCell {
+.rankHeatCell {
   display: grid;
-  min-height: 34px;
+  min-height: 50px;
   place-items: center;
-  font-size: 10px;
+  font-size: 13px;
   font-weight: 800;
   font-variant-numeric: tabular-nums;
 }
@@ -4055,8 +4070,22 @@
     justify-content: center;
   }
 
+  .causeRankTable > div {
+    grid-template-columns: 36px minmax(0, 1fr) 72px;
+    gap: 10px;
+  }
+
+  .causeRankTable .causeRankHead > span:last-child,
+  .causeRankTable > div > span:last-child {
+    display: none;
+  }
+
   .causeRankTable .causeRankHead {
     font-size: 8px;
+  }
+
+  .rankHeatmapSection {
+    margin-top: 42px;
   }
 
   .liveResultColumn {

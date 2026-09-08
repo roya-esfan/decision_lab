@@ -58,7 +58,7 @@ export function LiveResults({
   if (state.status === "error") return <ResultNotice title="Results are unavailable" detail={state.message} onRefresh={() => void load()} />;
 
   if (activityKey === "causes-of-death") {
-    return <CauseRankingResults results={state.results} />;
+    return <CauseRankingResults results={state.results} showHeatmap={projector} />;
   }
 
   return (
@@ -101,7 +101,7 @@ export function LiveResults({
   );
 }
 
-function CauseRankingResults({ results }: { results: ResultRow[] }) {
+function CauseRankingResults({ results, showHeatmap }: { results: ResultRow[]; showHeatmap: boolean }) {
   const summaries = summarizeCauseRankings(results);
   const responseCount = summaries.length === 0 ? 0 : Math.max(...summaries.map((item) => item.total));
   const formatNumber = new Intl.NumberFormat("en-US");
@@ -115,21 +115,59 @@ function CauseRankingResults({ results }: { results: ResultRow[] }) {
         </div>
         <strong>{responseCount} {responseCount === 1 ? "response" : "responses"}</strong>
       </header>
-      <div className={styles.causeRankTableScroll}>
-        <div className={styles.causeRankTable} role="table" aria-label="Class ranking, distribution across ranks, and published estimates">
-          <div role="row" className={styles.causeRankHead}>
-            <span role="columnheader">Class order</span>
+      <div className={styles.causeRankTable} role="table" aria-label="Average class rank and published estimates">
+        <div role="row" className={styles.causeRankHead}>
+          <span role="columnheader">Class order</span>
+          <span role="columnheader">Cause</span>
+          <span role="columnheader">Average rank</span>
+          <span role="columnheader">Estimated deaths in 2000</span>
+        </div>
+        {summaries.map((summary, index) => (
+          <div role="row" key={summary.promptKey}>
+            <strong role="cell">{index + 1}</strong>
+            <div role="cell">
+              <span>{summary.label}</span>
+              <div className={styles.rankDistribution} aria-label={`Distribution of ranks for ${summary.label}`}>
+                {["1", "2", "3", "4", "5"].map((rank) => {
+                  const count = summary.counts[rank] ?? 0;
+                  const percentage = summary.total === 0 ? 0 : Math.round((count / summary.total) * 100);
+                  return <i key={rank} title={`Rank ${rank}: ${percentage}%`} style={{ flexBasis: `${percentage}%` }} />;
+                })}
+              </div>
+            </div>
+            <strong role="cell">{summary.meanRank === null ? "—" : summary.meanRank.toFixed(2)}</strong>
+            <span role="cell">{summary.deaths2000 === null ? "—" : formatNumber.format(summary.deaths2000)}</span>
+          </div>
+        ))}
+      </div>
+      {showHeatmap && <CauseRankHeatmap summaries={summaries} />}
+      <p className={styles.resultSourceNote}>
+        Reference: Mokdad, A. H., Marks, J. S., Stroup, D. F., &amp; Gerberding,
+        J. L. (2004). Actual causes of death in the United States, 2000.
+        <em> JAMA, 291</em>(10), 1238–1245. Corrected 2005.
+      </p>
+    </section>
+  );
+}
+
+function CauseRankHeatmap({ summaries }: { summaries: ReturnType<typeof summarizeCauseRankings> }) {
+  return (
+    <section className={styles.rankHeatmapSection} aria-label="Class rank distribution heatmap">
+      <header>
+        <p className={styles.eyebrow}>Rank distribution</p>
+        <h2>How the class used each rank</h2>
+      </header>
+      <div className={styles.rankHeatmapScroll}>
+        <div className={styles.rankHeatmap} role="table" aria-label="Percentage of the class assigning each rank">
+          <div role="row" className={styles.rankHeatmapHead}>
             <span role="columnheader">Cause</span>
             {["1", "2", "3", "4", "5"].map((rank) => (
               <span role="columnheader" key={rank}>Rank {rank}</span>
             ))}
-            <span role="columnheader">Average rank</span>
-            <span role="columnheader">Estimated deaths in 2000</span>
           </div>
-          {summaries.map((summary, index) => (
+          {summaries.map((summary) => (
             <div role="row" key={summary.promptKey}>
-              <strong role="cell">{index + 1}</strong>
-              <strong role="cell" className={styles.causeRankLabel}>{summary.label}</strong>
+              <strong role="cell">{summary.label}</strong>
               {["1", "2", "3", "4", "5"].map((rank) => {
                 const count = summary.counts[rank] ?? 0;
                 const percentage = summary.total === 0 ? 0 : Math.round((count / summary.total) * 100);
@@ -149,17 +187,10 @@ function CauseRankingResults({ results }: { results: ResultRow[] }) {
                   </span>
                 );
               })}
-              <strong role="cell" className={styles.causeMeanRank}>{summary.meanRank === null ? "—" : summary.meanRank.toFixed(2)}</strong>
-              <span role="cell" className={styles.causePublishedDeaths}>{summary.deaths2000 === null ? "—" : formatNumber.format(summary.deaths2000)}</span>
             </div>
           ))}
         </div>
       </div>
-      <p className={styles.resultSourceNote}>
-        Reference: Mokdad, A. H., Marks, J. S., Stroup, D. F., &amp; Gerberding,
-        J. L. (2004). Actual causes of death in the United States, 2000.
-        <em> JAMA, 291</em>(10), 1238–1245. Corrected 2005.
-      </p>
     </section>
   );
 }
