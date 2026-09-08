@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test:bingo": "node scripts/verify-bingo-catalog.mjs"
+    "test:bingo": "node scripts/verify-bingo-catalog.mjs",
+    "test:rei": "node scripts/verify-rei-scoring.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.112.4",

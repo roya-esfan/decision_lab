@@ -1,15 +1,10 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { rei10Items, rei10ResponseLabels, type ReiItem } from "@/content/course";
+import { scoreRei10, type ReiAnswers } from "@/lib/rei-scoring";
 import { recordAnonymousCompletion } from "./anonymous-completion";
 import styles from "../course.module.css";
-
-type Answers = Record<string, number>;
-
-function mean(values: number[]) {
-  return values.reduce((total, value) => total + value, 0) / values.length;
-}
 
 function shuffle<T>(items: readonly T[]) {
   const shuffled = [...items];
@@ -36,7 +31,7 @@ function createQuestionOrder(): ReiItem[] {
 
 export function ReiQuestionnaire() {
   const [step, setStep] = useState(0);
-  const [answers, setAnswers] = useState<Answers>({});
+  const [answers, setAnswers] = useState<ReiAnswers>({});
   const [showResults, setShowResults] = useState(false);
   const [orderedItems, setOrderedItems] = useState<ReiItem[]>([]);
   const item = orderedItems[step];
@@ -50,21 +45,7 @@ export function ReiQuestionnaire() {
     return () => window.cancelAnimationFrame(frame);
   }, []);
 
-  const scores = useMemo(() => {
-    if (Object.keys(answers).length !== rei10Items.length) return null;
-
-    const dimensionScore = (dimension: "nfc" | "fi") =>
-      mean(
-        rei10Items
-          .filter((candidate) => candidate.dimension === dimension)
-          .map((candidate) => {
-            const raw = answers[candidate.id];
-            return candidate.reverse ? 6 - raw : raw;
-          }),
-      );
-
-    return { analytical: dimensionScore("nfc"), intuitive: dimensionScore("fi") };
-  }, [answers]);
+  const scores = scoreRei10(answers, rei10Items);
 
   function choose(value: number) {
     if (!item) return;

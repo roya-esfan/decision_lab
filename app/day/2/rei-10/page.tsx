@@ -49,11 +49,6 @@ export default function Rei10Page() {
             Individual differences in intuitive-experiential and analytical-rational
             thinking styles. <em>Journal of Personality and Social Psychology, 71</em>(2),
             390–405. https://doi.org/10.1037/0022-3514.71.2.390
-            <br /><br />
-            The REI-10 items and scoring used here follow Haukioja, J., Nyquist, M.,
-            &amp; Jylkkä, J. (2021). Reports from Twin Earth: Both deep structure and
-            appearance determine the reference of natural kind terms. <em>Mind &amp;
-            Language, 36</em>(3), 377–403. https://doi.org/10.1111/mila.12278
           </p>
         </aside>
       </main>
