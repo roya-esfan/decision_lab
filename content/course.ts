@@ -222,6 +222,20 @@ export const courseDays: CourseDay[] = [
         href: "/day/2/rei-10",
         status: "ready",
       },
+      {
+        number: 2,
+        title: "Which group had larger sales?",
+        description: "Choose which group of companies had the larger combined sales revenue",
+        href: "/day/2/company-revenue",
+        status: "ready",
+      },
+      {
+        number: 3,
+        title: "Rank the causes of death",
+        description: "Arrange five causes from the highest to the lowest estimated number of deaths",
+        href: "/day/2/causes-of-death",
+        status: "ready",
+      },
     ],
   },
   {

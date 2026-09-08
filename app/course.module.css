@@ -2926,6 +2926,127 @@
   font-style: normal;
 }
 
+.correctAnswerNote {
+  margin: 24px 0 0;
+  padding: 18px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.correctAnswerNote strong {
+  color: var(--accent);
+}
+
+.causeRankingResults {
+  border-top: 3px solid var(--ink);
+  border-bottom: 1px solid var(--line);
+}
+
+.causeRankingResults > header {
+  display: flex;
+  min-height: 110px;
+  justify-content: space-between;
+  gap: 30px;
+  align-items: center;
+}
+
+.causeRankingResults > header h2 {
+  margin: 7px 0 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(28px, 3.5vw, 42px);
+  font-weight: 400;
+  letter-spacing: -.035em;
+}
+
+.causeRankingResults > header > strong {
+  color: var(--muted);
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.causeRankTable {
+  border-top: 1px solid var(--ink);
+}
+
+.causeRankTable > div {
+  display: grid;
+  min-height: 82px;
+  padding: 13px 0;
+  grid-template-columns: 90px minmax(260px, 1fr) 130px 180px;
+  gap: 22px;
+  align-items: center;
+  border-bottom: 1px solid var(--fine-line);
+}
+
+.causeRankTable .causeRankHead {
+  min-height: 42px;
+  padding: 8px 0;
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .045em;
+  text-transform: uppercase;
+}
+
+.causeRankTable > div > strong:first-child {
+  color: var(--accent);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 27px;
+  font-weight: 400;
+}
+
+.causeRankTable > div > div > span {
+  display: block;
+  font-size: 14px;
+  font-weight: 750;
+}
+
+.causeRankTable > div > strong:nth-child(3) {
+  color: var(--accent);
+  font-size: 23px;
+}
+
+.causeRankTable > div > span:last-child {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.rankDistribution {
+  display: flex;
+  width: 100%;
+  height: 7px;
+  margin-top: 10px;
+  overflow: hidden;
+  background: var(--fine-line);
+}
+
+.rankDistribution i {
+  min-width: 0;
+  height: 100%;
+  background: var(--accent);
+}
+
+.rankDistribution i:nth-child(2) { background: #4e72d9; }
+.rankDistribution i:nth-child(3) { background: #7d96d7; }
+.rankDistribution i:nth-child(4) { background: #aab9d9; }
+.rankDistribution i:nth-child(5) { background: #d2d8e1; }
+
+.resultMethodNote,
+.resultSourceNote {
+  margin: 0;
+  padding: 15px 0 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+.resultSourceNote {
+  padding: 6px 0 20px;
+  font-size: 10px;
+}
+
 .outcomeMeanChart {
   display: grid;
   grid-template-columns: 36px repeat(2, minmax(180px, 250px));
@@ -3583,6 +3704,36 @@
   gap: 27px;
 }
 
+.instructorRankSummary {
+  display: grid;
+  border-top: 1px solid var(--fine-line);
+}
+
+.instructorRankSummary > div {
+  display: grid;
+  min-height: 38px;
+  grid-template-columns: 30px minmax(0, 1fr) 70px;
+  gap: 12px;
+  align-items: center;
+  border-bottom: 1px solid var(--fine-line);
+}
+
+.instructorRankSummary > div > span:first-child {
+  color: var(--accent);
+  font-weight: 850;
+}
+
+.instructorRankSummary > div > span:nth-child(2) {
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.instructorRankSummary > div > strong {
+  color: var(--accent);
+  font-size: 15px;
+  text-align: right;
+}
+
 .instructorResultRows > section + section {
   padding-top: 24px;
   border-top: 1px solid var(--fine-line);
@@ -3853,6 +4004,26 @@
   .liveResultChart {
     grid-template-columns: repeat(2, minmax(110px, 190px));
     gap: 24px;
+  }
+
+  .causeRankingResults > header {
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .causeRankTable > div {
+    grid-template-columns: 36px minmax(0, 1fr) 72px;
+    gap: 10px;
+  }
+
+  .causeRankTable .causeRankHead > span:last-child,
+  .causeRankTable > div > span:last-child {
+    display: none;
+  }
+
+  .causeRankTable .causeRankHead {
+    font-size: 8px;
   }
 
   .liveResultColumn {

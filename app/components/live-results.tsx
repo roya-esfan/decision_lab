@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import type { ActivityKey } from "@/lib/classroom";
+import { summarizeCauseRankings } from "@/lib/day-two-activities";
 import { summarizeOutcomeBiasCounts } from "@/lib/outcome-bias";
 import styles from "../course.module.css";
 
@@ -56,6 +57,10 @@ export function LiveResults({
   if (state.status === "hidden") return <ResultNotice title="Results are still hidden" detail="The instructor will reveal them when the class is ready to discuss." onRefresh={projector ? undefined : () => void load()} />;
   if (state.status === "error") return <ResultNotice title="Results are unavailable" detail={state.message} onRefresh={() => void load()} />;
 
+  if (activityKey === "causes-of-death") {
+    return <CauseRankingResults results={state.results} />;
+  }
+
   return (
     <section className={styles.liveResultRows} aria-live="polite" aria-label="Revealed class results">
       {state.results.map((result, index) => {
@@ -89,6 +94,58 @@ export function LiveResults({
           </article>
         );
       })}
+      {activityKey === "company-revenue" && (
+        <p className={styles.correctAnswerNote}><strong>Answer:</strong> Group B had the larger combined sales revenue.</p>
+      )}
+    </section>
+  );
+}
+
+function CauseRankingResults({ results }: { results: ResultRow[] }) {
+  const summaries = summarizeCauseRankings(results);
+  const responseCount = summaries.length === 0 ? 0 : Math.max(...summaries.map((item) => item.total));
+  const formatNumber = new Intl.NumberFormat("en-US");
+
+  return (
+    <section className={styles.causeRankingResults} aria-live="polite" aria-label="Class cause-of-death ranking">
+      <header>
+        <div>
+          <p className={styles.eyebrow}>Class ranking</p>
+          <h2>Ordered by average rank</h2>
+        </div>
+        <strong>{responseCount} {responseCount === 1 ? "response" : "responses"}</strong>
+      </header>
+      <div className={styles.causeRankTable} role="table" aria-label="Average class rank and published estimates">
+        <div role="row" className={styles.causeRankHead}>
+          <span role="columnheader">Class order</span>
+          <span role="columnheader">Cause</span>
+          <span role="columnheader">Average rank</span>
+          <span role="columnheader">Estimated deaths in 2000</span>
+        </div>
+        {summaries.map((summary, index) => (
+          <div role="row" key={summary.promptKey}>
+            <strong role="cell">{index + 1}</strong>
+            <div role="cell">
+              <span>{summary.label}</span>
+              <div className={styles.rankDistribution} aria-label={`Distribution of ranks for ${summary.label}`}>
+                {["1", "2", "3", "4", "5"].map((rank) => {
+                  const count = summary.counts[rank] ?? 0;
+                  const percentage = summary.total === 0 ? 0 : Math.round((count / summary.total) * 100);
+                  return <i key={rank} title={`Rank ${rank}: ${percentage}%`} style={{ flexBasis: `${percentage}%` }} />;
+                })}
+              </div>
+            </div>
+            <strong role="cell">{summary.meanRank === null ? "—" : summary.meanRank.toFixed(2)}</strong>
+            <span role="cell">{summary.deaths2000 === null ? "—" : formatNumber.format(summary.deaths2000)}</span>
+          </div>
+        ))}
+      </div>
+      <p className={styles.resultMethodNote}>
+        Lower average ranks indicate that the class placed a cause closer to first. The coloured strip shows how responses were distributed across ranks 1–5.
+      </p>
+      <p className={styles.resultSourceNote}>
+        Published estimates: Mokdad et al. (2004), with the 2005 correction for poor diet and physical inactivity.
+      </p>
     </section>
   );
 }

@@ -77,6 +77,24 @@ export const courseActivityCatalog: readonly CourseActivityDefinition[] = [
     kind: "private",
     completionLabel: "finished",
   },
+  {
+    key: "company-revenue",
+    day: 2,
+    number: 2,
+    title: "Which group had larger sales?",
+    activityHref: "/day/2/company-revenue",
+    resultsPath: "/day/2/company-revenue/results",
+    kind: "responses",
+  },
+  {
+    key: "causes-of-death",
+    day: 2,
+    number: 3,
+    title: "Rank the causes of death",
+    activityHref: "/day/2/causes-of-death",
+    resultsPath: "/day/2/causes-of-death/results",
+    kind: "responses",
+  },
 ];
 
 export function isControlledActivityKey(value: unknown): value is ControlledActivityKey {
@@ -87,4 +105,3 @@ export function isControlledActivityKey(value: unknown): value is ControlledActi
 export function isResponseActivityKey(value: ControlledActivityKey): value is ActivityKey {
   return activityKeys.includes(value as ActivityKey);
 }
-

@@ -1,0 +1,337 @@
+.breadcrumb {
+  display: flex;
+  min-height: 54px;
+  gap: 10px;
+  align-items: center;
+  border-bottom: 1px solid var(--fine-line);
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.breadcrumb a {
+  color: var(--ink);
+  text-underline-offset: 4px;
+}
+
+.eyebrow {
+  margin: 0;
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.activityHeader,
+.resultsHeader {
+  max-width: 920px;
+  padding: 50px 0 36px;
+}
+
+.activityHeader h1,
+.resultsHeader h1 {
+  max-width: 820px;
+  margin: 11px 0 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(38px, 4.6vw, 56px);
+  font-weight: 400;
+  letter-spacing: -.04em;
+  line-height: 1.05;
+}
+
+.activityHeader > p:last-child {
+  max-width: 760px;
+  margin: 20px 0 0;
+  color: var(--muted);
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+.companyActivity,
+.rankingActivity,
+.rankingLoading,
+.activityComplete {
+  padding: 36px 0 54px;
+  border-top: 3px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+
+.companyActivity > h2 {
+  max-width: 780px;
+  margin: 0 0 30px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(27px, 3.3vw, 40px);
+  font-weight: 400;
+  letter-spacing: -.03em;
+  line-height: 1.15;
+}
+
+.companyGroups {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border: 1px solid var(--line);
+}
+
+.companyGroups > section {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-width: 0;
+  padding: 25px;
+}
+
+.companyGroups > section + section {
+  border-left: 1px solid var(--line);
+}
+
+.companyGroups header {
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+  padding-bottom: 17px;
+  border-bottom: 1px solid var(--line);
+}
+
+.companyGroups header span {
+  color: var(--muted);
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.companyGroups header strong {
+  color: var(--accent);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 34px;
+  font-weight: 400;
+}
+
+.companyGroups ul {
+  margin: 0;
+  padding: 15px 0 25px;
+  list-style: none;
+}
+
+.companyGroups li {
+  padding: 9px 0;
+  border-bottom: 1px solid var(--fine-line);
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+.companyGroups button,
+.rankingActions button {
+  min-height: 48px;
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: white;
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.companyGroups button:hover,
+.companyGroups button:focus-visible,
+.rankingActions button:hover,
+.rankingActions button:focus-visible {
+  background: var(--accent-dark);
+}
+
+.companyGroups button:disabled,
+.rankingActions button:disabled {
+  cursor: wait;
+  opacity: .6;
+}
+
+.rankingInstructions {
+  display: grid;
+  grid-template-columns: minmax(220px, .6fr) minmax(0, 1.4fr);
+  gap: 35px;
+  padding-bottom: 25px;
+}
+
+.rankingInstructions h2 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 30px;
+  font-weight: 400;
+  letter-spacing: -.03em;
+}
+
+.rankingInstructions p {
+  max-width: 650px;
+  margin: 3px 0 0;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+.sortableRanking {
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--line);
+  list-style: none;
+}
+
+.sortableRanking li {
+  display: grid;
+  min-height: 72px;
+  padding: 9px 14px;
+  grid-template-columns: 42px 25px minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+  cursor: grab;
+}
+
+.sortableRanking li:last-child {
+  border-bottom: 0;
+}
+
+.sortableRanking li:active {
+  cursor: grabbing;
+}
+
+.rankNumber {
+  color: var(--accent);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 25px;
+  text-align: center;
+}
+
+.dragHandle {
+  color: var(--muted);
+  font-size: 18px;
+  letter-spacing: -5px;
+}
+
+.sortableRanking strong {
+  font-size: 15px;
+  line-height: 1.35;
+}
+
+.sortableRanking li > div {
+  display: flex;
+  gap: 6px;
+}
+
+.sortableRanking button {
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--ink);
+  font-size: 20px;
+}
+
+.sortableRanking button:hover,
+.sortableRanking button:focus-visible {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.sortableRanking button:disabled {
+  opacity: .25;
+}
+
+.rankingActions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 22px;
+}
+
+.rankingActions button {
+  min-width: 170px;
+  padding: 0 22px;
+}
+
+.rankingLoading {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.activityComplete h2 {
+  margin: 10px 0 20px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(32px, 4vw, 46px);
+  font-weight: 400;
+  letter-spacing: -.035em;
+}
+
+.completedRanking {
+  max-width: 760px;
+  margin: 0 0 28px;
+  padding: 0;
+  border-top: 1px solid var(--line);
+  list-style: none;
+  counter-reset: completed-rank;
+}
+
+.completedRanking li {
+  display: grid;
+  min-height: 52px;
+  grid-template-columns: 45px 1fr;
+  gap: 14px;
+  align-items: center;
+  border-bottom: 1px solid var(--fine-line);
+  counter-increment: completed-rank;
+  font-size: 14px;
+}
+
+.completedRanking li::before {
+  color: var(--accent);
+  content: counter(completed-rank);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 21px;
+}
+
+@media (max-width: 650px) {
+  .activityHeader,
+  .resultsHeader {
+    padding: 38px 0 30px;
+  }
+
+  .activityHeader h1,
+  .resultsHeader h1 {
+    font-size: 38px;
+  }
+
+  .activityHeader > p:last-child {
+    font-size: 16px;
+  }
+
+  .companyGroups,
+  .rankingInstructions {
+    grid-template-columns: 1fr;
+  }
+
+  .companyGroups > section + section {
+    border-top: 1px solid var(--line);
+    border-left: 0;
+  }
+
+  .companyGroups > section {
+    padding: 20px;
+  }
+
+  .sortableRanking li {
+    padding: 10px 8px;
+    grid-template-columns: 34px minmax(0, 1fr) auto;
+    gap: 8px;
+  }
+
+  .dragHandle {
+    display: none;
+  }
+
+  .sortableRanking li > div {
+    gap: 4px;
+  }
+
+  .sortableRanking button {
+    width: 38px;
+    height: 42px;
+  }
+
+  .rankingActions button {
+    width: 100%;
+  }
+}

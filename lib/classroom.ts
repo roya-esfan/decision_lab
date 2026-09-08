@@ -1,6 +1,13 @@
 import { outcomeBiasResponseChoices } from "./outcome-bias";
+import { deathCauses } from "./day-two-activities";
 
-export const activityKeys = ["assignment-1", "outcome-bias", "assignment-2"] as const;
+export const activityKeys = [
+  "assignment-1",
+  "outcome-bias",
+  "assignment-2",
+  "company-revenue",
+  "causes-of-death",
+] as const;
 export type ActivityKey = (typeof activityKeys)[number];
 
 export const promptDefinitions = {
@@ -17,6 +24,14 @@ export const promptDefinitions = {
     { key: "outcome-diagnostic-test", label: "Scenario 2 · Diagnostic test", choices: outcomeBiasResponseChoices },
     { key: "outcome-gamble", label: "Scenario 3 · Prize choice", choices: outcomeBiasResponseChoices },
   ],
+  "company-revenue": [
+    { key: "company-revenue-group", label: "Group with larger total sales revenue", choices: ["Group A", "Group B"] },
+  ],
+  "causes-of-death": deathCauses.map((cause) => ({
+    key: cause.key,
+    label: cause.label,
+    choices: ["1", "2", "3", "4", "5"] as const,
+  })),
 } as const;
 
 export function isActivityKey(value: unknown): value is ActivityKey {
@@ -31,7 +46,7 @@ export function validateResponses(
   const definitions = promptDefinitions[activityKey];
   if (responses.length !== definitions.length) return false;
 
-  return definitions.every((definition) => {
+  const valid = definitions.every((definition) => {
     const response = responses.find((item) =>
       typeof item === "object" && item !== null && "promptKey" in item && item.promptKey === definition.key,
     );
@@ -42,6 +57,17 @@ export function validateResponses(
       && (definition.choices as readonly string[]).includes(response.choice),
     );
   });
+
+  if (!valid) return false;
+  if (activityKey !== "causes-of-death") return true;
+
+  return new Set(
+    responses.map((response) =>
+      typeof response === "object" && response !== null && "choice" in response
+        ? response.choice
+        : null,
+    ),
+  ).size === definitions.length;
 }
 
 export function generateJoinCode() {

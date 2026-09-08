@@ -9,6 +9,7 @@ import {
   type TeachingDayNumber,
 } from "@/lib/activity-catalog";
 import type { ActivityKey } from "@/lib/classroom";
+import { summarizeCauseRankings } from "@/lib/day-two-activities";
 import { summarizeOutcomeBiasCounts } from "@/lib/outcome-bias";
 import styles from "../course.module.css";
 
@@ -351,7 +352,9 @@ export function ControlRoom({ email }: { email: string }) {
                       <strong>{responseCount}</strong>
                     </div>
                     <div className={styles.instructorResultRows}>
-                      {activityResults.map((result) => {
+                      {activity.key === "causes-of-death" ? (
+                        <InstructorCauseRanking results={activityResults} />
+                      ) : activityResults.map((result) => {
                         const total = Object.values(result.counts).reduce((sum, count) => sum + count, 0);
                         return (
                           <section key={result.promptKey}>
@@ -460,6 +463,23 @@ export function ControlRoom({ email }: { email: string }) {
       )}
       {error && <p className={styles.formError} role="alert">{error}</p>}
       <button className={styles.textButton} type="button" onClick={() => void logout()}>Sign out {email}</button>
+    </section>
+  );
+}
+
+function InstructorCauseRanking({ results }: { results: ResultRow[] }) {
+  return (
+    <section>
+      <header><strong>Class ranking</strong><span>Ordered by average rank</span></header>
+      <div className={styles.instructorRankSummary}>
+        {summarizeCauseRankings(results).map((summary, index) => (
+          <div key={summary.promptKey}>
+            <span>{index + 1}</span>
+            <span>{summary.label}</span>
+            <strong>{summary.meanRank === null ? "—" : summary.meanRank.toFixed(2)}</strong>
+          </div>
+        ))}
+      </div>
     </section>
   );
 }
