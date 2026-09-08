@@ -1,7 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { rei10Items, rei10ResponseLabels } from "@/content/course";
+import { useEffect, useMemo, useState } from "react";
+import { rei10Items, rei10ResponseLabels, type ReiItem } from "@/content/course";
 import { recordAnonymousCompletion } from "./anonymous-completion";
 import styles from "../course.module.css";
 
@@ -11,12 +11,44 @@ function mean(values: number[]) {
   return values.reduce((total, value) => total + value, 0) / values.length;
 }
 
+function shuffle<T>(items: readonly T[]) {
+  const shuffled = [...items];
+
+  for (let index = shuffled.length - 1; index > 0; index -= 1) {
+    const randomIndex = Math.floor(Math.random() * (index + 1));
+    [shuffled[index], shuffled[randomIndex]] = [shuffled[randomIndex], shuffled[index]];
+  }
+
+  return shuffled;
+}
+
+function createQuestionOrder(): ReiItem[] {
+  const analytical = shuffle(rei10Items.filter((item) => item.dimension === "nfc"));
+  const intuitive = shuffle(rei10Items.filter((item) => item.dimension === "fi"));
+  const startWithAnalytical = Math.random() >= 0.5;
+
+  return analytical.flatMap((analyticalItem, index) =>
+    startWithAnalytical
+      ? [analyticalItem, intuitive[index]]
+      : [intuitive[index], analyticalItem],
+  );
+}
+
 export function ReiQuestionnaire() {
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<Answers>({});
   const [showResults, setShowResults] = useState(false);
-  const item = rei10Items[step];
-  const selected = answers[item.id];
+  const [orderedItems, setOrderedItems] = useState<ReiItem[]>([]);
+  const item = orderedItems[step];
+  const selected = item ? answers[item.id] : undefined;
+
+  useEffect(() => {
+    const frame = window.requestAnimationFrame(() => {
+      setOrderedItems(createQuestionOrder());
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, []);
 
   const scores = useMemo(() => {
     if (Object.keys(answers).length !== rei10Items.length) return null;
@@ -35,12 +67,13 @@ export function ReiQuestionnaire() {
   }, [answers]);
 
   function choose(value: number) {
+    if (!item) return;
     setAnswers((current) => ({ ...current, [item.id]: value }));
   }
 
   function next() {
     if (!selected) return;
-    if (step === rei10Items.length - 1) {
+    if (step === orderedItems.length - 1) {
       setShowResults(true);
       void recordAnonymousCompletion("rei-10");
       return;
@@ -48,22 +81,12 @@ export function ReiQuestionnaire() {
     setStep((current) => current + 1);
   }
 
-  function reset() {
-    setAnswers({});
-    setStep(0);
-    setShowResults(false);
-  }
-
   if (showResults && scores) {
     return (
       <section className={styles.reiResults} aria-live="polite" aria-labelledby="results-title">
         <div className={styles.resultLead}>
           <p className={styles.eyebrow}>Your private result</p>
-          <h2 id="results-title">Your two scores</h2>
-          <p>
-            These scores are independent. A stronger preference for analytical
-            thinking does not imply weaker intuition, and neither score measures intelligence.
-          </p>
+          <h2 id="results-title">Your cognitive style</h2>
         </div>
 
         <div className={styles.scoreRows}>
@@ -83,15 +106,14 @@ export function ReiQuestionnaire() {
           />
         </div>
 
-        <div className={styles.reflectionPrompt}>
-          <span>Discuss</span>
-          <p>When might your preferred approach help you make a better decision—and when might it create a blind spot?</p>
-        </div>
+      </section>
+    );
+  }
 
-        <div className={styles.resultActions}>
-          <button type="button" onClick={reset}>Retake privately</button>
-          <span>No answer or score has left this page.</span>
-        </div>
+  if (!item) {
+    return (
+      <section className={styles.questionnaireLoading} aria-live="polite">
+        Preparing the questions…
       </section>
     );
   }
@@ -102,16 +124,15 @@ export function ReiQuestionnaire() {
         <div>
           <span>Item</span>
           <strong>{String(step + 1).padStart(2, "0")}</strong>
-          <span>/ {rei10Items.length}</span>
+          <span>/ {orderedItems.length}</span>
         </div>
-        <div className={styles.progressLine} aria-label={`Question ${step + 1} of ${rei10Items.length}`}>
-          <span style={{ width: `${((step + 1) / rei10Items.length) * 100}%` }} />
+        <div className={styles.progressLine} aria-label={`Question ${step + 1} of ${orderedItems.length}`}>
+          <span style={{ width: `${((step + 1) / orderedItems.length) * 100}%` }} />
         </div>
         <p>Rate how true each statement is for you. There are no right or wrong answers.</p>
       </aside>
 
       <div className={styles.questionPanel}>
-        <p className={styles.eyebrow}>Thinking preference</p>
         <h2 id="question-title">{item.text}</h2>
         <fieldset className={styles.responseScale}>
           <legend>Choose one response</legend>
@@ -136,7 +157,7 @@ export function ReiQuestionnaire() {
         <div className={styles.questionActions}>
           <button type="button" disabled={step === 0} onClick={() => setStep((current) => current - 1)}>Back</button>
           <button className={styles.nextButton} type="button" disabled={!selected} onClick={next}>
-            {step === rei10Items.length - 1 ? "See my result" : "Next item"}
+            {step === orderedItems.length - 1 ? "See my result" : "Next item"}
           </button>
         </div>
       </div>

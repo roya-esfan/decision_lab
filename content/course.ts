@@ -136,6 +136,7 @@ export const courseDays: CourseDay[] = [
       "Availability, representativeness, anchoring and confirmation",
       "Bias and unwanted variability (noise)",
       "Coursework workshop: self-nudging and choice architecture",
+      "Introduction to nudges and coursework",
     ],
     readings: {
       required: [
@@ -151,7 +152,67 @@ export const courseDays: CourseDay[] = [
         "Rau & Bromiley (2025), A review of cognitive biases in strategic decision making.",
       ],
     },
-    sessions: [],
+    sessions: [
+      {
+        time: "12:30–13:15",
+        label: "Session 1",
+        duration: "45 min",
+        description: "Bounded rationality, satisficing, and dual-process theories",
+        kind: "teaching",
+      },
+      {
+        time: "13:15–13:30",
+        label: "Break",
+        duration: "15 min",
+        kind: "break",
+      },
+      {
+        time: "13:30–14:15",
+        label: "Session 2",
+        duration: "45 min",
+        description: "System 1 and System 2, heuristics and biases",
+        kind: "teaching",
+      },
+      {
+        time: "14:15–14:45",
+        label: "Break",
+        duration: "30 min",
+        kind: "break",
+      },
+      {
+        time: "14:45–15:30",
+        label: "Session 3",
+        duration: "45 min",
+        description: "Availability and representativeness",
+        kind: "teaching",
+      },
+      {
+        time: "15:30–15:45",
+        label: "Break",
+        duration: "15 min",
+        kind: "break",
+      },
+      {
+        time: "15:45–16:30",
+        label: "Session 4",
+        duration: "45 min",
+        description: "Confirmation, anchoring, and noise versus bias",
+        kind: "teaching",
+      },
+      {
+        time: "16:30–16:45",
+        label: "Break",
+        duration: "15 min",
+        kind: "break",
+      },
+      {
+        time: "16:45–17:15",
+        label: "Session 5",
+        duration: "30 min",
+        description: "Introduction to nudges and coursework",
+        kind: "teaching",
+      },
+    ],
     assignments: [
       {
         number: 1,

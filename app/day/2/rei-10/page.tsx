@@ -33,7 +33,7 @@ export default function Rei10Page() {
               Their original measure, REI-40, consists of 40 items. This is a short version, REI-10, with 10 items.
             </p>
             <p className={styles.localNotice}>
-              Your answers and scores stay in this browser. The instructor sees only an anonymous completion count.
+              Your answers and scores stay in this browser.
             </p>
           </div>
         </section>
@@ -43,17 +43,18 @@ export default function Rei10Page() {
         </PrivateActivityAccess>
 
         <aside className={styles.sourceNote} aria-labelledby="source-title">
-          <h2 id="source-title">Source and interpretation</h2>
+          <h2 id="source-title">Reference</h2>
           <p>
-            REI-10 by Epstein, Pacini, Denes-Raj and Heier (1996). Items and the
-            reverse-scoring clarification follow Haukioja, Nyquist and Jylkkä
-            (2020), Table 2, published under CC BY 4.0. This classroom activity
-            is for reflection, not psychological diagnosis.
+            Epstein, S., Pacini, R., Denes-Raj, V., &amp; Heier, H. (1996).
+            Individual differences in intuitive-experiential and analytical-rational
+            thinking styles. <em>Journal of Personality and Social Psychology, 71</em>(2),
+            390–405. https://doi.org/10.1037/0022-3514.71.2.390
+            <br /><br />
+            The REI-10 items and scoring used here follow Haukioja, J., Nyquist, M.,
+            &amp; Jylkkä, J. (2021). Reports from Twin Earth: Both deep structure and
+            appearance determine the reference of natural kind terms. <em>Mind &amp;
+            Language, 36</em>(3), 377–403. https://doi.org/10.1111/mila.12278
           </p>
-          <div>
-            <a href="https://doi.org/10.1037/0022-3514.71.2.390" target="_blank" rel="noreferrer">Original REI study</a>
-            <a href="https://doi.org/10.1111/mila.12278" target="_blank" rel="noreferrer">Open-access item source</a>
-          </div>
         </aside>
       </main>
     </CourseShell>

@@ -435,6 +435,15 @@
   border-bottom: 1px solid var(--ink);
 }
 
+.questionnaireLoading {
+  margin-top: 42px;
+  padding: 44px 0 54px;
+  border-top: 3px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  color: var(--muted);
+  font-size: 13px;
+}
+
 .questionProgress {
   padding-right: 28px;
   border-right: 1px solid var(--line);
@@ -482,7 +491,7 @@
 .questionPanel h2 {
   max-width: 800px;
   min-height: 108px;
-  margin: 13px 0 32px;
+  margin: 0 0 32px;
   font-size: clamp(28px, 3.5vw, 46px);
   letter-spacing: -.042em;
   line-height: 1.08;
@@ -607,7 +616,7 @@
 .scoreRows {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  margin-top: 49px;
+  margin-top: 36px;
   border-top: 2px solid var(--ink);
   border-bottom: 1px solid var(--line);
 }
@@ -726,7 +735,7 @@
 
 .sourceNote {
   display: grid;
-  grid-template-columns: 180px 1fr auto;
+  grid-template-columns: 180px 1fr;
   gap: 30px;
   margin-top: 42px;
   padding-top: 20px;
