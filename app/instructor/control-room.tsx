@@ -47,6 +47,9 @@ export function ControlRoom({ email }: { email: string }) {
   const [recentRuns, setRecentRuns] = useState<RunOption[]>([]);
   const [activeRun, setActiveRun] = useState<ActiveRun | null>(null);
   const [selectedDay, setSelectedDay] = useState<TeachingDayNumber>(1);
+  const [publishedDays, setPublishedDays] = useState<TeachingDayNumber[]>([1]);
+  const [dayAccessReady, setDayAccessReady] = useState(false);
+  const [dayAccessLoaded, setDayAccessLoaded] = useState(false);
   const [results, setResults] = useState<Record<string, ResultRow[]>>({});
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState("");
@@ -92,10 +95,33 @@ export function ControlRoom({ email }: { email: string }) {
     setResults(Object.fromEntries(entries));
   }, []);
 
+  const loadDayAccess = useCallback(async () => {
+    try {
+      const response = await fetch("/api/instructor/day-access", { cache: "no-store" });
+      const data = await response.json() as {
+        publishedDays?: TeachingDayNumber[];
+        ready?: boolean;
+        error?: string;
+      };
+      if (!response.ok) throw new Error(data.error ?? "Day visibility could not be loaded.");
+      setPublishedDays(data.publishedDays ?? [1]);
+      setDayAccessReady(Boolean(data.ready));
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : "Day visibility could not be loaded.");
+    } finally {
+      setDayAccessLoaded(true);
+    }
+  }, []);
+
   useEffect(() => {
     const timer = window.setTimeout(() => { void loadRun(selectedDay); }, 0);
     return () => window.clearTimeout(timer);
   }, [loadRun, selectedDay]);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => { void loadDayAccess(); }, 0);
+    return () => window.clearTimeout(timer);
+  }, [loadDayAccess]);
 
   useEffect(() => {
     if (!currentRunId) return;
@@ -186,6 +212,30 @@ export function ControlRoom({ email }: { email: string }) {
     }
   }
 
+  async function toggleDayAccess() {
+    if (!dayAccessReady) return;
+    const currentlyPublished = publishedDays.includes(selectedDay);
+    const key = `day-access-${selectedDay}`;
+    setBusy(key);
+    setError("");
+    try {
+      const response = await fetch("/api/instructor/day-access", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ dayNumber: selectedDay, published: !currentlyPublished }),
+      });
+      const data = await response.json() as { error?: string };
+      if (!response.ok) throw new Error(data.error ?? "Day visibility could not be updated.");
+      setPublishedDays((current) => currentlyPublished
+        ? current.filter((day) => day !== selectedDay)
+        : [...current, selectedDay].sort((first, second) => first - second));
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : "Day visibility could not be updated.");
+    } finally {
+      setBusy("");
+    }
+  }
+
   function selectTeachingDay(dayNumber: TeachingDayNumber) {
     if (dayNumber === selectedDay) return;
     setLoading(true);
@@ -217,6 +267,14 @@ export function ControlRoom({ email }: { email: string }) {
     return (
       <section className={styles.controlRoom}>
         <InstructorDayTabs selectedDay={selectedDay} onSelect={selectTeachingDay} />
+        <DayVisibilityControl
+          day={selectedDay}
+          published={publishedDays.includes(selectedDay)}
+          loaded={dayAccessLoaded}
+          ready={dayAccessReady}
+          busy={busy === `day-access-${selectedDay}`}
+          onToggle={() => void toggleDayAccess()}
+        />
         <section className={styles.controlEmpty}>
           <p className={styles.eyebrow}>Day {selectedDay}</p>
           <h2>No session for this day</h2>
@@ -242,6 +300,14 @@ export function ControlRoom({ email }: { email: string }) {
   return (
     <section className={styles.controlRoom}>
       <InstructorDayTabs selectedDay={selectedDay} onSelect={selectTeachingDay} />
+      <DayVisibilityControl
+        day={selectedDay}
+        published={publishedDays.includes(selectedDay)}
+        loaded={dayAccessLoaded}
+        ready={dayAccessReady}
+        busy={busy === `day-access-${selectedDay}`}
+        onToggle={() => void toggleDayAccess()}
+      />
 
       {recentRuns.length > 1 && (
         <label className={styles.runSelector}>
@@ -463,6 +529,38 @@ export function ControlRoom({ email }: { email: string }) {
       )}
       {error && <p className={styles.formError} role="alert">{error}</p>}
       <button className={styles.textButton} type="button" onClick={() => void logout()}>Sign out {email}</button>
+    </section>
+  );
+}
+
+function DayVisibilityControl({
+  day,
+  published,
+  loaded,
+  ready,
+  busy,
+  onToggle,
+}: {
+  day: TeachingDayNumber;
+  published: boolean;
+  loaded: boolean;
+  ready: boolean;
+  busy: boolean;
+  onToggle: () => void;
+}) {
+  return (
+    <section className={styles.dayVisibilityControl} aria-label={`Day ${day} student access`}>
+      <div>
+        <span>Student access</span>
+        <strong>{!loaded ? "Checking…" : published ? `Day ${day} is open` : `Day ${day} is hidden`}</strong>
+      </div>
+      {loaded && !ready ? (
+        <p>Run the latest Supabase migration to activate day visibility controls.</p>
+      ) : (
+        <button type="button" disabled={!loaded || busy} onClick={onToggle}>
+          {busy ? "Updating…" : published ? `Hide Day ${day} from students` : `Open Day ${day} to students`}
+        </button>
+      )}
     </section>
   );
 }

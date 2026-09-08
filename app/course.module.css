@@ -3593,6 +3593,99 @@
   color: white;
 }
 
+.dayVisibilityControl {
+  display: flex;
+  min-height: 72px;
+  padding: 14px 0;
+  justify-content: space-between;
+  gap: 28px;
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+}
+
+.dayVisibilityControl > div {
+  display: grid;
+  gap: 5px;
+}
+
+.dayVisibilityControl span {
+  color: var(--muted);
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+}
+
+.dayVisibilityControl strong {
+  color: var(--accent);
+  font-size: 15px;
+}
+
+.dayVisibilityControl p {
+  margin: 0;
+  color: #8c2e25;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.dayVisibilityControl button {
+  min-height: 40px;
+  padding: 0 15px;
+  border: 1px solid var(--accent);
+  background: transparent;
+  color: var(--accent);
+  font: inherit;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .035em;
+  text-transform: uppercase;
+}
+
+.dayVisibilityControl button:hover:not(:disabled) {
+  background: var(--accent);
+  color: white;
+}
+
+.dayVisibilityControl button:disabled {
+  cursor: wait;
+  opacity: .55;
+}
+
+.lockedDayPage {
+  max-width: 760px;
+  min-height: 62vh;
+  padding: clamp(70px, 11vw, 140px) 0;
+}
+
+.lockedDayPage h1 {
+  margin: 12px 0 18px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(38px, 5vw, 62px);
+  font-weight: 400;
+  letter-spacing: -.04em;
+  line-height: 1.04;
+}
+
+.lockedDayPage > p:not(.eyebrow) {
+  max-width: 560px;
+  margin: 0 0 28px;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.lockedDayPage a {
+  display: inline-flex;
+  min-height: 44px;
+  padding: 0 17px;
+  align-items: center;
+  background: var(--accent);
+  color: white;
+  font-size: 12px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
 .controlSectionHeading {
   display: flex;
   justify-content: space-between;
@@ -4208,6 +4301,16 @@
 
   .instructorDayTabs button {
     min-width: 112px;
+  }
+
+  .dayVisibilityControl {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 13px;
+  }
+
+  .dayVisibilityControl button {
+    width: 100%;
   }
 
   .privateActivitySummary {

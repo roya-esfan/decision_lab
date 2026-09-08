@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { courseDays, type CourseDay } from "@/content/course";
 import styles from "../home.module.css";
 
@@ -17,15 +17,15 @@ type FeaturedDay = {
   label: "Today" | "Upcoming class" | "Most recent class";
 };
 
-function findFeaturedDay(date: Date): FeaturedDay {
+function findFeaturedDay(date: Date, availableDays: CourseDay[]): FeaturedDay {
   const dateKey = localDateKey(date);
-  const exact = courseDays.find((day) => day.dateISO === dateKey);
+  const exact = availableDays.find((day) => day.dateISO === dateKey);
   if (exact) return { day: exact, label: "Today" };
 
-  const next = courseDays.find((day) => day.dateISO > dateKey);
+  const next = availableDays.find((day) => day.dateISO > dateKey);
   if (next) return { day: next, label: "Upcoming class" };
 
-  return { day: courseDays[courseDays.length - 1], label: "Most recent class" };
+  return { day: availableDays[availableDays.length - 1] ?? courseDays[0], label: "Most recent class" };
 }
 
 function dateParts(day: CourseDay) {
@@ -34,19 +34,30 @@ function dateParts(day: CourseDay) {
   return { dateNumber, month };
 }
 
-export function CourseHome() {
+export function CourseHome({
+  publishedDays,
+  instructorView,
+}: {
+  publishedDays: number[];
+  instructorView: boolean;
+}) {
+  const availableDays = useMemo(
+    () => courseDays.filter((day) => publishedDays.includes(day.number)),
+    [publishedDays],
+  );
   const [featured, setFeatured] = useState<FeaturedDay>({
-    day: courseDays[0],
+    day: availableDays[0] ?? courseDays[0],
     label: "Upcoming class",
   });
 
   useEffect(() => {
-    const timer = window.setTimeout(() => setFeatured(findFeaturedDay(new Date())), 0);
+    const timer = window.setTimeout(() => setFeatured(findFeaturedDay(new Date(), availableDays)), 0);
     return () => window.clearTimeout(timer);
-  }, []);
+  }, [availableDays]);
 
   const { day: featuredDay, label } = featured;
   const { dateNumber, month } = dateParts(featuredDay);
+  const featuredIsOpen = publishedDays.includes(featuredDay.number);
 
   return (
     <>
@@ -63,7 +74,11 @@ export function CourseHome() {
           </div>
           <h2 id="featured-day-title">Day {featuredDay.number}: {featuredDay.title}</h2>
         </div>
-        <Link className={styles.primaryLink} href={`/day/${featuredDay.number}`}>Open day <span aria-hidden="true">→</span></Link>
+        {featuredIsOpen ? (
+          <Link className={styles.primaryLink} href={`/day/${featuredDay.number}`}>Open day <span aria-hidden="true">→</span></Link>
+        ) : (
+          <span className={styles.primaryLinkLocked} aria-disabled="true">Open day <span aria-hidden="true">→</span></span>
+        )}
       </section>
 
       <section className={styles.courseMap} aria-labelledby="course-map-title">
@@ -71,20 +86,27 @@ export function CourseHome() {
           <h2 id="course-map-title">Course overview</h2>
         </div>
         <ol className={styles.overviewList}>
-          {courseDays.map((day) => (
-            <li key={day.number}>
-              <span className={styles.dayNumber}>{day.number}</span>
-              <div className={styles.dayMeta}>
-                <strong>{day.date}</strong>
-                <div className={styles.logistics}>
-                  <span>{day.time}</span>
-                  <span>{day.room}</span>
+          {courseDays.map((day) => {
+            const isOpen = instructorView || publishedDays.includes(day.number);
+            return (
+              <li key={day.number} className={isOpen ? undefined : styles.closedDay}>
+                <span className={styles.dayNumber}>{day.number}</span>
+                <div className={styles.dayMeta}>
+                  <strong>{day.date}</strong>
+                  <div className={styles.logistics}>
+                    <span>{day.time}</span>
+                    <span>{day.room}</span>
+                  </div>
                 </div>
-              </div>
-              <p>Day {day.number}: {day.title}</p>
-              <Link className={styles.overviewButton} href={`/day/${day.number}`}>Open day <span aria-hidden="true">→</span></Link>
-            </li>
-          ))}
+                <p>Day {day.number}: {day.title}</p>
+                {isOpen ? (
+                  <Link className={styles.overviewButton} href={`/day/${day.number}`}>Open day <span aria-hidden="true">→</span></Link>
+                ) : (
+                  <span className={styles.overviewButtonLocked} aria-disabled="true">Open day <span aria-hidden="true">→</span></span>
+                )}
+              </li>
+            );
+          })}
         </ol>
       </section>
 

@@ -80,6 +80,20 @@
   white-space: nowrap;
 }
 
+.primaryLinkLocked {
+  display: inline-flex;
+  min-height: 44px;
+  padding: 0 18px;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: #dfe3e6;
+  color: #77818a;
+  font-size: 14px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
 .primaryLink:hover,
 .feedback a:hover {
   background: var(--accent-dark);
@@ -149,13 +163,41 @@
 }
 
 .overviewButton {
-  color: var(--ink);
-  font-size: 14px;
+  display: inline-flex;
+  min-height: 36px;
+  padding: 0 13px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 13px;
   font-weight: 700;
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 4px;
+  text-decoration: none;
   white-space: nowrap;
+}
+
+.overviewButton:hover {
+  background: var(--accent-dark);
+}
+
+.overviewButtonLocked {
+  display: inline-flex;
+  min-height: 36px;
+  padding: 0 13px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #dfe3e6;
+  color: #77818a;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.closedDay .dayNumber,
+.closedDay p {
+  color: #77818a;
 }
 
 .feedback {
