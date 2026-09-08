@@ -140,11 +140,10 @@ function CauseRankingResults({ results }: { results: ResultRow[] }) {
           </div>
         ))}
       </div>
-      <p className={styles.resultMethodNote}>
-        Lower average ranks indicate that the class placed a cause closer to first. The coloured strip shows how responses were distributed across ranks 1–5.
-      </p>
       <p className={styles.resultSourceNote}>
-        Published estimates: Mokdad et al. (2004), with the 2005 correction for poor diet and physical inactivity.
+        Reference: Mokdad, A. H., Marks, J. S., Stroup, D. F., &amp; Gerberding,
+        J. L. (2004). Actual causes of death in the United States, 2000.
+        <em> JAMA, 291</em>(10), 1238–1245. Corrected 2005.
       </p>
     </section>
   );
