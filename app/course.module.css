@@ -3603,9 +3603,35 @@
   border-bottom: 1px solid var(--line);
 }
 
-.dayVisibilityControl > div {
+.dayVisibilityControl > div:first-child {
   display: grid;
   gap: 5px;
+}
+
+.dayVisibilityActions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.dayVisibilityActions a {
+  display: inline-flex;
+  min-height: 40px;
+  padding: 0 15px;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent);
+  color: white;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .035em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.dayVisibilityActions a:hover {
+  background: var(--ink);
 }
 
 .dayVisibilityControl span {
@@ -4310,6 +4336,16 @@
   }
 
   .dayVisibilityControl button {
+    width: 100%;
+  }
+
+  .dayVisibilityActions {
+    width: 100%;
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .dayVisibilityActions a {
     width: 100%;
   }
 

@@ -36,10 +36,8 @@ function dateParts(day: CourseDay) {
 
 export function CourseHome({
   publishedDays,
-  instructorView,
 }: {
   publishedDays: number[];
-  instructorView: boolean;
 }) {
   const availableDays = useMemo(
     () => courseDays.filter((day) => publishedDays.includes(day.number)),
@@ -76,8 +74,6 @@ export function CourseHome({
         </div>
         {featuredIsOpen ? (
           <Link className={styles.primaryLink} href={`/day/${featuredDay.number}`}>Open day <span aria-hidden="true">→</span></Link>
-        ) : instructorView ? (
-          <Link className={styles.primaryLinkLocked} href={`/day/${featuredDay.number}`}>Open day <span aria-hidden="true">→</span></Link>
         ) : (
           <span className={styles.primaryLinkLocked} aria-disabled="true">Open day <span aria-hidden="true">→</span></span>
         )}
@@ -103,8 +99,6 @@ export function CourseHome({
                 <p>Day {day.number}: {day.title}</p>
                 {isOpen ? (
                   <Link className={styles.overviewButton} href={`/day/${day.number}`}>Open day <span aria-hidden="true">→</span></Link>
-                ) : instructorView ? (
-                  <Link className={styles.overviewButtonLocked} href={`/day/${day.number}`}>Open day <span aria-hidden="true">→</span></Link>
                 ) : (
                   <span className={styles.overviewButtonLocked} aria-disabled="true">Open day <span aria-hidden="true">→</span></span>
                 )}

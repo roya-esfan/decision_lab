@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import {
   courseActivityCatalog,
@@ -554,13 +555,19 @@ function DayVisibilityControl({
         <span>Student access</span>
         <strong>{!loaded ? "Checking…" : published ? `Day ${day} is open` : `Day ${day} is hidden`}</strong>
       </div>
-      {loaded && !ready ? (
-        <p>Run the latest Supabase migration to activate day visibility controls.</p>
-      ) : (
-        <button type="button" disabled={!loaded || busy} onClick={onToggle}>
-          {busy ? "Updating…" : published ? `Hide Day ${day} from students` : `Open Day ${day} to students`}
-        </button>
-      )}
+      <div className={styles.dayVisibilityActions}>
+        <Link href={`/day/${day}`} target="_blank" rel="noreferrer">
+          Open Day {day} page
+        </Link>
+        {loaded && ready ? (
+          <button type="button" disabled={busy} onClick={onToggle}>
+            {busy ? "Updating…" : published ? `Hide Day ${day} from students` : `Open Day ${day} to students`}
+          </button>
+        ) : null}
+        {loaded && !ready ? (
+          <p>Run the latest Supabase migration to activate day visibility controls.</p>
+        ) : null}
+      </div>
     </section>
   );
 }
