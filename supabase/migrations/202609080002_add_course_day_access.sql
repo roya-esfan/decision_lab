@@ -12,3 +12,6 @@ on conflict (day_number) do nothing;
 alter table public.course_day_access enable row level security;
 
 revoke all on table public.course_day_access from anon, authenticated;
+grant select, insert, update on table public.course_day_access to service_role;
+
+notify pgrst, 'reload schema';
