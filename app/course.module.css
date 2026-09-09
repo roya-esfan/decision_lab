@@ -3368,13 +3368,6 @@
   color: #8c2e25;
 }
 
-.runActions .freshSessionButton {
-  margin-right: auto;
-  border-color: var(--accent);
-  background: transparent;
-  color: var(--accent);
-}
-
 .controlActivities {
   padding-top: 46px;
 }
@@ -4240,10 +4233,6 @@
 
   .runActions button {
     flex: 1;
-  }
-
-  .runActions .freshSessionButton {
-    margin-right: 0;
   }
 
   .controlActivities article > header {

@@ -176,43 +176,6 @@ export function ControlRoom({ email }: { email: string }) {
     }
   }
 
-  async function startFreshRun() {
-    if (!run) return;
-    if (run.isActive && !window.confirm(
-      "Close the current session and start a new empty one? The current session and all its results will remain saved in the session dropdown.",
-    )) return;
-
-    setBusy("fresh");
-    setError("");
-    try {
-      if (run.isActive) {
-        const closeResponse = await fetch(`/api/instructor/runs/${run.id}`, {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ action: "close-run" }),
-        });
-        const closeData = await closeResponse.json() as { error?: string };
-        if (!closeResponse.ok) throw new Error(closeData.error ?? "The current session could not be closed.");
-      }
-
-      const createResponse = await fetch("/api/instructor/runs", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ capacity: run.capacity, dayNumber: selectedDay }),
-      });
-      const createData = await createResponse.json() as { error?: string };
-      if (!createResponse.ok) throw new Error(createData.error ?? "A fresh classroom session could not be created.");
-
-      setResults({});
-      await loadRun(selectedDay);
-    } catch (caught) {
-      await loadRun(selectedDay, run.id);
-      setError(caught instanceof Error ? caught.message : "A fresh classroom session could not be created.");
-    } finally {
-      setBusy("");
-    }
-  }
-
   async function toggleDayAccess() {
     if (!dayAccessReady) return;
     const currentlyPublished = publishedDays.includes(selectedDay);
@@ -281,14 +244,14 @@ export function ControlRoom({ email }: { email: string }) {
           <h2>No session for this day</h2>
           <p>
             {dayActivities.length > 0
-              ? "Create a session for this teaching day. Every activity will begin closed."
+              ? "Start a classroom session when you want to collect new live responses. Every activity will begin closed."
               : "No activities have been added to this teaching day yet."}
           </p>
           {activeRun ? (
             <button type="button" onClick={showActiveRun}>Go to Day {activeRun.dayNumber} live session</button>
           ) : dayActivities.length > 0 ? (
             <button type="button" onClick={() => void createRun()} disabled={busy === "create"}>
-              {busy === "create" ? "Preparing…" : `Start Day ${selectedDay} session`}
+              {busy === "create" ? "Preparing…" : `Start Day ${selectedDay} classroom session`}
             </button>
           ) : null}
           {error && <p className={styles.formError} role="alert">{error}</p>}
@@ -328,7 +291,7 @@ export function ControlRoom({ email }: { email: string }) {
       )}
 
       <div className={styles.runStatus}>
-        <div><span>Day {selectedDay} session</span><strong>{run.isActive ? "Live" : "Completed"}</strong></div>
+        <div><span>Classroom session</span><strong>{run.isActive ? "Active" : "Completed"}</strong></div>
         <div>
           <span>{dayHasResponseActivities ? "Anonymous participants" : "Anonymous completions"}</span>
           <strong>
@@ -338,25 +301,17 @@ export function ControlRoom({ email }: { email: string }) {
         </div>
         <div className={styles.runActions}>
           {run.isActive ? (
-            <>
-            <button
-              className={styles.freshSessionButton}
-              type="button"
-              disabled={Boolean(busy)}
-              onClick={() => void startFreshRun()}
-            >{busy === "fresh" ? "Starting…" : "Close and start fresh"}</button>
             <button className={styles.dangerButton} type="button" disabled={Boolean(busy)} onClick={() => {
               if (window.confirm("End this classroom session? All activities will close. You can still enable review mode afterwards.")) {
                 void updateRun({ action: "close-run" }, "close");
               }
             }}>End classroom session</button>
-            </>
           ) : (
             activeRun ? (
               <button type="button" onClick={showActiveRun}>Go to Day {activeRun.dayNumber} live session</button>
             ) : (
               <button type="button" disabled={Boolean(busy)} onClick={() => void createRun()}>
-                {busy === "create" ? "Preparing…" : `Start new Day ${selectedDay} session`}
+                {busy === "create" ? "Preparing…" : `Start new Day ${selectedDay} classroom session`}
               </button>
             )
           )}
@@ -368,9 +323,9 @@ export function ControlRoom({ email }: { email: string }) {
           <p className={styles.eyebrow}>Day {selectedDay}</p>
           <h2>Activities and results</h2>
         </div>
-        {dayActivities.some((activity) => activity.kind === "responses") && (
-          <p>Totals update automatically every two seconds</p>
-        )}
+        <p>{run.isActive
+          ? "Open only the activity you are using with the class"
+          : "Activities can still be opened for review after class"}</p>
       </div>
 
       {dayActivities.length === 0 ? (
@@ -407,7 +362,11 @@ export function ControlRoom({ email }: { email: string }) {
                   </div>
                   <div className={styles.activityState}>
                     <span className={mode === "live" ? styles.stateLive : mode === "review" ? styles.stateRevealed : undefined}>
-                      {!state ? "Database update required" : mode === "live" ? "Live" : mode === "review" ? "Review mode" : "Closed"}
+                      {!state
+                        ? "Database update required"
+                        : mode === "live"
+                          ? responseActivity ? "Open for live responses" : "Open for class"
+                          : mode === "review" ? "Open for review" : "Closed"}
                     </span>
                   </div>
                 </header>
@@ -470,7 +429,7 @@ export function ControlRoom({ email }: { email: string }) {
                 )}
 
                 <footer>
-                  <a href={activity.activityHref} target="_blank" rel="noreferrer">Open student page</a>
+                  <a href={activity.activityHref} target="_blank" rel="noreferrer">Preview activity page</a>
                   {activity.resultsPath && (
                     <a
                       href={`${activity.resultsPath}?projector=1&instructor=1&run=${encodeURIComponent(run.id)}`}
@@ -498,7 +457,7 @@ export function ControlRoom({ email }: { email: string }) {
                         { action: "set-activity-mode", activityKey: activity.key, mode: "closed" },
                         `${activity.key}-mode`,
                       )}
-                    >Close review mode</button>
+                    >Close review access</button>
                   ) : (
                     <>
                       {run.isActive && (
@@ -509,7 +468,7 @@ export function ControlRoom({ email }: { email: string }) {
                             { action: "set-activity-mode", activityKey: activity.key, mode: "live" },
                             `${activity.key}-mode`,
                           )}
-                        >Open live activity</button>
+                        >{responseActivity ? "Open for live responses" : "Open for class"}</button>
                       )}
                       <button
                         className={styles.revealButton}
@@ -519,7 +478,7 @@ export function ControlRoom({ email }: { email: string }) {
                           { action: "set-activity-mode", activityKey: activity.key, mode: "review" },
                           `${activity.key}-mode`,
                         )}
-                      >Enable review mode</button>
+                      >Open for review</button>
                     </>
                   )}
                 </footer>
@@ -552,16 +511,16 @@ function DayVisibilityControl({
   return (
     <section className={styles.dayVisibilityControl} aria-label={`Day ${day} student access`}>
       <div>
-        <span>Student access</span>
-        <strong>{!loaded ? "Checking…" : published ? `Day ${day} is open` : `Day ${day} is hidden`}</strong>
+        <span>Day page visibility</span>
+        <strong>{!loaded ? "Checking…" : published ? "Visible to students" : "Hidden from students"}</strong>
       </div>
       <div className={styles.dayVisibilityActions}>
         <Link href={`/day/${day}`} target="_blank" rel="noreferrer">
-          Open Day {day} page
+          Preview Day {day} as instructor
         </Link>
         {loaded && ready ? (
           <button type="button" disabled={busy} onClick={onToggle}>
-            {busy ? "Updating…" : published ? `Hide Day ${day} from students` : `Open Day ${day} to students`}
+            {busy ? "Updating…" : published ? `Hide Day ${day} from students` : `Show Day ${day} to students`}
           </button>
         ) : null}
         {loaded && !ready ? (
