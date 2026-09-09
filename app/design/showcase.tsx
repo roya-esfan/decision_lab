@@ -27,7 +27,7 @@ function FeedbackLink() {
     <div className={styles.feedbackLine}>
       <span>Constructive feedback is always appreciated.</span>
       <a href="https://www.menti.com/al67du6pv352" target="_blank" rel="noreferrer">
-        Give anonymous feedback <span aria-hidden="true">↗</span>
+        Give anonymous feedback <span aria-hidden="true">{"\u2197\uFE0E"}</span>
       </a>
     </div>
   );
