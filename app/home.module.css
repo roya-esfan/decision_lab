@@ -239,7 +239,8 @@
     grid-template-columns: 100px minmax(0, 1fr);
   }
 
-  .featuredDay > .primaryLink {
+  .featuredDay > .primaryLink,
+  .featuredDay > .primaryLinkLocked {
     grid-column: 2;
     width: fit-content;
   }
@@ -259,7 +260,8 @@
     grid-column: 2;
   }
 
-  .overviewButton {
+  .overviewButton,
+  .overviewButtonLocked {
     grid-column: 3;
     grid-row: 1 / 3;
   }
@@ -292,7 +294,8 @@
     font-size: 30px;
   }
 
-  .featuredDay > .primaryLink {
+  .featuredDay > .primaryLink,
+  .featuredDay > .primaryLinkLocked {
     grid-column: 1;
   }
 
@@ -323,7 +326,8 @@
     grid-template-columns: 24px minmax(0, 1fr);
   }
 
-  .overviewButton {
+  .overviewButton,
+  .overviewButtonLocked {
     grid-column: 2;
     grid-row: auto;
     width: fit-content;
