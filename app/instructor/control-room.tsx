@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   courseActivityCatalog,
   isResponseActivityKey,
@@ -55,6 +55,8 @@ export function ControlRoom({ email }: { email: string }) {
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState("");
   const [error, setError] = useState("");
+  const runRequestId = useRef(0);
+  const resultsRequestId = useRef(0);
   const currentRunId = run?.id;
   const dayActivities = courseActivityCatalog.filter((activity) => activity.day === selectedDay);
   const dayHasResponseActivities = dayActivities.some((activity) => activity.kind === "responses");
@@ -64,6 +66,8 @@ export function ControlRoom({ email }: { email: string }) {
   }, 0);
 
   const loadRun = useCallback(async (dayNumber: TeachingDayNumber, runId?: string) => {
+    const requestId = runRequestId.current + 1;
+    runRequestId.current = requestId;
     try {
       const query = new URLSearchParams({ day: String(dayNumber) });
       if (runId) query.set("run", runId);
@@ -75,24 +79,29 @@ export function ControlRoom({ email }: { email: string }) {
         error?: string;
       };
       if (!response.ok) throw new Error(data.error ?? "The classroom session could not be loaded.");
+      if (requestId !== runRequestId.current) return;
       setRun(data.run ?? null);
       setRecentRuns(data.recentRuns ?? []);
       setActiveRun(data.activeRun ?? null);
       setError("");
     } catch (caught) {
+      if (requestId !== runRequestId.current) return;
       setError(caught instanceof Error ? caught.message : "The classroom session could not be loaded.");
     } finally {
-      setLoading(false);
+      if (requestId === runRequestId.current) setLoading(false);
     }
   }, []);
 
   const loadResults = useCallback(async (runId: string) => {
+    const requestId = resultsRequestId.current + 1;
+    resultsRequestId.current = requestId;
     const entries = await Promise.all(responseActivities.map(async (activity) => {
       const response = await fetch(`/api/instructor/results?run=${runId}&activity=${activity.key}`, { cache: "no-store" });
       if (!response.ok) return [activity.key, []] as const;
       const data = await response.json() as { results?: ResultRow[] };
       return [activity.key, data.results ?? []] as const;
     }));
+    if (requestId !== resultsRequestId.current) return;
     setResults(Object.fromEntries(entries));
   }, []);
 
@@ -202,6 +211,8 @@ export function ControlRoom({ email }: { email: string }) {
 
   function selectTeachingDay(dayNumber: TeachingDayNumber) {
     if (dayNumber === selectedDay) return;
+    runRequestId.current += 1;
+    resultsRequestId.current += 1;
     setLoading(true);
     setRun(null);
     setRecentRuns([]);
