@@ -165,7 +165,12 @@ export async function POST(request: Request) {
     }
     if (!run) throw new Error("JOIN_CODE_GENERATION_FAILED");
 
-    const establishedActivityKeys = controlledActivityKeys.filter((activityKey) => activityKey !== "crew-problem");
+    const migrationDependentActivityKeys = ["crew-problem", "school-bag-framing"] as const;
+    const establishedActivityKeys = controlledActivityKeys.filter(
+      (activityKey) => !migrationDependentActivityKeys.includes(
+        activityKey as (typeof migrationDependentActivityKeys)[number],
+      ),
+    );
     const { error: stateError } = await supabase.from("classroom_activity_states").insert(
       establishedActivityKeys.map((activityKey) => ({
         run_id: run.id,
@@ -179,15 +184,17 @@ export async function POST(request: Request) {
       throw stateError;
     }
 
-    const { error: crewStateError } = await supabase.from("classroom_activity_states").insert({
-      run_id: run.id,
-      activity_key: "crew-problem",
-      is_open: false,
-      is_revealed: false,
-    });
-    if (crewStateError && crewStateError.code !== "23514") {
-      await supabase.from("classroom_runs").delete().eq("id", run.id);
-      throw crewStateError;
+    for (const activityKey of migrationDependentActivityKeys) {
+      const { error: migratedStateError } = await supabase.from("classroom_activity_states").insert({
+        run_id: run.id,
+        activity_key: activityKey,
+        is_open: false,
+        is_revealed: false,
+      });
+      if (migratedStateError && migratedStateError.code !== "23514") {
+        await supabase.from("classroom_runs").delete().eq("id", run.id);
+        throw migratedStateError;
+      }
     }
 
     return NextResponse.json({ created: true, runId: run.id }, { status: 201 });

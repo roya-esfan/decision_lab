@@ -267,6 +267,13 @@ export const courseDays: CourseDay[] = [
         href: "/day/3/crew-problem",
         status: "ready",
       },
+      {
+        number: 2,
+        title: "Gain or loss?",
+        description: "Decide whether two ways of presenting a price feel like gains or losses",
+        href: "/day/3/school-bag-framing",
+        status: "ready",
+      },
     ],
   },
   {

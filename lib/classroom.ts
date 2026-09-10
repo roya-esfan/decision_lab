@@ -9,6 +9,7 @@ export const activityKeys = [
   "company-revenue",
   "causes-of-death",
   "crew-problem",
+  "school-bag-framing",
 ] as const;
 export type ActivityKey = (typeof activityKeys)[number];
 
@@ -36,6 +37,10 @@ export const promptDefinitions = {
   })),
   "crew-problem": [
     { key: "crew-choice", label: "Crew problem", choices: crewProblemResponseChoices },
+  ],
+  "school-bag-framing": [
+    { key: "school-bag-discount", label: "Cash discount", choices: ["Gain", "Loss"] },
+    { key: "school-bag-surcharge", label: "Card surcharge", choices: ["Gain", "Loss"] },
   ],
 } as const;
 
