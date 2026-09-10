@@ -295,6 +295,13 @@ export const courseDays: CourseDay[] = [
         href: "/day/3/coin-gamble",
         status: "ready",
       },
+      {
+        number: 6,
+        title: "What amount would you choose?",
+        description: "State an amount in response to a hypothetical scenario",
+        href: "/day/3/rare-disease-valuation",
+        status: "ready",
+      },
     ],
   },
   {

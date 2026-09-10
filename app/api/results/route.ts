@@ -59,7 +59,7 @@ export async function GET(request: Request) {
     const results = promptDefinitions[activityKey].map((prompt) => {
       const counts = Object.fromEntries(prompt.choices.map((choice) => [choice, 0])) as Record<string, number>;
       for (const row of rows ?? []) {
-        if (row.prompt_key === prompt.key && row.choice in counts) counts[row.choice] += 1;
+        if (row.prompt_key === prompt.key) counts[row.choice] = (counts[row.choice] ?? 0) + 1;
       }
       return { promptKey: prompt.key, label: prompt.label, counts };
     });

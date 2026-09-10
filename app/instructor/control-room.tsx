@@ -15,6 +15,7 @@ import { summarizeCrewProblemCounts } from "@/lib/crew-problem";
 import { summarizeCauseRankings } from "@/lib/day-two-activities";
 import { summarizeEndowmentFramingCounts } from "@/lib/endowment-framing";
 import { summarizeOutcomeBiasCounts } from "@/lib/outcome-bias";
+import { summarizeRareDiseaseValuations } from "@/lib/rare-disease-valuation";
 import styles from "../course.module.css";
 
 type ActivityState = { key: ControlledActivityKey; isOpen: boolean; isRevealed: boolean };
@@ -445,6 +446,8 @@ export function ControlRoom({ email }: { email: string }) {
                               <InstructorCalculatorTrip counts={result.counts} />
                             ) : activity.key === "endowment-framing" ? (
                               <InstructorEndowmentFraming counts={result.counts} />
+                            ) : activity.key === "rare-disease-valuation" ? (
+                              <InstructorRareDiseaseValuation counts={result.counts} />
                             ) : (
                               Object.entries(result.counts).map(([choice, count]) => {
                                 const percentage = total === 0 ? 0 : Math.round((count / total) * 100);
@@ -643,6 +646,24 @@ function InstructorEndowmentFraming({ counts }: { counts: Record<string, number>
           </header>
           <div><span>Certain option</span><strong>{summary.certainPercentage}%</strong></div>
           <div><span>Gamble</span><strong>{summary.gamblePercentage}%</strong></div>
+        </section>
+      ))}
+    </div>
+  );
+}
+
+function InstructorRareDiseaseValuation({ counts }: { counts: Record<string, number> }) {
+  const formatter = new Intl.NumberFormat("nb-NO", { maximumFractionDigits: 0 });
+  return (
+    <div className={styles.instructorCrewFrames}>
+      {summarizeRareDiseaseValuations(counts).map((summary) => (
+        <section key={summary.condition}>
+          <header>
+            <strong>Group {summary.condition} · {summary.label}</strong>
+            <span>n = {summary.total}</span>
+          </header>
+          <div><span>Median</span><strong>{summary.median === null ? "—" : `${formatter.format(summary.median)} NOK`}</strong></div>
+          <div><span>Mean</span><strong>{summary.mean === null ? "—" : `${formatter.format(summary.mean)} NOK`}</strong></div>
         </section>
       ))}
     </div>

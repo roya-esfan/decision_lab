@@ -1,0 +1,92 @@
+.activity {
+  max-width: 960px;
+}
+
+.amountEntry {
+  max-width: 620px;
+  margin-top: 32px;
+}
+
+.amountEntry > label {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.amountEntry > div {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  border: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.amountEntry span {
+  display: flex;
+  min-width: 78px;
+  padding: 0 18px;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px solid var(--line);
+  color: var(--accent);
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.amountEntry input {
+  min-width: 0;
+  height: 72px;
+  padding: 0 20px;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: var(--ink);
+  font: 400 clamp(25px, 4vw, 36px)/1 Georgia, "Times New Roman", serif;
+}
+
+.amountEntry > div:focus-within {
+  border-color: var(--accent);
+  box-shadow: inset 0 -3px 0 var(--accent);
+}
+
+.amountEntry > p {
+  margin: 9px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.actions {
+  display: flex;
+  margin-top: 30px;
+}
+
+.actions button {
+  min-height: 50px;
+  padding: 0 22px;
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: white;
+  cursor: pointer;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.actions button:hover:not(:disabled) {
+  background: var(--ink);
+}
+
+.actions button:disabled {
+  cursor: not-allowed;
+  opacity: .45;
+}
+
+@media (max-width: 650px) {
+  .amountEntry input {
+    height: 64px;
+  }
+
+  .actions button {
+    width: 100%;
+  }
+}

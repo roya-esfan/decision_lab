@@ -7,6 +7,7 @@ import { summarizeCalculatorTripCounts } from "@/lib/calculator-trip";
 import { summarizeEndowmentFramingCounts } from "@/lib/endowment-framing";
 import { summarizeCrewProblemCounts } from "@/lib/crew-problem";
 import { summarizeOutcomeBiasCounts } from "@/lib/outcome-bias";
+import { summarizeRareDiseaseValuations } from "@/lib/rare-disease-valuation";
 import styles from "../course.module.css";
 
 type ResultRow = { promptKey: string; label: string; counts: Record<string, number> };
@@ -76,6 +77,10 @@ export function LiveResults({
     return <EndowmentFramingResults results={state.results} />;
   }
 
+  if (activityKey === "rare-disease-valuation") {
+    return <RareDiseaseValuationResults results={state.results} />;
+  }
+
   return (
     <section className={styles.liveResultRows} aria-live="polite" aria-label="Revealed class results">
       {state.results.map((result, index) => {
@@ -112,6 +117,49 @@ export function LiveResults({
       {activityKey === "company-revenue" && (
         <p className={styles.correctAnswerNote}><strong>Answer:</strong> Group B had the larger combined sales revenue.</p>
       )}
+    </section>
+  );
+}
+
+function RareDiseaseValuationResults({ results }: { results: ResultRow[] }) {
+  const summaries = summarizeRareDiseaseValuations(results[0]?.counts ?? {});
+  const total = summaries.reduce((sum, summary) => sum + summary.total, 0);
+  const formatter = new Intl.NumberFormat("nb-NO", { maximumFractionDigits: 0 });
+
+  return (
+    <section className={styles.valuationResults} aria-live="polite" aria-label="Amounts by condition">
+      <header>
+        <div>
+          <p className={styles.eyebrow}>Class responses</p>
+          <h2>Amount by condition</h2>
+        </div>
+        <strong>{total} {total === 1 ? "response" : "responses"}</strong>
+      </header>
+      <div className={styles.valuationComparison}>
+        {summaries.map((summary) => (
+          <section key={summary.condition}>
+            <header>
+              <span>Group {summary.condition}</span>
+              <h3>{summary.label}</h3>
+              <p>{summary.measure}</p>
+            </header>
+            <dl>
+              <div>
+                <dt>Median</dt>
+                <dd>{summary.median === null ? "—" : `${formatter.format(summary.median)} NOK`}</dd>
+              </div>
+              <div>
+                <dt>Mean</dt>
+                <dd>{summary.mean === null ? "—" : `${formatter.format(summary.mean)} NOK`}</dd>
+              </div>
+              <div>
+                <dt>Responses</dt>
+                <dd>{summary.total}</dd>
+              </div>
+            </dl>
+          </section>
+        ))}
+      </div>
     </section>
   );
 }

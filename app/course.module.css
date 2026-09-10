@@ -3015,6 +3015,98 @@
   grid-template-rows: 42px 220px auto auto;
 }
 
+.valuationResults {
+  border-top: 3px solid var(--ink);
+  border-bottom: 1px solid var(--line);
+}
+
+.valuationResults > header {
+  display: flex;
+  min-height: 110px;
+  justify-content: space-between;
+  gap: 30px;
+  align-items: center;
+}
+
+.valuationResults > header h2 {
+  margin: 7px 0 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(28px, 3.5vw, 42px);
+  font-weight: 400;
+  letter-spacing: -.035em;
+}
+
+.valuationResults > header > strong {
+  color: var(--muted);
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.valuationComparison {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-top: 1px solid var(--ink);
+}
+
+.valuationComparison > section {
+  min-width: 0;
+  padding: 28px 30px 32px 0;
+}
+
+.valuationComparison > section + section {
+  padding-right: 0;
+  padding-left: 30px;
+  border-left: 1px solid var(--line);
+}
+
+.valuationComparison header > span {
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.valuationComparison h3 {
+  margin: 7px 0 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(24px, 3vw, 34px);
+  font-weight: 400;
+  letter-spacing: -.03em;
+}
+
+.valuationComparison header p {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.valuationComparison dl {
+  display: grid;
+  margin: 25px 0 0;
+  border-top: 1px solid var(--fine-line);
+}
+
+.valuationComparison dl > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: baseline;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--fine-line);
+}
+
+.valuationComparison dt {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.valuationComparison dd {
+  margin: 0;
+  color: var(--accent);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(20px, 2.5vw, 28px);
+}
+
 .causeRankingResults {
   border-top: 3px solid var(--ink);
   border-bottom: 1px solid var(--line);
@@ -4371,8 +4463,25 @@
   }
 
   .crewFrameComparison,
+  .valuationComparison,
   .instructorCrewFrames {
     grid-template-columns: 1fr;
+  }
+
+  .valuationResults > header {
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .valuationComparison > section,
+  .valuationComparison > section + section {
+    padding: 24px 0 28px;
+    border-left: 0;
+  }
+
+  .valuationComparison > section + section {
+    border-top: 1px solid var(--line);
   }
 
   .crewFrameGroup,

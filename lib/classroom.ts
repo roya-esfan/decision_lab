@@ -3,6 +3,7 @@ import { deathCauses } from "./day-two-activities";
 import { crewProblemResponseChoices } from "./crew-problem";
 import { calculatorTripResponseChoices } from "./calculator-trip";
 import { endowmentFramingResponseChoices } from "./endowment-framing";
+import { isEncodedRareDiseaseValuation } from "./rare-disease-valuation";
 
 export const activityKeys = [
   "assignment-1",
@@ -15,6 +16,7 @@ export const activityKeys = [
   "calculator-trip",
   "endowment-framing",
   "coin-gamble",
+  "rare-disease-valuation",
 ] as const;
 export type ActivityKey = (typeof activityKeys)[number];
 
@@ -56,6 +58,9 @@ export const promptDefinitions = {
   "coin-gamble": [
     { key: "coin-gamble-choice", label: "Accept the gamble", choices: ["Yes", "No"] },
   ],
+  "rare-disease-valuation": [
+    { key: "rare-disease-amount", label: "Amount in NOK", choices: [] },
+  ],
 } as const;
 
 export function isActivityKey(value: unknown): value is ActivityKey {
@@ -69,6 +74,19 @@ export function validateResponses(
   if (!Array.isArray(responses)) return false;
   const definitions = promptDefinitions[activityKey];
   if (responses.length !== definitions.length) return false;
+
+  if (activityKey === "rare-disease-valuation") {
+    const response = responses[0];
+    return Boolean(
+      typeof response === "object"
+      && response !== null
+      && "promptKey" in response
+      && response.promptKey === "rare-disease-amount"
+      && "choice" in response
+      && typeof response.choice === "string"
+      && isEncodedRareDiseaseValuation(response.choice),
+    );
+  }
 
   const valid = definitions.every((definition) => {
     const response = responses.find((item) =>
