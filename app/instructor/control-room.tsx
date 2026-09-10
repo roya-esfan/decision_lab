@@ -10,6 +10,7 @@ import {
   type TeachingDayNumber,
 } from "@/lib/activity-catalog";
 import type { ActivityKey } from "@/lib/classroom";
+import { summarizeCrewProblemCounts } from "@/lib/crew-problem";
 import { summarizeCauseRankings } from "@/lib/day-two-activities";
 import { summarizeOutcomeBiasCounts } from "@/lib/outcome-bias";
 import styles from "../course.module.css";
@@ -406,6 +407,8 @@ export function ControlRoom({ email }: { email: string }) {
                                   </div>
                                 ))}
                               </div>
+                            ) : activity.key === "crew-problem" ? (
+                              <InstructorCrewProblem counts={result.counts} />
                             ) : (
                               Object.entries(result.counts).map(([choice, count]) => {
                                 const percentage = total === 0 ? 0 : Math.round((count / total) * 100);
@@ -556,6 +559,23 @@ function InstructorCauseRanking({ results }: { results: ResultRow[] }) {
         ))}
       </div>
     </section>
+  );
+}
+
+function InstructorCrewProblem({ counts }: { counts: Record<string, number> }) {
+  return (
+    <div className={styles.instructorCrewFrames}>
+      {summarizeCrewProblemCounts(counts).map((summary) => (
+        <section key={summary.frame}>
+          <header>
+            <strong>Condition {summary.conditionNumber} · {summary.label}</strong>
+            <span>n = {summary.total}</span>
+          </header>
+          <div><span>Certain</span><strong>{summary.certainPercentage}%</strong></div>
+          <div><span>Uncertain</span><strong>{summary.uncertainPercentage}%</strong></div>
+        </section>
+      ))}
+    </div>
   );
 }
 

@@ -95,6 +95,15 @@ export const courseActivityCatalog: readonly CourseActivityDefinition[] = [
     resultsPath: "/day/2/causes-of-death/results",
     kind: "responses",
   },
+  {
+    key: "crew-problem",
+    day: 3,
+    number: 1,
+    title: "Crew problem",
+    activityHref: "/day/3/crew-problem",
+    resultsPath: "/day/3/crew-problem/results",
+    kind: "responses",
+  },
 ];
 
 export function isControlledActivityKey(value: unknown): value is ControlledActivityKey {

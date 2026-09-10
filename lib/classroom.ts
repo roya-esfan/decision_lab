@@ -1,5 +1,6 @@
 import { outcomeBiasResponseChoices } from "./outcome-bias";
 import { deathCauses } from "./day-two-activities";
+import { crewProblemResponseChoices } from "./crew-problem";
 
 export const activityKeys = [
   "assignment-1",
@@ -7,6 +8,7 @@ export const activityKeys = [
   "assignment-2",
   "company-revenue",
   "causes-of-death",
+  "crew-problem",
 ] as const;
 export type ActivityKey = (typeof activityKeys)[number];
 
@@ -32,6 +34,9 @@ export const promptDefinitions = {
     label: cause.label,
     choices: ["1", "2", "3", "4", "5"] as const,
   })),
+  "crew-problem": [
+    { key: "crew-choice", label: "Crew problem", choices: crewProblemResponseChoices },
+  ],
 } as const;
 
 export function isActivityKey(value: unknown): value is ActivityKey {

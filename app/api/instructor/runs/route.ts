@@ -165,8 +165,9 @@ export async function POST(request: Request) {
     }
     if (!run) throw new Error("JOIN_CODE_GENERATION_FAILED");
 
+    const establishedActivityKeys = controlledActivityKeys.filter((activityKey) => activityKey !== "crew-problem");
     const { error: stateError } = await supabase.from("classroom_activity_states").insert(
-      controlledActivityKeys.map((activityKey) => ({
+      establishedActivityKeys.map((activityKey) => ({
         run_id: run.id,
         activity_key: activityKey,
         is_open: false,
@@ -176,6 +177,17 @@ export async function POST(request: Request) {
     if (stateError) {
       await supabase.from("classroom_runs").delete().eq("id", run.id);
       throw stateError;
+    }
+
+    const { error: crewStateError } = await supabase.from("classroom_activity_states").insert({
+      run_id: run.id,
+      activity_key: "crew-problem",
+      is_open: false,
+      is_revealed: false,
+    });
+    if (crewStateError && crewStateError.code !== "23514") {
+      await supabase.from("classroom_runs").delete().eq("id", run.id);
+      throw crewStateError;
     }
 
     return NextResponse.json({ created: true, runId: run.id }, { status: 201 });

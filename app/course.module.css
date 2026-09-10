@@ -2939,6 +2939,82 @@
   color: var(--accent);
 }
 
+.crewFrameResults {
+  border-top: 3px solid var(--ink);
+  border-bottom: 1px solid var(--line);
+}
+
+.crewFrameResults > header {
+  display: flex;
+  min-height: 110px;
+  justify-content: space-between;
+  gap: 30px;
+  align-items: center;
+}
+
+.crewFrameResults > header h2 {
+  margin: 7px 0 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(28px, 3.5vw, 42px);
+  font-weight: 400;
+  letter-spacing: -.035em;
+}
+
+.crewFrameResults > header > strong,
+.crewFrameGroup > header > strong {
+  color: var(--muted);
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.crewFrameComparison {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-top: 1px solid var(--ink);
+}
+
+.crewFrameGroup {
+  min-width: 0;
+  padding: 26px 30px 30px 0;
+}
+
+.crewFrameGroup + .crewFrameGroup {
+  padding-right: 0;
+  padding-left: 30px;
+  border-left: 1px solid var(--line);
+}
+
+.crewFrameGroup > header {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: end;
+}
+
+.crewFrameGroup > header span {
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.crewFrameGroup h3 {
+  margin: 5px 0 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(23px, 2.7vw, 32px);
+  font-weight: 400;
+}
+
+.crewFrameGroup .liveResultChart {
+  grid-template-columns: repeat(2, minmax(100px, 1fr));
+  gap: clamp(18px, 4vw, 42px);
+  padding-top: 28px;
+}
+
+.crewFrameGroup .liveResultColumn {
+  grid-template-rows: 42px 220px auto auto;
+}
+
 .causeRankingResults {
   border-top: 3px solid var(--ink);
   border-bottom: 1px solid var(--line);
@@ -4001,6 +4077,52 @@
   font-style: normal;
 }
 
+.instructorCrewFrames {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-top: 1px solid var(--fine-line);
+}
+
+.instructorCrewFrames > section {
+  padding: 13px 18px 13px 0;
+}
+
+.instructorCrewFrames > section + section {
+  padding-left: 18px;
+  border-left: 1px solid var(--fine-line);
+}
+
+.instructorCrewFrames header,
+.instructorCrewFrames > section > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.instructorCrewFrames header {
+  margin-bottom: 9px;
+}
+
+.instructorCrewFrames header strong,
+.instructorCrewFrames > section > div span {
+  font-size: 11px;
+}
+
+.instructorCrewFrames header span {
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.instructorCrewFrames > section > div {
+  padding: 6px 0;
+  border-top: 1px solid var(--fine-line);
+}
+
+.instructorCrewFrames > section > div strong {
+  color: var(--accent);
+  font-size: 15px;
+}
+
 .controlActivities article > footer {
   flex-wrap: wrap;
   align-items: center;
@@ -4180,6 +4302,34 @@
     align-items: flex-start;
     flex-direction: column;
     justify-content: center;
+  }
+
+  .crewFrameResults > header,
+  .crewFrameGroup > header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .crewFrameComparison,
+  .instructorCrewFrames {
+    grid-template-columns: 1fr;
+  }
+
+  .crewFrameGroup,
+  .crewFrameGroup + .crewFrameGroup {
+    padding: 24px 0 28px;
+    border-left: 0;
+  }
+
+  .crewFrameGroup + .crewFrameGroup,
+  .instructorCrewFrames > section + section {
+    border-top: 1px solid var(--line);
+  }
+
+  .instructorCrewFrames > section,
+  .instructorCrewFrames > section + section {
+    padding: 13px 0;
+    border-left: 0;
   }
 
   .causeRankTable > div {

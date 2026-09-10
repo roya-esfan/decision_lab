@@ -1,0 +1,193 @@
+.page {
+  padding-bottom: 48px;
+}
+
+.breadcrumb {
+  display: flex;
+  min-height: 54px;
+  gap: 10px;
+  align-items: center;
+  border-bottom: 1px solid var(--fine-line);
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.breadcrumb a {
+  color: var(--ink);
+  text-underline-offset: 4px;
+}
+
+.header,
+.resultsHeader {
+  max-width: 920px;
+  padding: 48px 0 40px;
+}
+
+.header > p:first-child,
+.resultsHeader > p:first-child,
+.complete > p {
+  margin: 0 0 12px;
+  color: var(--accent);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.header h1,
+.resultsHeader h1 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(38px, 5vw, 58px);
+  font-weight: 400;
+  letter-spacing: -.035em;
+  line-height: 1.05;
+}
+
+.header > p:last-child {
+  margin: 18px 0 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(24px, 3vw, 34px);
+  line-height: 1.25;
+}
+
+.conditionPicker,
+.activity,
+.complete {
+  padding: 34px 0 48px;
+  border-top: 2px solid var(--ink);
+  border-bottom: 1px solid var(--line);
+}
+
+.conditionPicker h2,
+.complete h2 {
+  max-width: 760px;
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(30px, 4vw, 46px);
+  font-weight: 400;
+  letter-spacing: -.03em;
+  line-height: 1.15;
+}
+
+.conditionPicker > div {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(120px, 230px));
+  gap: 14px;
+  margin-top: 30px;
+}
+
+.conditionPicker button {
+  min-height: 108px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--accent);
+  cursor: pointer;
+  font: 700 42px/1 Georgia, "Times New Roman", serif;
+}
+
+.conditionPicker button:hover,
+.conditionPicker button:focus-visible {
+  border-color: var(--accent);
+  background: #edf4f7;
+}
+
+.scenario {
+  max-width: 900px;
+}
+
+.scenario p {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.65;
+}
+
+.scenario h2 {
+  margin: 30px 0 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(27px, 3.3vw, 39px);
+  font-weight: 400;
+  letter-spacing: -.025em;
+}
+
+.options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-top: 28px;
+  border: 1px solid var(--line);
+}
+
+.options button {
+  display: grid;
+  min-height: 210px;
+  padding: 26px;
+  gap: 20px;
+  align-content: start;
+  border: 0;
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+}
+
+.options button + button {
+  border-left: 1px solid var(--line);
+}
+
+.options button:hover,
+.options button:focus-visible {
+  background: #edf4f7;
+}
+
+.options button:disabled {
+  cursor: wait;
+  opacity: .6;
+}
+
+.options span {
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.options strong {
+  max-width: 500px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(21px, 2.5vw, 29px);
+  font-weight: 400;
+  line-height: 1.28;
+}
+
+@media (max-width: 650px) {
+  .header,
+  .resultsHeader {
+    padding: 38px 0 32px;
+  }
+
+  .conditionPicker > div {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .conditionPicker button {
+    min-height: 88px;
+  }
+
+  .scenario p {
+    font-size: 16px;
+  }
+
+  .options {
+    grid-template-columns: 1fr;
+  }
+
+  .options button {
+    min-height: 0;
+    padding: 22px 18px;
+  }
+
+  .options button + button {
+    border-top: 1px solid var(--line);
+    border-left: 0;
+  }
+}

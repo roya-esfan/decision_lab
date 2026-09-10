@@ -259,7 +259,15 @@ export const courseDays: CourseDay[] = [
       recommended: ["Kahneman, Chapters 26, 29 and 34."],
     },
     sessions: [],
-    assignments: [],
+    assignments: [
+      {
+        number: 1,
+        title: "Crew problem",
+        description: "Choose between two options",
+        href: "/day/3/crew-problem",
+        status: "ready",
+      },
+    ],
   },
   {
     number: 4,

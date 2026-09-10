@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import type { ActivityKey } from "@/lib/classroom";
 import { summarizeCauseRankings } from "@/lib/day-two-activities";
+import { summarizeCrewProblemCounts } from "@/lib/crew-problem";
 import { summarizeOutcomeBiasCounts } from "@/lib/outcome-bias";
 import styles from "../course.module.css";
 
@@ -61,6 +62,10 @@ export function LiveResults({
     return <CauseRankingResults results={state.results} showHeatmap={projector} />;
   }
 
+  if (activityKey === "crew-problem") {
+    return <CrewProblemResults results={state.results} />;
+  }
+
   return (
     <section className={styles.liveResultRows} aria-live="polite" aria-label="Revealed class results">
       {state.results.map((result, index) => {
@@ -97,6 +102,54 @@ export function LiveResults({
       {activityKey === "company-revenue" && (
         <p className={styles.correctAnswerNote}><strong>Answer:</strong> Group B had the larger combined sales revenue.</p>
       )}
+    </section>
+  );
+}
+
+function CrewProblemResults({ results }: { results: ResultRow[] }) {
+  const result = results[0];
+  const summaries = summarizeCrewProblemCounts(result?.counts ?? {});
+  const total = summaries.reduce((sum, summary) => sum + summary.total, 0);
+
+  return (
+    <section className={styles.crewFrameResults} aria-live="polite" aria-label="Crew problem results by condition">
+      <header>
+        <div>
+          <p className={styles.eyebrow}>Class choices</p>
+          <h2>Choice by framing condition</h2>
+        </div>
+        <strong>{total} {total === 1 ? "response" : "responses"}</strong>
+      </header>
+      <div className={styles.crewFrameComparison}>
+        {summaries.map((summary) => (
+          <section className={styles.crewFrameGroup} key={summary.frame}>
+            <header>
+              <div>
+                <span>Condition {summary.conditionNumber}</span>
+                <h3>{summary.label}</h3>
+              </div>
+              <strong>n = {summary.total}</strong>
+            </header>
+            <div className={styles.liveResultChart}>
+              {([
+                ["Certain option", summary.certain, summary.certainPercentage],
+                ["Uncertain option", summary.uncertain, summary.uncertainPercentage],
+              ] as const).map(([label, count, percentage]) => (
+                <div
+                  className={styles.liveResultColumn}
+                  key={label}
+                  aria-label={`${summary.label}, ${label}: ${percentage}% (${count} ${count === 1 ? "response" : "responses"})`}
+                >
+                  <strong>{percentage}%</strong>
+                  <div aria-hidden="true"><i style={{ height: percentage === 0 ? "2px" : `${percentage}%` }} /></div>
+                  <span>{label}</span>
+                  <em>{count} {count === 1 ? "response" : "responses"}</em>
+                </div>
+              ))}
+            </div>
+          </section>
+        ))}
+      </div>
     </section>
   );
 }
