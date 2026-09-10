@@ -288,6 +288,13 @@ export const courseDays: CourseDay[] = [
         href: "/day/3/endowment-framing",
         status: "ready",
       },
+      {
+        number: 5,
+        title: "Would you accept the gamble?",
+        description: "Consider a coin-toss gamble and decide whether to accept it",
+        href: "/day/3/coin-gamble",
+        status: "ready",
+      },
     ],
   },
   {

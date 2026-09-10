@@ -14,6 +14,7 @@ export const activityKeys = [
   "school-bag-framing",
   "calculator-trip",
   "endowment-framing",
+  "coin-gamble",
 ] as const;
 export type ActivityKey = (typeof activityKeys)[number];
 
@@ -51,6 +52,9 @@ export const promptDefinitions = {
   ],
   "endowment-framing": [
     { key: "endowment-framing-choice", label: "Certain option or gamble", choices: endowmentFramingResponseChoices },
+  ],
+  "coin-gamble": [
+    { key: "coin-gamble-choice", label: "Accept the gamble", choices: ["Yes", "No"] },
   ],
 } as const;
 

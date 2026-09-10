@@ -131,6 +131,15 @@ export const courseActivityCatalog: readonly CourseActivityDefinition[] = [
     resultsPath: "/day/3/endowment-framing/results",
     kind: "responses",
   },
+  {
+    key: "coin-gamble",
+    day: 3,
+    number: 5,
+    title: "Would you accept the gamble?",
+    activityHref: "/day/3/coin-gamble",
+    resultsPath: "/day/3/coin-gamble/results",
+    kind: "responses",
+  },
 ];
 
 export function isControlledActivityKey(value: unknown): value is ControlledActivityKey {
