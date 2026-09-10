@@ -23,7 +23,7 @@ const problems: Record<EndowmentFramingConditionNumber, {
   "1": {
     startingAmount: "$1,000",
     options: [
-      { decision: "certain", label: "Option A", description: "$500 for sure" },
+      { decision: "certain", label: "Option A", description: "A sure gain of $500" },
       {
         decision: "gamble",
         label: "Option B",
@@ -34,7 +34,7 @@ const problems: Record<EndowmentFramingConditionNumber, {
   "2": {
     startingAmount: "$2,000",
     options: [
-      { decision: "certain", label: "Option A", description: "Lose $500 for sure" },
+      { decision: "certain", label: "Option A", description: "A sure loss of $500" },
       {
         decision: "gamble",
         label: "Option B",
