@@ -3391,6 +3391,55 @@
   margin-top: 18px;
 }
 
+.preSessionStatus {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 28px;
+  align-items: center;
+  padding: 24px 0;
+  border-top: 2px solid var(--ink);
+  border-bottom: 1px solid var(--line);
+}
+
+.preSessionStatus h2 {
+  margin: 6px 0 7px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(24px, 3vw, 34px);
+  font-weight: 400;
+  letter-spacing: -.03em;
+}
+
+.preSessionStatus > div > p:last-child {
+  max-width: 660px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.preSessionStatus > button {
+  min-height: 48px;
+  padding: 0 18px;
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: white;
+  cursor: pointer;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .035em;
+  text-transform: uppercase;
+}
+
+.preSessionStatus > button:hover:not(:disabled) {
+  background: var(--ink);
+}
+
+.preSessionStatus > button:disabled {
+  cursor: wait;
+  opacity: .55;
+}
+
 .runStatus {
   display: grid;
   grid-template-columns: 1.1fr .7fr .7fr 1.4fr;
@@ -4282,9 +4331,14 @@
 @media (max-width: 720px) {
   .joinPanel form,
   .instructorLogin,
+  .preSessionStatus,
   .runStatus,
   .previewResults {
     grid-template-columns: 1fr;
+  }
+
+  .preSessionStatus > button {
+    width: 100%;
   }
 
   .joinPanel form button {

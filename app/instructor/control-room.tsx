@@ -253,14 +253,16 @@ export function ControlRoom({ email }: { email: string }) {
           busy={busy === `day-access-${selectedDay}`}
           onToggle={() => void toggleDayAccess()}
         />
-        <section className={styles.controlEmpty}>
-          <p className={styles.eyebrow}>Day {selectedDay}</p>
-          <h2>No classroom session</h2>
-          <p>
-            {dayActivities.length > 0
-              ? "The activities are listed below. Start a classroom session when you want to collect new live responses; every activity will begin closed."
-              : "No activities have been added to this teaching day yet."}
-          </p>
+        <section className={styles.preSessionStatus}>
+          <div>
+            <p className={styles.eyebrow}>Day {selectedDay}</p>
+            <h2>No classroom session</h2>
+            <p>
+              {dayActivities.length > 0
+                ? "Start a session when you want to collect responses. Every activity will begin closed."
+                : "No activities have been added to this teaching day yet."}
+            </p>
+          </div>
           {activeRun ? (
             <button type="button" onClick={showActiveRun}>Go to Day {activeRun.dayNumber} live session</button>
           ) : dayActivities.length > 0 ? (
@@ -268,8 +270,8 @@ export function ControlRoom({ email }: { email: string }) {
               {busy === "create" ? "Preparing…" : `Start Day ${selectedDay} classroom session`}
             </button>
           ) : null}
-          {error && <p className={styles.formError} role="alert">{error}</p>}
         </section>
+        {error && <p className={styles.formError} role="alert">{error}</p>}
         {dayActivities.length > 0 && (
           <>
             <div className={styles.controlSectionHeading}>
