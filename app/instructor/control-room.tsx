@@ -255,10 +255,10 @@ export function ControlRoom({ email }: { email: string }) {
         />
         <section className={styles.controlEmpty}>
           <p className={styles.eyebrow}>Day {selectedDay}</p>
-          <h2>No session for this day</h2>
+          <h2>No classroom session</h2>
           <p>
             {dayActivities.length > 0
-              ? "Start a classroom session when you want to collect new live responses. Every activity will begin closed."
+              ? "The activities are listed below. Start a classroom session when you want to collect new live responses; every activity will begin closed."
               : "No activities have been added to this teaching day yet."}
           </p>
           {activeRun ? (
@@ -270,6 +270,34 @@ export function ControlRoom({ email }: { email: string }) {
           ) : null}
           {error && <p className={styles.formError} role="alert">{error}</p>}
         </section>
+        {dayActivities.length > 0 && (
+          <>
+            <div className={styles.controlSectionHeading}>
+              <div>
+                <p className={styles.eyebrow}>Day {selectedDay}</p>
+                <h2>Programmed activities</h2>
+              </div>
+              <p>{dayActivities.length} {dayActivities.length === 1 ? "activity" : "activities"} prepared</p>
+            </div>
+            <div className={styles.controlActivities}>
+              {dayActivities.map((activity) => (
+                <article key={activity.key}>
+                  <header>
+                    <div>
+                      <p className={styles.eyebrow}>Activity {activity.number}</p>
+                      <h3>{activity.title}</h3>
+                    </div>
+                    <div className={styles.activityState}><span>Closed</span></div>
+                  </header>
+                  <footer>
+                    <a href={activity.activityHref} target="_blank" rel="noreferrer">View activity page</a>
+                    <span className={styles.sessionRequiredNote}>Live controls appear after a session starts</span>
+                  </footer>
+                </article>
+              ))}
+            </div>
+          </>
+        )}
         <button className={styles.textButton} type="button" onClick={() => void logout()}>Sign out {email}</button>
       </section>
     );

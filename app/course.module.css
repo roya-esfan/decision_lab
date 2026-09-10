@@ -4151,6 +4151,12 @@
   font-weight: 750;
 }
 
+.sessionRequiredNote {
+  margin-left: auto;
+  color: var(--muted);
+  font-size: 11px;
+}
+
 .localActivitiesNote {
   display: grid;
   grid-template-columns: 190px 1fr;
@@ -4518,6 +4524,12 @@
 
   .controlActivities article > footer a {
     min-height: 36px;
+  }
+
+  .sessionRequiredNote {
+    width: 100%;
+    margin-left: 0;
+    text-align: left;
   }
 
   .privateCompletionSection > header,
