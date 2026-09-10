@@ -2,6 +2,7 @@ import { outcomeBiasResponseChoices } from "./outcome-bias";
 import { deathCauses } from "./day-two-activities";
 import { crewProblemResponseChoices } from "./crew-problem";
 import { calculatorTripResponseChoices } from "./calculator-trip";
+import { endowmentFramingResponseChoices } from "./endowment-framing";
 
 export const activityKeys = [
   "assignment-1",
@@ -12,6 +13,7 @@ export const activityKeys = [
   "crew-problem",
   "school-bag-framing",
   "calculator-trip",
+  "endowment-framing",
 ] as const;
 export type ActivityKey = (typeof activityKeys)[number];
 
@@ -46,6 +48,9 @@ export const promptDefinitions = {
   ],
   "calculator-trip": [
     { key: "calculator-trip-choice", label: "Trip to the other store", choices: calculatorTripResponseChoices },
+  ],
+  "endowment-framing": [
+    { key: "endowment-framing-choice", label: "Certain option or gamble", choices: endowmentFramingResponseChoices },
   ],
 } as const;
 

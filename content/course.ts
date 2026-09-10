@@ -281,6 +281,13 @@ export const courseDays: CourseDay[] = [
         href: "/day/3/calculator-trip",
         status: "ready",
       },
+      {
+        number: 4,
+        title: "Choose between two options",
+        description: "Choose between a certain outcome and a gamble",
+        href: "/day/3/endowment-framing",
+        status: "ready",
+      },
     ],
   },
   {
