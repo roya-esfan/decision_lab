@@ -10,6 +10,7 @@ import {
   type TeachingDayNumber,
 } from "@/lib/activity-catalog";
 import type { ActivityKey } from "@/lib/classroom";
+import { summarizeCalculatorTripCounts } from "@/lib/calculator-trip";
 import { summarizeCrewProblemCounts } from "@/lib/crew-problem";
 import { summarizeCauseRankings } from "@/lib/day-two-activities";
 import { summarizeOutcomeBiasCounts } from "@/lib/outcome-bias";
@@ -409,6 +410,8 @@ export function ControlRoom({ email }: { email: string }) {
                               </div>
                             ) : activity.key === "crew-problem" ? (
                               <InstructorCrewProblem counts={result.counts} />
+                            ) : activity.key === "calculator-trip" ? (
+                              <InstructorCalculatorTrip counts={result.counts} />
                             ) : (
                               Object.entries(result.counts).map(([choice, count]) => {
                                 const percentage = total === 0 ? 0 : Math.round((count / total) * 100);
@@ -573,6 +576,23 @@ function InstructorCrewProblem({ counts }: { counts: Record<string, number> }) {
           </header>
           <div><span>Certain</span><strong>{summary.certainPercentage}%</strong></div>
           <div><span>Uncertain</span><strong>{summary.uncertainPercentage}%</strong></div>
+        </section>
+      ))}
+    </div>
+  );
+}
+
+function InstructorCalculatorTrip({ counts }: { counts: Record<string, number> }) {
+  return (
+    <div className={styles.instructorCrewFrames}>
+      {summarizeCalculatorTripCounts(counts).map((summary) => (
+        <section key={summary.condition}>
+          <header>
+            <strong>Condition {summary.conditionNumber} · {summary.label}</strong>
+            <span>n = {summary.total}</span>
+          </header>
+          <div><span>Yes</span><strong>{summary.yesPercentage}%</strong></div>
+          <div><span>No</span><strong>{summary.noPercentage}%</strong></div>
         </section>
       ))}
     </div>

@@ -274,6 +274,13 @@ export const courseDays: CourseDay[] = [
         href: "/day/3/school-bag-framing",
         status: "ready",
       },
+      {
+        number: 3,
+        title: "Would you make the trip?",
+        description: "Decide whether you would travel to another store",
+        href: "/day/3/calculator-trip",
+        status: "ready",
+      },
     ],
   },
   {

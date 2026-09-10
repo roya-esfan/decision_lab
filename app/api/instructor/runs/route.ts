@@ -165,7 +165,11 @@ export async function POST(request: Request) {
     }
     if (!run) throw new Error("JOIN_CODE_GENERATION_FAILED");
 
-    const migrationDependentActivityKeys = ["crew-problem", "school-bag-framing"] as const;
+    const migrationDependentActivityKeys = [
+      "crew-problem",
+      "school-bag-framing",
+      "calculator-trip",
+    ] as const;
     const establishedActivityKeys = controlledActivityKeys.filter(
       (activityKey) => !migrationDependentActivityKeys.includes(
         activityKey as (typeof migrationDependentActivityKeys)[number],
