@@ -3020,6 +3020,92 @@
   border-bottom: 1px solid var(--line);
 }
 
+.probabilityNewsResults {
+  border-top: 3px solid var(--ink);
+  border-bottom: 1px solid var(--line);
+}
+
+.probabilityNewsResults > header {
+  display: flex;
+  min-height: 110px;
+  justify-content: space-between;
+  gap: 30px;
+  align-items: center;
+}
+
+.probabilityNewsResults > header h2 {
+  margin: 7px 0 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(28px, 3.5vw, 42px);
+  font-weight: 400;
+  letter-spacing: -.035em;
+}
+
+.probabilityNewsResults > header > strong {
+  color: var(--muted);
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.probabilityNewsChart {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(130px, 1fr));
+  gap: clamp(18px, 4vw, 50px);
+  padding: 35px 0 30px;
+  border-top: 1px solid var(--ink);
+}
+
+.probabilityNewsChart article {
+  display: grid;
+  grid-template-rows: 40px 250px auto auto auto;
+  min-width: 0;
+  text-align: center;
+}
+
+.probabilityNewsChart article > strong {
+  color: var(--accent);
+  font-size: 28px;
+}
+
+.probabilityNewsChart article > div {
+  position: relative;
+  border-bottom: 1px solid var(--ink);
+}
+
+.probabilityNewsChart article > div i {
+  position: absolute;
+  right: 20%;
+  bottom: 0;
+  left: 20%;
+  display: block;
+  background: var(--accent);
+}
+
+.probabilityNewsChart article > span {
+  margin-top: 15px;
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 850;
+}
+
+.probabilityNewsChart h3 {
+  margin: 4px 0 0;
+  font-size: 16px;
+}
+
+.probabilityNewsChart article > p,
+.probabilityNewsNote {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.probabilityNewsNote {
+  margin: 0;
+  padding: 15px 0;
+  border-top: 1px solid var(--fine-line);
+}
+
 .valuationResults > header {
   display: flex;
   min-height: 110px;
@@ -4264,6 +4350,43 @@
   font-size: 15px;
 }
 
+.instructorProbabilityNews {
+  display: grid;
+  border-top: 1px solid var(--fine-line);
+}
+
+.instructorProbabilityNews > div {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr) 42px minmax(95px, auto);
+  gap: 10px;
+  min-height: 38px;
+  align-items: center;
+  border-bottom: 1px solid var(--fine-line);
+}
+
+.instructorProbabilityNews > div > span:first-child {
+  color: var(--accent);
+  font-weight: 850;
+}
+
+.instructorProbabilityNews > div > span:nth-child(2) {
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.instructorProbabilityNews strong {
+  color: var(--accent);
+  font-size: 17px;
+  text-align: right;
+}
+
+.instructorProbabilityNews em {
+  color: var(--muted);
+  font-size: 10px;
+  font-style: normal;
+  text-align: right;
+}
+
 .controlActivities article > footer {
   flex-wrap: wrap;
   align-items: center;
@@ -4472,6 +4595,21 @@
     align-items: flex-start;
     flex-direction: column;
     justify-content: center;
+  }
+
+  .probabilityNewsResults > header {
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .probabilityNewsChart {
+    grid-template-columns: repeat(2, minmax(120px, 1fr));
+    gap: 34px 20px;
+  }
+
+  .probabilityNewsChart article {
+    grid-template-rows: 38px 180px auto auto auto;
   }
 
   .valuationComparison > section,

@@ -302,6 +302,13 @@ export const courseDays: CourseDay[] = [
         href: "/day/3/rare-disease-valuation",
         status: "ready",
       },
+      {
+        number: 7,
+        title: "Is the news equally good?",
+        description: "Rate four changes in the chance of receiving $1 million",
+        href: "/day/3/probability-news",
+        status: "ready",
+      },
     ],
   },
   {

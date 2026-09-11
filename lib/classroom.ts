@@ -4,6 +4,7 @@ import { crewProblemResponseChoices } from "./crew-problem";
 import { calculatorTripResponseChoices } from "./calculator-trip";
 import { endowmentFramingResponseChoices } from "./endowment-framing";
 import { isEncodedRareDiseaseValuation } from "./rare-disease-valuation";
+import { probabilityNewsCases, probabilityNewsScale } from "./probability-news";
 
 export const activityKeys = [
   "assignment-1",
@@ -17,6 +18,7 @@ export const activityKeys = [
   "endowment-framing",
   "coin-gamble",
   "rare-disease-valuation",
+  "probability-news",
 ] as const;
 export type ActivityKey = (typeof activityKeys)[number];
 
@@ -61,6 +63,11 @@ export const promptDefinitions = {
   "rare-disease-valuation": [
     { key: "rare-disease-amount", label: "Amount in NOK", choices: [] },
   ],
+  "probability-news": probabilityNewsCases.map((item) => ({
+    key: item.key,
+    label: `${item.letter} · ${item.change}`,
+    choices: probabilityNewsScale,
+  })),
 } as const;
 
 export function isActivityKey(value: unknown): value is ActivityKey {

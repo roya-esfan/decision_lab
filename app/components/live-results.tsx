@@ -8,6 +8,7 @@ import { summarizeEndowmentFramingCounts } from "@/lib/endowment-framing";
 import { summarizeCrewProblemCounts } from "@/lib/crew-problem";
 import { summarizeOutcomeBiasCounts } from "@/lib/outcome-bias";
 import { summarizeRareDiseaseValuations } from "@/lib/rare-disease-valuation";
+import { summarizeProbabilityNews } from "@/lib/probability-news";
 import styles from "../course.module.css";
 
 type ResultRow = { promptKey: string; label: string; counts: Record<string, number> };
@@ -81,6 +82,10 @@ export function LiveResults({
     return <RareDiseaseValuationResults results={state.results} />;
   }
 
+  if (activityKey === "probability-news") {
+    return <ProbabilityNewsResults results={state.results} />;
+  }
+
   return (
     <section className={styles.liveResultRows} aria-live="polite" aria-label="Revealed class results">
       {state.results.map((result, index) => {
@@ -117,6 +122,43 @@ export function LiveResults({
       {activityKey === "company-revenue" && (
         <p className={styles.correctAnswerNote}><strong>Answer:</strong> Group B had the larger combined sales revenue.</p>
       )}
+    </section>
+  );
+}
+
+function ProbabilityNewsResults({ results }: { results: ResultRow[] }) {
+  const summaries = summarizeProbabilityNews(results);
+  const total = summaries.length === 0
+    ? 0
+    : Math.max(...summaries.map((summary) => summary.ratings + summary.notSure));
+
+  return (
+    <section className={styles.probabilityNewsResults} aria-live="polite" aria-label="Mean rating for each probability change">
+      <header>
+        <div>
+          <p className={styles.eyebrow}>Class ratings</p>
+          <h2>How good did the news feel?</h2>
+        </div>
+        <strong>{total} {total === 1 ? "response" : "responses"}</strong>
+      </header>
+      <div className={styles.probabilityNewsChart}>
+        {summaries.map((summary) => {
+          const height = summary.mean === null ? 0 : Math.max(1, summary.mean * 10);
+          return (
+            <article
+              key={summary.promptKey}
+              aria-label={`${summary.change}: mean ${summary.mean === null ? "not available" : summary.mean.toFixed(1)} out of 10; ${summary.notSure} not sure`}
+            >
+              <strong>{summary.mean === null ? "—" : summary.mean.toFixed(1)}</strong>
+              <div aria-hidden="true"><i style={{ height: `${height}%` }} /></div>
+              <span>{summary.letter}</span>
+              <h3>{summary.change}</h3>
+              <p>n = {summary.ratings}{summary.notSure > 0 ? ` · ${summary.notSure} not sure` : ""}</p>
+            </article>
+          );
+        })}
+      </div>
+      <p className={styles.probabilityNewsNote}>Mean rating on the 0–10 scale; “Not sure” responses are shown separately</p>
     </section>
   );
 }

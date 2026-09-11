@@ -16,6 +16,7 @@ import { summarizeCauseRankings } from "@/lib/day-two-activities";
 import { summarizeEndowmentFramingCounts } from "@/lib/endowment-framing";
 import { summarizeOutcomeBiasCounts } from "@/lib/outcome-bias";
 import { summarizeRareDiseaseValuations } from "@/lib/rare-disease-valuation";
+import { summarizeProbabilityNews } from "@/lib/probability-news";
 import styles from "../course.module.css";
 
 type ActivityState = { key: ControlledActivityKey; isOpen: boolean; isRevealed: boolean };
@@ -425,6 +426,8 @@ export function ControlRoom({ email }: { email: string }) {
                     <div className={styles.instructorResultRows}>
                       {activity.key === "causes-of-death" ? (
                         <InstructorCauseRanking results={activityResults} />
+                      ) : activity.key === "probability-news" ? (
+                        <InstructorProbabilityNews results={activityResults} />
                       ) : activityResults.map((result) => {
                         const total = Object.values(result.counts).reduce((sum, count) => sum + count, 0);
                         return (
@@ -667,6 +670,24 @@ function InstructorRareDiseaseValuation({ counts }: { counts: Record<string, num
         </section>
       ))}
     </div>
+  );
+}
+
+function InstructorProbabilityNews({ results }: { results: ResultRow[] }) {
+  return (
+    <section>
+      <header><strong>Mean rating</strong><span>0–10 scale</span></header>
+      <div className={styles.instructorProbabilityNews}>
+        {summarizeProbabilityNews(results).map((summary) => (
+          <div key={summary.promptKey}>
+            <span>{summary.letter}</span>
+            <span>{summary.change}</span>
+            <strong>{summary.mean === null ? "—" : summary.mean.toFixed(1)}</strong>
+            <em>n = {summary.ratings}{summary.notSure > 0 ? ` · ${summary.notSure} unsure` : ""}</em>
+          </div>
+        ))}
+      </div>
+    </section>
   );
 }
 
