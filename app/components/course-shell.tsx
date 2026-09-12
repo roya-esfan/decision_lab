@@ -15,7 +15,7 @@ export function CourseHeader() {
 export function CourseFooter() {
   return (
     <footer className={styles.siteFooter}>
-      <span>ØAADM3700 · Judgement and decision making in organizations</span>
+      <span>ØAADM3700 · Decision-Making Processes in Organizations</span>
       <div><Link href="/instructor">Instructor</Link><span>Autumn 2026</span></div>
     </footer>
   );

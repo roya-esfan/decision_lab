@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "ØAADM3700 — Judgement and decision making in organizations",
+  title: "ØAADM3700 — Decision-Making Processes in Organizations",
   description:
     "Course schedule, sessions, readings and classroom activities for ØAADM3700.",
 };

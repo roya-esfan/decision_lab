@@ -11,7 +11,7 @@ export default async function Home() {
     <CourseShell>
       <main>
         <section className={styles.hero}>
-          <h1>Judgement and decision making in organizations</h1>
+          <h1>Decision-Making Processes in Organizations</h1>
         </section>
         <CourseHome publishedDays={access.publishedDays} />
       </main>
