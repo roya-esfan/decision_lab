@@ -29,9 +29,11 @@ export function RationalDecisionTool() {
   const [error, setError] = useState("");
 
   const weightTotal = criteria.reduce((total, criterion) => total + (weights[criterion.id] ?? 0), 0);
+  const allWeightsEntered = criteria.every((criterion) => weights[criterion.id] !== undefined);
+  const weightsReady = allWeightsEntered && Math.abs(weightTotal - 100) <= 0.001;
 
   const rankedAlternatives = useMemo(() => {
-    return alternatives
+    const scored = alternatives
       .map((alternative) => ({
         ...alternative,
         score: criteria.reduce((total, criterion) => {
@@ -40,8 +42,41 @@ export function RationalDecisionTool() {
           return total + weight * rating;
         }, 0),
       }))
-      .sort((a, b) => b.score - a.score);
+      .map((alternative) => ({
+        ...alternative,
+        displayedScore: Number(alternative.score.toFixed(2)),
+      }))
+      .sort((a, b) => b.displayedScore - a.displayedScore);
+
+    const distinctScores = [...new Set(scored.map((alternative) => alternative.displayedScore))];
+    return scored.map((alternative) => ({
+      ...alternative,
+      rank: distinctScores.indexOf(alternative.displayedScore) + 1,
+    }));
   }, [alternatives, criteria, ratings, weights]);
+  const highestScoringAlternatives = rankedAlternatives.filter(
+    (alternative) => alternative.displayedScore === rankedAlternatives[0]?.displayedScore,
+  );
+
+  function changeWeight(id: string, rawValue: string) {
+    setWeights((current) => {
+      const next = { ...current };
+      if (rawValue === "") delete next[id];
+      else next[id] = Number(rawValue);
+      return next;
+    });
+    setError("");
+  }
+
+  function changeRating(key: string, rawValue: string) {
+    setRatings((current) => {
+      const next = { ...current };
+      if (rawValue === "") delete next[key];
+      else next[key] = Math.max(1, Math.min(10, Number(rawValue)));
+      return next;
+    });
+    setError("");
+  }
 
   function addNamedItem(
     event: FormEvent,
@@ -81,6 +116,7 @@ export function RationalDecisionTool() {
   function validateStep() {
     if (step === 1 && problem.trim().length < 3) return "Write a short description of the problem before continuing.";
     if (step === 2 && criteria.length < 2) return "Add at least two criteria before continuing.";
+    if (step === 3 && !allWeightsEntered) return "Enter a weight for every criterion before continuing.";
     if (step === 3 && criteria.some((criterion) => (weights[criterion.id] ?? 0) < 0 || (weights[criterion.id] ?? 0) > 100)) return "Each criterion weight must be between 0% and 100%.";
     if (step === 3 && Math.abs(weightTotal - 100) > 0.001) return `The criteria must total exactly 100%. Your current total is ${weightTotal}%.`;
     if (step === 4 && alternatives.length < 2) return "Add at least two alternatives before continuing.";
@@ -160,12 +196,12 @@ export function RationalDecisionTool() {
               {criteria.map((criterion) => (
                 <label key={criterion.id}>
                   <span>{criterion.name}</span>
-                  <span><input type="number" min="0" max="100" step="1" value={weights[criterion.id] ?? ""} onChange={(event) => setWeights((current) => ({ ...current, [criterion.id]: Number(event.target.value) }))} />%</span>
+                  <span><input type="number" min="0" max="100" step="1" value={weights[criterion.id] ?? ""} onChange={(event) => changeWeight(criterion.id, event.target.value)} />%</span>
                 </label>
               ))}
             </div>
-            <div className={weightTotal === 100 ? styles.validTotal : styles.invalidTotal} aria-live="polite">
-              <span>Total</span><strong>{weightTotal}%</strong><em>{weightTotal === 100 ? "Ready" : `${100 - weightTotal}% remaining`}</em>
+            <div className={weightsReady ? styles.validTotal : styles.invalidTotal} aria-live="polite">
+              <span>Total</span><strong>{weightTotal}%</strong><em>{weightsReady ? "Ready" : allWeightsEntered ? `${100 - weightTotal}% remaining` : "Enter every weight"}</em>
             </div>
           </>
         )}
@@ -188,10 +224,7 @@ export function RationalDecisionTool() {
                 return (
                   <label key={key}>
                     <span>From 1 to 10, how well will <strong>{alternative.name}</strong> achieve <strong>{criterion.name}</strong>?</span>
-                    <input type="number" min="1" max="10" step="1" value={ratings[key] ?? ""} onChange={(event) => {
-                      const value = Number(event.target.value);
-                      setRatings((current) => ({ ...current, [key]: Math.max(1, Math.min(10, value)) }));
-                    }} />
+                    <input type="number" min="1" max="10" step="1" value={ratings[key] ?? ""} onChange={(event) => changeRating(key, event.target.value)} />
                   </label>
                 );
               }))}
@@ -203,14 +236,14 @@ export function RationalDecisionTool() {
           <>
             <p className={styles.stepInstruction}>Each rating is multiplied by its criterion weight. The weighted ratings are then added for each alternative.</p>
             <div className={styles.decisionOutcome}>
-              <p>Highest weighted score</p>
-              <h3>{rankedAlternatives[0]?.name}</h3>
-              <strong>{rankedAlternatives[0]?.score.toFixed(2)} <small>/ 10</small></strong>
+              <p>{highestScoringAlternatives.length > 1 ? "Equal highest weighted score" : "Highest weighted score"}</p>
+              <h3>{highestScoringAlternatives.map((alternative) => alternative.name).join(" and ")}</h3>
+              <strong>{rankedAlternatives[0]?.displayedScore.toFixed(2)} <small>/ 10</small></strong>
             </div>
             <div className={styles.rankingTable} role="table" aria-label="Ranked alternatives">
               <div role="row"><span role="columnheader">Rank</span><span role="columnheader">Alternative</span><span role="columnheader">Weighted score</span></div>
-              {rankedAlternatives.map((alternative, index) => (
-                <div role="row" key={alternative.id}><span role="cell">{index + 1}</span><strong role="cell">{alternative.name}</strong><span role="cell">{alternative.score.toFixed(2)}</span></div>
+              {rankedAlternatives.map((alternative) => (
+                <div role="row" key={alternative.id}><span role="cell">{alternative.rank}</span><strong role="cell">{alternative.name}</strong><span role="cell">{alternative.displayedScore.toFixed(2)}</span></div>
               ))}
             </div>
             <div className={styles.calculationBreakdown}>
@@ -226,7 +259,7 @@ export function RationalDecisionTool() {
                         {index > 0 ? " + " : ""}({((weights[criterion.id] ?? 0) / 100).toFixed(2)} × {ratings[`${alternative.id}:${criterion.id}`] ?? 0})
                       </span>
                     ))}
-                    {" = "}<strong>{alternative.score.toFixed(2)}</strong>
+                    {" = "}<strong>{alternative.displayedScore.toFixed(2)}</strong>
                   </p>
                 </section>
               ))}

@@ -1999,9 +1999,11 @@
 }
 
 .decisionOutcome h3 {
+  min-width: 0;
   margin: 0;
   font-size: clamp(27px, 4vw, 47px);
   letter-spacing: -.045em;
+  overflow-wrap: anywhere;
   text-transform: uppercase;
 }
 
