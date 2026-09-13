@@ -108,13 +108,6 @@ export const courseDays: CourseDay[] = [
       },
       {
         number: 4,
-        title: "Which exam results feel better?",
-        description: "Choose based on your immediate reaction",
-        href: "/day/1/assignment-2",
-        status: "ready",
-      },
-      {
-        number: 5,
         title: "Make a rational decision",
         description: "Apply six steps to a problem of your own and compare weighted alternatives",
         href: "/day/1/assignment-3",

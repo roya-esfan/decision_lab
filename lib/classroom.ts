@@ -9,7 +9,6 @@ import { probabilityNewsCases, probabilityNewsScale } from "./probability-news";
 export const activityKeys = [
   "assignment-1",
   "outcome-bias",
-  "assignment-2",
   "company-revenue",
   "causes-of-death",
   "crew-problem",
@@ -27,9 +26,6 @@ export const promptDefinitions = {
     { key: "bargain-50", label: "50 kr to you / 50 kr to Eve", choices: ["accept", "reject"] },
     { key: "bargain-20", label: "20 kr to you / 80 kr to Eve", choices: ["accept", "reject"] },
     { key: "bargain-2", label: "2 kr to you / 98 kr to Eve", choices: ["accept", "reject"] },
-  ],
-  "assignment-2": [
-    { key: "exam-result", label: "Exam result", choices: ["70/100", "96/137"] },
   ],
   "outcome-bias": [
     { key: "outcome-bypass", label: "Scenario 1 · Bypass operation", choices: outcomeBiasResponseChoices },
