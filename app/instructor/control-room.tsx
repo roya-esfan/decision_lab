@@ -17,6 +17,7 @@ import { summarizeEndowmentFramingCounts } from "@/lib/endowment-framing";
 import { summarizeOutcomeBiasCounts } from "@/lib/outcome-bias";
 import { summarizeRareDiseaseValuations } from "@/lib/rare-disease-valuation";
 import { summarizeProbabilityNews } from "@/lib/probability-news";
+import { fetchWithTransientRetry } from "@/lib/client-fetch";
 import styles from "../course.module.css";
 
 type ActivityState = { key: ControlledActivityKey; isOpen: boolean; isRevealed: boolean };
@@ -60,9 +61,11 @@ export function ControlRoom({ email }: { email: string }) {
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState("");
   const [error, setError] = useState("");
+  const [runLoadError, setRunLoadError] = useState("");
   const runRequestId = useRef(0);
   const resultsRequestId = useRef(0);
   const currentRunId = run?.id;
+  const isRunActive = run?.isActive ?? false;
   const dayActivities = courseActivityCatalog.filter((activity) => activity.day === selectedDay);
   const dayHasResponseActivities = dayActivities.some((activity) => activity.kind === "responses");
   const dayPrivateCompletionTotal = dayActivities.reduce((total, activity) => {
@@ -76,7 +79,7 @@ export function ControlRoom({ email }: { email: string }) {
     try {
       const query = new URLSearchParams({ day: String(dayNumber) });
       if (runId) query.set("run", runId);
-      const response = await fetch(`/api/instructor/runs?${query}`, { cache: "no-store" });
+      const response = await fetchWithTransientRetry(`/api/instructor/runs?${query}`, { cache: "no-store" });
       const data = await response.json() as {
         run?: ClassroomRun | null;
         recentRuns?: RunOption[];
@@ -88,31 +91,40 @@ export function ControlRoom({ email }: { email: string }) {
       setRun(data.run ?? null);
       setRecentRuns(data.recentRuns ?? []);
       setActiveRun(data.activeRun ?? null);
+      setRunLoadError("");
       setError("");
     } catch (caught) {
       if (requestId !== runRequestId.current) return;
-      setError(caught instanceof Error ? caught.message : "The classroom session could not be loaded.");
+      setRunLoadError(caught instanceof Error ? caught.message : "The classroom session could not be loaded.");
     } finally {
       if (requestId === runRequestId.current) setLoading(false);
     }
   }, []);
 
-  const loadResults = useCallback(async (runId: string) => {
+  const loadResults = useCallback(async (runId: string, dayNumber: TeachingDayNumber) => {
     const requestId = resultsRequestId.current + 1;
     resultsRequestId.current = requestId;
-    const entries = await Promise.all(responseActivities.map(async (activity) => {
-      const response = await fetch(`/api/instructor/results?run=${runId}&activity=${activity.key}`, { cache: "no-store" });
-      if (!response.ok) return [activity.key, []] as const;
-      const data = await response.json() as { results?: ResultRow[] };
-      return [activity.key, data.results ?? []] as const;
+    const activitiesForDay = responseActivities.filter((activity) => activity.day === dayNumber);
+    const entries = await Promise.all(activitiesForDay.map(async (activity) => {
+      try {
+        const response = await fetchWithTransientRetry(`/api/instructor/results?run=${runId}&activity=${activity.key}`, { cache: "no-store" });
+        if (!response.ok) return [activity.key, null] as const;
+        const data = await response.json() as { results?: ResultRow[] };
+        return [activity.key, data.results ?? []] as const;
+      } catch {
+        return [activity.key, null] as const;
+      }
     }));
     if (requestId !== resultsRequestId.current) return;
-    setResults(Object.fromEntries(entries));
+    setResults((current) => ({
+      ...current,
+      ...Object.fromEntries(entries.filter((entry) => entry[1] !== null)),
+    }));
   }, []);
 
   const loadDayAccess = useCallback(async () => {
     try {
-      const response = await fetch("/api/instructor/day-access", { cache: "no-store" });
+      const response = await fetchWithTransientRetry("/api/instructor/day-access", { cache: "no-store" });
       const data = await response.json() as {
         publishedDays?: TeachingDayNumber[];
         ready?: boolean;
@@ -140,16 +152,17 @@ export function ControlRoom({ email }: { email: string }) {
 
   useEffect(() => {
     if (!currentRunId) return;
-    const initial = window.setTimeout(() => { void loadResults(currentRunId); }, 0);
+    const initial = window.setTimeout(() => { void loadResults(currentRunId, selectedDay); }, 0);
+    if (!isRunActive) return () => window.clearTimeout(initial);
     const timer = window.setInterval(() => {
       void loadRun(selectedDay, currentRunId);
-      void loadResults(currentRunId);
+      void loadResults(currentRunId, selectedDay);
     }, 2000);
     return () => {
       window.clearTimeout(initial);
       window.clearInterval(timer);
     };
-  }, [currentRunId, loadResults, loadRun, selectedDay]);
+  }, [currentRunId, isRunActive, loadResults, loadRun, selectedDay]);
 
   async function createRun() {
     setBusy("create");
@@ -182,7 +195,7 @@ export function ControlRoom({ email }: { email: string }) {
       });
       const data = await response.json() as { error?: string };
       if (!response.ok) throw new Error(data.error ?? "The classroom session could not be updated.");
-      await Promise.all([loadRun(selectedDay, run.id), loadResults(run.id)]);
+      await Promise.all([loadRun(selectedDay, run.id), loadResults(run.id, selectedDay)]);
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "The classroom session could not be updated.");
     } finally {
@@ -222,6 +235,7 @@ export function ControlRoom({ email }: { email: string }) {
     setRun(null);
     setRecentRuns([]);
     setResults({});
+    setRunLoadError("");
     setSelectedDay(dayNumber);
   }
 
@@ -258,14 +272,21 @@ export function ControlRoom({ email }: { email: string }) {
         <section className={styles.preSessionStatus}>
           <div>
             <p className={styles.eyebrow}>Day {selectedDay}</p>
-            <h2>No classroom session</h2>
+            <h2>{runLoadError ? "Could not load this day" : "No classroom session"}</h2>
             <p>
-              {dayActivities.length > 0
+              {runLoadError
+                ? "The classroom connection is temporarily unavailable. Please try again."
+                : dayActivities.length > 0
                 ? "Start a session when you want to collect responses. Every activity will begin closed."
                 : "No activities have been added to this teaching day yet."}
             </p>
           </div>
-          {activeRun ? (
+          {runLoadError ? (
+            <button type="button" onClick={() => {
+              setLoading(true);
+              void loadRun(selectedDay);
+            }}>Try again</button>
+          ) : activeRun ? (
             <button type="button" onClick={showActiveRun}>Go to Day {activeRun.dayNumber} live session</button>
           ) : dayActivities.length > 0 ? (
             <button type="button" onClick={() => void createRun()} disabled={busy === "create"}>

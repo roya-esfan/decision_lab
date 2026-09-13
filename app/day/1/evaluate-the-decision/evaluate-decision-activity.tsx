@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { useRef, useState } from "react";
 import { LiveResults } from "../../../components/live-results";
 import { LiveSessionGate, useLiveSession } from "../../../components/live-session";
+import { fetchWithTransientRetry } from "@/lib/client-fetch";
 import {
   encodeOutcomeBiasResponse,
   outcomeBiasConditions,
@@ -135,7 +136,7 @@ export function EvaluateDecisionActivity() {
     setSubmitting(true);
     setSubmissionError("");
     try {
-      const response = await fetch("/api/responses/outcome-bias", {
+      const response = await fetchWithTransientRetry("/api/responses/outcome-bias", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
