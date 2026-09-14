@@ -229,6 +229,13 @@ export const courseDays: CourseDay[] = [
         href: "/day/2/causes-of-death",
         status: "ready",
       },
+      {
+        number: 4,
+        title: "Steve’s occupation",
+        description: "Choose which occupation you think Steve is most likely to have",
+        href: "/day/2/steve-occupation",
+        status: "ready",
+      },
     ],
   },
   {

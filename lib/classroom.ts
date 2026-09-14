@@ -11,6 +11,7 @@ export const activityKeys = [
   "outcome-bias",
   "company-revenue",
   "causes-of-death",
+  "steve-occupation",
   "crew-problem",
   "school-bag-framing",
   "calculator-trip",
@@ -40,6 +41,9 @@ export const promptDefinitions = {
     label: cause.label,
     choices: ["1", "2", "3", "4", "5"] as const,
   })),
+  "steve-occupation": [
+    { key: "steve-occupation-choice", label: "Which occupation is Steve most likely to have?", choices: ["Farmer", "Librarian"] },
+  ],
   "crew-problem": [
     { key: "crew-choice", label: "Crew problem", choices: crewProblemResponseChoices },
   ],

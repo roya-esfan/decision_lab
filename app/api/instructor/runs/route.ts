@@ -166,6 +166,7 @@ export async function POST(request: Request) {
     if (!run) throw new Error("JOIN_CODE_GENERATION_FAILED");
 
     const migrationDependentActivityKeys = [
+      "steve-occupation",
       "crew-problem",
       "school-bag-framing",
       "calculator-trip",

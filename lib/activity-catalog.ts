@@ -87,6 +87,15 @@ export const courseActivityCatalog: readonly CourseActivityDefinition[] = [
     kind: "responses",
   },
   {
+    key: "steve-occupation",
+    day: 2,
+    number: 4,
+    title: "Steve’s occupation",
+    activityHref: "/day/2/steve-occupation",
+    resultsPath: "/day/2/steve-occupation/results",
+    kind: "responses",
+  },
+  {
     key: "crew-problem",
     day: 3,
     number: 1,

@@ -42,7 +42,7 @@ export async function PATCH(
         if (runError) throw runError;
         if (!run) throw new ApiError(409, "Start a new classroom session before opening a live activity.");
       }
-      const { error } = await supabase
+      const { data: updatedActivity, error } = await supabase
         .from("classroom_activity_states")
         .update({
           is_open: body.mode === "live",
@@ -50,8 +50,11 @@ export async function PATCH(
           updated_at: new Date().toISOString(),
         })
         .eq("run_id", id)
-        .eq("activity_key", body.activityKey);
+        .eq("activity_key", body.activityKey)
+        .select("activity_key")
+        .maybeSingle();
       if (error) throw error;
+      if (!updatedActivity) throw new ApiError(409, "Run the latest Supabase migration before opening this activity.");
     } else {
       throw new ApiError(400, "Unknown classroom action.");
     }

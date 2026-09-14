@@ -48,6 +48,7 @@
 }
 
 .companyActivity,
+.steveActivity,
 .rankingActivity,
 .rankingLoading,
 .activityComplete {
@@ -64,6 +65,68 @@
   font-weight: 400;
   letter-spacing: -.03em;
   line-height: 1.15;
+}
+
+.steveDescription {
+  max-width: 880px;
+  margin: 0 0 34px;
+  padding: 0 0 0 23px;
+  border-left: 3px solid var(--accent);
+  color: var(--ink);
+  font-size: clamp(18px, 2.2vw, 23px);
+  line-height: 1.55;
+}
+
+.steveActivity > h2 {
+  margin: 0 0 25px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(27px, 3vw, 38px);
+  font-weight: 400;
+  letter-spacing: -.03em;
+  line-height: 1.2;
+}
+
+.steveChoices {
+  display: grid;
+  max-width: 760px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.steveChoices button {
+  display: flex;
+  min-height: 90px;
+  gap: 18px;
+  align-items: center;
+  padding: 20px 24px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  text-align: left;
+}
+
+.steveChoices button:hover,
+.steveChoices button:focus-visible {
+  border-color: var(--accent);
+  background: #eaf1f7;
+}
+
+.steveChoices button:disabled {
+  cursor: wait;
+  opacity: .6;
+}
+
+.steveChoices span {
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .08em;
+}
+
+.steveChoices strong {
+  font-size: 20px;
+  font-weight: 650;
 }
 
 .companyGroups {
@@ -299,6 +362,7 @@
   }
 
   .companyGroups,
+  .steveChoices,
   .rankingInstructions {
     grid-template-columns: 1fr;
   }
