@@ -48,7 +48,7 @@
 }
 
 .companyActivity,
-.steveActivity,
+.binaryActivity,
 .rankingActivity,
 .rankingLoading,
 .activityComplete {
@@ -67,7 +67,7 @@
   line-height: 1.15;
 }
 
-.steveDescription {
+.binaryDescription {
   max-width: 880px;
   margin: 0 0 34px;
   padding: 0 0 0 23px;
@@ -77,7 +77,7 @@
   line-height: 1.55;
 }
 
-.steveActivity > h2 {
+.binaryActivity > h2 {
   margin: 0 0 25px;
   font-family: Georgia, "Times New Roman", serif;
   font-size: clamp(27px, 3vw, 38px);
@@ -86,14 +86,14 @@
   line-height: 1.2;
 }
 
-.steveChoices {
+.binaryChoices {
   display: grid;
   max-width: 760px;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
 }
 
-.steveChoices button {
+.binaryChoices button {
   display: flex;
   min-height: 90px;
   gap: 18px;
@@ -106,25 +106,25 @@
   text-align: left;
 }
 
-.steveChoices button:hover,
-.steveChoices button:focus-visible {
+.binaryChoices button:hover,
+.binaryChoices button:focus-visible {
   border-color: var(--accent);
   background: #eaf1f7;
 }
 
-.steveChoices button:disabled {
+.binaryChoices button:disabled {
   cursor: wait;
   opacity: .6;
 }
 
-.steveChoices span {
+.binaryChoices span {
   color: var(--accent);
   font-size: 12px;
   font-weight: 800;
   letter-spacing: .08em;
 }
 
-.steveChoices strong {
+.binaryChoices strong {
   font-size: 20px;
   font-weight: 650;
 }
@@ -362,7 +362,7 @@
   }
 
   .companyGroups,
-  .steveChoices,
+  .binaryChoices,
   .rankingInstructions {
     grid-template-columns: 1fr;
   }

@@ -236,6 +236,13 @@ export const courseDays: CourseDay[] = [
         href: "/day/2/steve-occupation",
         status: "ready",
       },
+      {
+        number: 5,
+        title: "The student’s major",
+        description: "Guess the student’s undergraduate major",
+        href: "/day/2/student-major",
+        status: "ready",
+      },
     ],
   },
   {

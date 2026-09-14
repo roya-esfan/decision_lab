@@ -12,6 +12,7 @@ export const activityKeys = [
   "company-revenue",
   "causes-of-death",
   "steve-occupation",
+  "student-major",
   "crew-problem",
   "school-bag-framing",
   "calculator-trip",
@@ -43,6 +44,9 @@ export const promptDefinitions = {
   })),
   "steve-occupation": [
     { key: "steve-occupation-choice", label: "Which occupation is Steve most likely to have?", choices: ["Farmer", "Librarian"] },
+  ],
+  "student-major": [
+    { key: "student-major-choice", label: "What was the student’s undergraduate major?", choices: ["Chinese studies", "Economics"] },
   ],
   "crew-problem": [
     { key: "crew-choice", label: "Crew problem", choices: crewProblemResponseChoices },

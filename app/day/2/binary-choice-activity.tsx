@@ -1,25 +1,36 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { LiveResults } from "../../../components/live-results";
-import { LiveSessionGate, useLiveSession } from "../../../components/live-session";
+import { LiveResults } from "../../components/live-results";
+import { LiveSessionGate, useLiveSession } from "../../components/live-session";
 import { fetchWithTransientRetry } from "@/lib/client-fetch";
-import sharedStyles from "../../../course.module.css";
-import styles from "../day-two-activities.module.css";
+import type { ActivityKey } from "@/lib/classroom";
+import sharedStyles from "../../course.module.css";
+import styles from "./day-two-activities.module.css";
 
-type Occupation = "Farmer" | "Librarian";
+type Option = { letter: "A" | "B"; value: string };
 
-export function SteveOccupationChoice() {
-  const session = useLiveSession("steve-occupation");
+export function BinaryChoiceActivity({
+  activityKey,
+  promptKey,
+  question,
+  options,
+}: {
+  activityKey: ActivityKey;
+  promptKey: string;
+  question: string;
+  options: readonly [Option, Option];
+}) {
+  const session = useLiveSession(activityKey);
   const idempotencyKey = useRef<string | null>(null);
-  const [choice, setChoice] = useState<Occupation | null>(null);
+  const [choice, setChoice] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [submissionError, setSubmissionError] = useState("");
 
-  async function choose(occupation: Occupation) {
+  async function choose(value: string) {
     if (submitting) return;
     if (session.state === "review") {
-      setChoice(occupation);
+      setChoice(value);
       return;
     }
 
@@ -27,19 +38,19 @@ export function SteveOccupationChoice() {
     setSubmitting(true);
     setSubmissionError("");
     try {
-      const response = await fetchWithTransientRetry("/api/responses/steve-occupation", {
+      const response = await fetchWithTransientRetry(`/api/responses/${activityKey}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           idempotencyKey: idempotencyKey.current,
-          responses: [{ promptKey: "steve-occupation-choice", choice: occupation }],
+          responses: [{ promptKey, choice: value }],
         }),
       });
       const data = await response.json() as { accepted?: boolean; error?: string };
       if (!response.ok || !data.accepted) {
         throw new Error(data.error ?? "Your response could not be submitted.");
       }
-      setChoice(occupation);
+      setChoice(value);
     } catch (error) {
       setSubmissionError(error instanceof Error ? error.message : "Your response could not be submitted.");
     } finally {
@@ -62,7 +73,7 @@ export function SteveOccupationChoice() {
               <p className={sharedStyles.eyebrow}>From the classroom session</p>
               <h2>Class results</h2>
             </header>
-            <LiveResults activityKey="steve-occupation" />
+            <LiveResults activityKey={activityKey} />
           </div>
         ) : (
           <p className={sharedStyles.submissionStatus}>Class results will be discussed together.</p>
@@ -72,13 +83,13 @@ export function SteveOccupationChoice() {
   }
 
   return (
-    <section className={styles.steveActivity} aria-labelledby="steve-question">
-      <h2 id="steve-question">Which occupation is Steve most likely to have?</h2>
-      <div className={styles.steveChoices} role="group" aria-label="Choose Steve’s occupation">
-        {(["Farmer", "Librarian"] as const).map((occupation, index) => (
-          <button key={occupation} type="button" disabled={submitting} onClick={() => void choose(occupation)}>
-            <span>{index === 0 ? "A" : "B"}</span>
-            <strong>{occupation}</strong>
+    <section className={styles.binaryActivity} aria-labelledby="binary-choice-question">
+      <h2 id="binary-choice-question">{question}</h2>
+      <div className={styles.binaryChoices} role="group" aria-label={question}>
+        {options.map((option) => (
+          <button key={option.value} type="button" disabled={submitting} onClick={() => void choose(option.value)}>
+            <span>{option.letter}</span>
+            <strong>{option.value}</strong>
           </button>
         ))}
       </div>

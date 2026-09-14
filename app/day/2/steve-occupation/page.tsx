@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { CourseShell } from "../../../components/course-shell";
-import { SteveOccupationChoice } from "./steve-occupation-choice";
+import { BinaryChoiceActivity } from "../binary-choice-activity";
 import styles from "../day-two-activities.module.css";
 
 export const metadata: Metadata = {
@@ -23,13 +23,18 @@ export default function SteveOccupationPage() {
           <h1>Steve’s occupation</h1>
         </header>
 
-        <blockquote className={styles.steveDescription}>
+        <blockquote className={styles.binaryDescription}>
           Steve is very shy and withdrawn, invariably helpful, but with little interest in people,
           or in the world of reality. A meek and tidy soul, he has a need for order and structure,
           and a passion for detail.
         </blockquote>
 
-        <SteveOccupationChoice />
+        <BinaryChoiceActivity
+          activityKey="steve-occupation"
+          promptKey="steve-occupation-choice"
+          question="Which occupation is Steve most likely to have?"
+          options={[{ letter: "A", value: "Farmer" }, { letter: "B", value: "Librarian" }]}
+        />
       </main>
     </CourseShell>
   );

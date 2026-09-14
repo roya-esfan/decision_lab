@@ -167,6 +167,7 @@ export async function POST(request: Request) {
 
     const migrationDependentActivityKeys = [
       "steve-occupation",
+      "student-major",
       "crew-problem",
       "school-bag-framing",
       "calculator-trip",
