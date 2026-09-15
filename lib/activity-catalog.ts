@@ -149,15 +149,6 @@ export const courseActivityCatalog: readonly CourseActivityDefinition[] = [
     resultsPath: "/day/3/rare-disease-valuation/results",
     kind: "responses",
   },
-  {
-    key: "probability-news",
-    day: 3,
-    number: 6,
-    title: "Is the news equally good?",
-    activityHref: "/day/3/probability-news",
-    resultsPath: "/day/3/probability-news/results",
-    kind: "responses",
-  },
 ];
 
 export function isControlledActivityKey(value: unknown): value is ControlledActivityKey {
