@@ -1,20 +1,3 @@
-export const companyRevenueGroups = {
-  A: [
-    "Reebok International",
-    "Hilton Hotels",
-    "Starbucks",
-    "RadioShack",
-    "Hershey Foods",
-  ],
-  B: [
-    "ConocoPhillips",
-    "American International Group",
-    "McKesson",
-    "AmerisourceBergen",
-    "Altria Group",
-  ],
-} as const;
-
 export const deathCauses = [
   { key: "death-tobacco", label: "Tobacco", deaths2000: 435_000 },
   {

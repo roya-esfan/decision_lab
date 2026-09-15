@@ -16,10 +16,10 @@ export default async function CauseRankingResultsPage({
     <CourseShell>
       <main>
         <nav className={styles.breadcrumb} aria-label="Breadcrumb">
-          <Link href="/day/2/causes-of-death">Activity 3</Link><span>/</span><span>Class results</span>
+          <Link href="/day/2/causes-of-death">Activity 2</Link><span>/</span><span>Class results</span>
         </nav>
         <header className={styles.resultsHeader}>
-          <p className={styles.eyebrow}>Day 2 · Activity 3 · Class results</p>
+          <p className={styles.eyebrow}>Day 2 · Activity 2 · Class results</p>
           <h1>How did the class rank the causes?</h1>
         </header>
         <LiveResults activityKey="causes-of-death" projector={projector} instructorRunId={instructorRunId} />

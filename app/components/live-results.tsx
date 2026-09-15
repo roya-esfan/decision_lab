@@ -119,9 +119,6 @@ export function LiveResults({
           </article>
         );
       })}
-      {activityKey === "company-revenue" && (
-        <p className={styles.correctAnswerNote}><strong>Answer:</strong> Group B had the larger combined sales revenue.</p>
-      )}
     </section>
   );
 }

@@ -16,10 +16,10 @@ export default async function StudentMajorResultsPage({
     <CourseShell>
       <main>
         <nav className={styles.breadcrumb} aria-label="Breadcrumb">
-          <Link href="/day/2/student-major">Activity 5</Link><span>/</span><span>Class results</span>
+          <Link href="/day/2/student-major">Activity 4</Link><span>/</span><span>Class results</span>
         </nav>
         <header className={styles.resultsHeader}>
-          <p className={styles.eyebrow}>Day 2 · Activity 5 · Class results</p>
+          <p className={styles.eyebrow}>Day 2 · Activity 4 · Class results</p>
           <h1>The student’s major</h1>
         </header>
         <LiveResults activityKey="student-major" projector={projector} instructorRunId={instructorRunId} />
