@@ -15,11 +15,11 @@ export default function CoinGamblePage() {
       <main className={styles.page}>
         <nav className={styles.breadcrumb} aria-label="Breadcrumb">
           <Link href="/">Course home</Link><span>/</span>
-          <Link href="/day/3">Day 3</Link><span>/</span><span>Activity 5</span>
+          <Link href="/day/3">Day 3</Link><span>/</span><span>Activity 4</span>
         </nav>
 
         <header className={styles.header}>
-          <p>Day 3 · Activity 5</p>
+          <p>Day 3 · Activity 4</p>
           <h1>Would you accept the gamble?</h1>
         </header>
 

@@ -15,11 +15,11 @@ export default function CalculatorTripPage() {
       <main className={styles.page}>
         <nav className={styles.breadcrumb} aria-label="Breadcrumb">
           <Link href="/">Course home</Link><span>/</span>
-          <Link href="/day/3">Day 3</Link><span>/</span><span>Activity 3</span>
+          <Link href="/day/3">Day 3</Link><span>/</span><span>Activity 2</span>
         </nav>
 
         <header className={styles.header}>
-          <p>Day 3 · Activity 3</p>
+          <p>Day 3 · Activity 2</p>
           <h1>Would you make the trip?</h1>
         </header>
 

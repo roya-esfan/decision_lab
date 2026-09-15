@@ -16,10 +16,10 @@ export default async function RareDiseaseValuationResultsPage({
     <CourseShell>
       <main className={styles.page}>
         <nav className={styles.breadcrumb} aria-label="Breadcrumb">
-          <Link href="/day/3/rare-disease-valuation">Activity 6</Link><span>/</span><span>Class results</span>
+          <Link href="/day/3/rare-disease-valuation">Activity 5</Link><span>/</span><span>Class results</span>
         </nav>
         <header className={styles.resultsHeader}>
-          <p>Day 3 · Activity 6 · Class results</p>
+          <p>Day 3 · Activity 5 · Class results</p>
           <h1>What amount would you choose?</h1>
         </header>
         <LiveResults activityKey="rare-disease-valuation" projector={projector} instructorRunId={instructorRunId} />

@@ -16,10 +16,10 @@ export default async function EndowmentFramingResultsPage({
     <CourseShell>
       <main className={styles.page}>
         <nav className={styles.breadcrumb} aria-label="Breadcrumb">
-          <Link href="/day/3/endowment-framing">Activity 4</Link><span>/</span><span>Class results</span>
+          <Link href="/day/3/endowment-framing">Activity 3</Link><span>/</span><span>Class results</span>
         </nav>
         <header className={styles.resultsHeader}>
-          <p>Day 3 · Activity 4 · Class results</p>
+          <p>Day 3 · Activity 3 · Class results</p>
           <h1>Choose between two options</h1>
         </header>
         <LiveResults activityKey="endowment-framing" projector={projector} instructorRunId={instructorRunId} />

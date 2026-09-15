@@ -16,10 +16,10 @@ export default async function ProbabilityNewsResultsPage({
     <CourseShell>
       <main className={styles.page}>
         <nav className={styles.breadcrumb} aria-label="Breadcrumb">
-          <Link href="/day/3/probability-news">Activity 7</Link><span>/</span><span>Class results</span>
+          <Link href="/day/3/probability-news">Activity 6</Link><span>/</span><span>Class results</span>
         </nav>
         <header className={styles.header}>
-          <p>Day 3 · Activity 7 · Class results</p>
+          <p>Day 3 · Activity 6 · Class results</p>
           <h1>Is the news equally good?</h1>
         </header>
         <LiveResults activityKey="probability-news" projector={projector} instructorRunId={instructorRunId} />

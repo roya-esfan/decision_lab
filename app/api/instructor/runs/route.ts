@@ -169,7 +169,6 @@ export async function POST(request: Request) {
       "steve-occupation",
       "student-major",
       "crew-problem",
-      "school-bag-framing",
       "calculator-trip",
       "endowment-framing",
       "coin-gamble",

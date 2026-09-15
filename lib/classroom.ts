@@ -14,7 +14,6 @@ export const activityKeys = [
   "steve-occupation",
   "student-major",
   "crew-problem",
-  "school-bag-framing",
   "calculator-trip",
   "endowment-framing",
   "coin-gamble",
@@ -50,10 +49,6 @@ export const promptDefinitions = {
   ],
   "crew-problem": [
     { key: "crew-choice", label: "Crew problem", choices: crewProblemResponseChoices },
-  ],
-  "school-bag-framing": [
-    { key: "school-bag-discount", label: "Cash discount", choices: ["Gain", "Loss"] },
-    { key: "school-bag-surcharge", label: "Card surcharge", choices: ["Gain", "Loss"] },
   ],
   "calculator-trip": [
     { key: "calculator-trip-choice", label: "Trip to the other store", choices: calculatorTripResponseChoices },

@@ -114,18 +114,9 @@ export const courseActivityCatalog: readonly CourseActivityDefinition[] = [
     kind: "responses",
   },
   {
-    key: "school-bag-framing",
-    day: 3,
-    number: 2,
-    title: "Gain or loss?",
-    activityHref: "/day/3/school-bag-framing",
-    resultsPath: "/day/3/school-bag-framing/results",
-    kind: "responses",
-  },
-  {
     key: "calculator-trip",
     day: 3,
-    number: 3,
+    number: 2,
     title: "Would you make the trip?",
     activityHref: "/day/3/calculator-trip",
     resultsPath: "/day/3/calculator-trip/results",
@@ -134,7 +125,7 @@ export const courseActivityCatalog: readonly CourseActivityDefinition[] = [
   {
     key: "endowment-framing",
     day: 3,
-    number: 4,
+    number: 3,
     title: "Choose between two options",
     activityHref: "/day/3/endowment-framing",
     resultsPath: "/day/3/endowment-framing/results",
@@ -143,7 +134,7 @@ export const courseActivityCatalog: readonly CourseActivityDefinition[] = [
   {
     key: "coin-gamble",
     day: 3,
-    number: 5,
+    number: 4,
     title: "Would you accept the gamble?",
     activityHref: "/day/3/coin-gamble",
     resultsPath: "/day/3/coin-gamble/results",
@@ -152,7 +143,7 @@ export const courseActivityCatalog: readonly CourseActivityDefinition[] = [
   {
     key: "rare-disease-valuation",
     day: 3,
-    number: 6,
+    number: 5,
     title: "What amount would you choose?",
     activityHref: "/day/3/rare-disease-valuation",
     resultsPath: "/day/3/rare-disease-valuation/results",
@@ -161,7 +152,7 @@ export const courseActivityCatalog: readonly CourseActivityDefinition[] = [
   {
     key: "probability-news",
     day: 3,
-    number: 7,
+    number: 6,
     title: "Is the news equally good?",
     activityHref: "/day/3/probability-news",
     resultsPath: "/day/3/probability-news/results",

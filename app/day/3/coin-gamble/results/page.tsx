@@ -16,10 +16,10 @@ export default async function CoinGambleResultsPage({
     <CourseShell>
       <main className={styles.page}>
         <nav className={styles.breadcrumb} aria-label="Breadcrumb">
-          <Link href="/day/3/coin-gamble">Activity 5</Link><span>/</span><span>Class results</span>
+          <Link href="/day/3/coin-gamble">Activity 4</Link><span>/</span><span>Class results</span>
         </nav>
         <header className={styles.resultsHeader}>
-          <p>Day 3 · Activity 5 · Class results</p>
+          <p>Day 3 · Activity 4 · Class results</p>
           <h1>Would you accept the gamble?</h1>
         </header>
         <LiveResults activityKey="coin-gamble" projector={projector} instructorRunId={instructorRunId} />

@@ -15,11 +15,11 @@ export default function ProbabilityNewsPage() {
       <main className={styles.page}>
         <nav className={styles.breadcrumb} aria-label="Breadcrumb">
           <Link href="/">Course home</Link><span>/</span>
-          <Link href="/day/3">Day 3</Link><span>/</span><span>Activity 7</span>
+          <Link href="/day/3">Day 3</Link><span>/</span><span>Activity 6</span>
         </nav>
 
         <header className={styles.header}>
-          <p>Day 3 · Activity 7</p>
+          <p>Day 3 · Activity 6</p>
           <h1>Is the news equally good?</h1>
         </header>
 

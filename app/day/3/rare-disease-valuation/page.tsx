@@ -15,11 +15,11 @@ export default function RareDiseaseValuationPage() {
       <main className={sharedStyles.page}>
         <nav className={sharedStyles.breadcrumb} aria-label="Breadcrumb">
           <Link href="/">Course home</Link><span>/</span>
-          <Link href="/day/3">Day 3</Link><span>/</span><span>Activity 6</span>
+          <Link href="/day/3">Day 3</Link><span>/</span><span>Activity 5</span>
         </nav>
 
         <header className={sharedStyles.header}>
-          <p>Day 3 · Activity 6</p>
+          <p>Day 3 · Activity 5</p>
           <h1>What amount would you choose?</h1>
         </header>
 
