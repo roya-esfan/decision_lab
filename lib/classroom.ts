@@ -9,6 +9,7 @@ import { probabilityNewsCases, probabilityNewsScale } from "./probability-news";
 export const activityKeys = [
   "assignment-1",
   "outcome-bias",
+  "company-revenue",
   "causes-of-death",
   "steve-occupation",
   "student-major",
@@ -32,6 +33,9 @@ export const promptDefinitions = {
     { key: "outcome-bypass", label: "Scenario 1 · Bypass operation", choices: outcomeBiasResponseChoices },
     { key: "outcome-diagnostic-test", label: "Scenario 2 · Diagnostic test", choices: outcomeBiasResponseChoices },
     { key: "outcome-gamble", label: "Scenario 3 · Prize choice", choices: outcomeBiasResponseChoices },
+  ],
+  "company-revenue": [
+    { key: "company-revenue-group", label: "Group with larger total sales revenue", choices: ["Group A", "Group B"] },
   ],
   "causes-of-death": deathCauses.map((cause) => ({
     key: cause.key,

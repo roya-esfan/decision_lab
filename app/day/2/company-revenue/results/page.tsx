@@ -3,7 +3,7 @@ import { CourseShell } from "../../../../components/course-shell";
 import { LiveResults } from "../../../../components/live-results";
 import styles from "../../day-two-activities.module.css";
 
-export default async function SteveOccupationResultsPage({
+export default async function CompanyRevenueResultsPage({
   searchParams,
 }: {
   searchParams: Promise<{ projector?: string; instructor?: string; run?: string }>;
@@ -16,13 +16,13 @@ export default async function SteveOccupationResultsPage({
     <CourseShell>
       <main>
         <nav className={styles.breadcrumb} aria-label="Breadcrumb">
-          <Link href="/day/2/steve-occupation">Activity 4</Link><span>/</span><span>Class results</span>
+          <Link href="/day/2/company-revenue">Activity 2</Link><span>/</span><span>Class results</span>
         </nav>
         <header className={styles.resultsHeader}>
-          <p className={styles.eyebrow}>Day 2 · Activity 4 · Class results</p>
-          <h1>Steve’s occupation</h1>
+          <p className={styles.eyebrow}>Day 2 · Activity 2 · Class results</p>
+          <h1>Which group had larger sales?</h1>
         </header>
-        <LiveResults activityKey="steve-occupation" projector={projector} instructorRunId={instructorRunId} />
+        <LiveResults activityKey="company-revenue" projector={projector} instructorRunId={instructorRunId} />
       </main>
     </CourseShell>
   );

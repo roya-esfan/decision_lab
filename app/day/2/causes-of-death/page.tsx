@@ -15,11 +15,11 @@ export default function CausesOfDeathPage() {
       <main>
         <nav className={styles.breadcrumb} aria-label="Breadcrumb">
           <Link href="/">Course home</Link><span>/</span>
-          <Link href="/day/2">Day 2</Link><span>/</span><span>Activity 2</span>
+          <Link href="/day/2">Day 2</Link><span>/</span><span>Activity 3</span>
         </nav>
 
         <header className={styles.activityHeader}>
-          <p className={styles.eyebrow}>Day 2 · Activity 2</p>
+          <p className={styles.eyebrow}>Day 2 · Activity 3</p>
           <h1>Rank the causes of death</h1>
           <p>
             Rank these five estimated causes of death in the United States in 2000.

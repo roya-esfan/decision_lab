@@ -15,11 +15,11 @@ export default function StudentMajorPage() {
       <main>
         <nav className={styles.breadcrumb} aria-label="Breadcrumb">
           <Link href="/">Course home</Link><span>/</span>
-          <Link href="/day/2">Day 2</Link><span>/</span><span>Activity 4</span>
+          <Link href="/day/2">Day 2</Link><span>/</span><span>Activity 5</span>
         </nav>
 
         <header className={styles.activityHeader}>
-          <p className={styles.eyebrow}>Day 2 · Activity 4</p>
+          <p className={styles.eyebrow}>Day 2 · Activity 5</p>
           <h1>The student’s major</h1>
         </header>
 
