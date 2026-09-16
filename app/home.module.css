@@ -197,14 +197,10 @@
   white-space: nowrap;
 }
 
-.overviewActions {
-  display: grid;
-  gap: 7px;
-  justify-items: stretch;
-}
-
 .recapQuestionControl {
-  display: contents;
+  display: block;
+  width: fit-content;
+  margin-top: 4px;
 }
 
 .recapQuestionToggle {
@@ -296,11 +292,6 @@
   gap: 10px;
 }
 
-.recapQuestionPanel form > label {
-  font-size: 13px;
-  font-weight: 700;
-}
-
 .recapQuestionPanel textarea {
   width: 100%;
   min-height: 150px;
@@ -328,8 +319,7 @@
   align-items: center;
 }
 
-.recapQuestionActions span,
-.recapDraftNote {
+.recapQuestionActions span {
   color: var(--muted);
   font-size: 11px;
 }
@@ -352,7 +342,6 @@
   opacity: .45;
 }
 
-.recapDraftNote,
 .recapQuestionError {
   margin: 2px 0 0;
   line-height: 1.5;
@@ -446,7 +435,8 @@
     grid-column: 2;
   }
 
-  .overviewActions {
+  .overviewButton,
+  .overviewButtonLocked {
     grid-column: 3;
     grid-row: 1 / 3;
   }
@@ -511,7 +501,8 @@
     grid-template-columns: 24px minmax(0, 1fr);
   }
 
-  .overviewActions {
+  .overviewButton,
+  .overviewButtonLocked {
     grid-column: 2;
     grid-row: auto;
     width: fit-content;

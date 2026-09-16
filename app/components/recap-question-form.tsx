@@ -150,9 +150,9 @@ export function RecapQuestionForm() {
               </div>
             ) : (
               <form onSubmit={submitQuestion}>
-                <label htmlFor="recap-question">Your question or uncertainty</label>
                 <textarea
                   id="recap-question"
+                  aria-label="Your question or uncertainty"
                   value={question}
                   onChange={(event) => updateQuestion(event.target.value)}
                   maxLength={recapQuestionMaxLength}
@@ -164,11 +164,10 @@ export function RecapQuestionForm() {
                 <div className={styles.recapQuestionActions}>
                   <span>{question.length}/{recapQuestionMaxLength}</span>
                   <button type="submit" disabled={!question.trim() || state === "saving"}>
-                    {state === "saving" ? "Saving…" : state === "error" ? "Try again" : "Send anonymously"}
+                    {state === "saving" ? "Saving…" : state === "error" ? "Try again" : "Send"}
                   </button>
                 </div>
                 {message ? <p className={styles.recapQuestionError} role="alert">{message}</p> : null}
-                <p className={styles.recapDraftNote}>Your draft stays on this device until the database confirms it has been saved.</p>
               </form>
             )}
           </section>

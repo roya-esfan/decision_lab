@@ -96,16 +96,14 @@ export function CourseHome({
                     <span>{day.time}</span>
                     <span>{day.room}</span>
                   </div>
-                </div>
-                <p>Day {day.number}: {day.title}</p>
-                <div className={styles.overviewActions}>
-                  {isOpen ? (
-                    <Link className={styles.overviewButton} href={`/day/${day.number}`}>Open day <span aria-hidden="true">→</span></Link>
-                  ) : (
-                    <span className={styles.overviewButtonLocked} aria-disabled="true">Open day <span aria-hidden="true">→</span></span>
-                  )}
                   {day.number === 8 ? <RecapQuestionForm /> : null}
                 </div>
+                <p>Day {day.number}: {day.title}</p>
+                {isOpen ? (
+                  <Link className={styles.overviewButton} href={`/day/${day.number}`}>Open day <span aria-hidden="true">→</span></Link>
+                ) : (
+                  <span className={styles.overviewButtonLocked} aria-disabled="true">Open day <span aria-hidden="true">→</span></span>
+                )}
               </li>
             );
           })}
