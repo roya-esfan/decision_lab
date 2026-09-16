@@ -2,6 +2,7 @@ import { CourseShell } from "../components/course-shell";
 import { getInstructor } from "@/lib/instructor-session";
 import { InstructorLogin } from "./instructor-login";
 import { ControlRoom } from "./control-room";
+import { RecapQuestionsPanel } from "./recap-questions-panel";
 import styles from "../course.module.css";
 
 export const dynamic = "force-dynamic";
@@ -15,7 +16,12 @@ export default async function InstructorPage() {
           <p className={styles.eyebrow}>Instructor only</p>
           <h1>Classroom control</h1>
         </header>
-        {instructor ? <ControlRoom email={instructor.email} /> : <InstructorLogin />}
+        {instructor ? (
+          <>
+            <ControlRoom email={instructor.email} />
+            <RecapQuestionsPanel />
+          </>
+        ) : <InstructorLogin />}
       </main>
     </CourseShell>
   );

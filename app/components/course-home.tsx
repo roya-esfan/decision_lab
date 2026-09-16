@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { courseDays, type CourseDay } from "@/content/course";
+import { RecapQuestionForm } from "./recap-question-form";
 import styles from "../home.module.css";
 
 function localDateKey(date: Date) {
@@ -97,11 +98,14 @@ export function CourseHome({
                   </div>
                 </div>
                 <p>Day {day.number}: {day.title}</p>
-                {isOpen ? (
-                  <Link className={styles.overviewButton} href={`/day/${day.number}`}>Open day <span aria-hidden="true">→</span></Link>
-                ) : (
-                  <span className={styles.overviewButtonLocked} aria-disabled="true">Open day <span aria-hidden="true">→</span></span>
-                )}
+                <div className={styles.overviewActions}>
+                  {isOpen ? (
+                    <Link className={styles.overviewButton} href={`/day/${day.number}`}>Open day <span aria-hidden="true">→</span></Link>
+                  ) : (
+                    <span className={styles.overviewButtonLocked} aria-disabled="true">Open day <span aria-hidden="true">→</span></span>
+                  )}
+                  {day.number === 8 ? <RecapQuestionForm /> : null}
+                </div>
               </li>
             );
           })}

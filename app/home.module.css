@@ -155,7 +155,7 @@
   line-height: 1.4;
 }
 
-.overviewList p {
+.overviewList > li > p {
   margin: 0;
   color: var(--ink);
   font-family: Georgia, "Times New Roman", serif;
@@ -197,8 +197,194 @@
   white-space: nowrap;
 }
 
+.overviewActions {
+  display: grid;
+  gap: 7px;
+  justify-items: stretch;
+}
+
+.recapQuestionControl {
+  display: contents;
+}
+
+.recapQuestionToggle {
+  min-height: 36px;
+  padding: 0 13px;
+  border: 1px solid var(--accent);
+  background: transparent;
+  color: var(--accent);
+  cursor: pointer;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.recapQuestionToggle:hover {
+  background: #e7eef4;
+}
+
+.recapQuestionOverlay {
+  position: fixed;
+  z-index: 100;
+  inset: 0;
+  display: grid;
+  overflow-y: auto;
+  padding: 24px;
+  place-items: center;
+  background: rgba(21, 34, 43, .58);
+}
+
+.recapQuestionPanel {
+  position: relative;
+  display: grid;
+  width: min(720px, 100%);
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
+  gap: 28px;
+  padding: clamp(28px, 5vw, 48px);
+  border-top: 4px solid var(--accent);
+  background: var(--surface);
+  box-shadow: 0 24px 70px rgba(21, 34, 43, .25);
+}
+
+.recapQuestionClose {
+  position: absolute;
+  top: 13px;
+  right: 16px;
+  width: 38px;
+  height: 38px;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 28px;
+  line-height: 1;
+}
+
+.recapQuestionIntro {
+  display: grid;
+  gap: 10px;
+  padding-right: 24px;
+}
+
+.recapQuestionIntro h3 {
+  margin: 0 0 2px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(26px, 4vw, 36px);
+  font-weight: 400;
+  letter-spacing: -.025em;
+  line-height: 1.15;
+}
+
+.recapQuestionIntro p,
+.recapQuestionIntro time {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.recapQuestionIntro p:nth-of-type(2),
+.recapQuestionIntro time {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.recapQuestionPanel form {
+  display: grid;
+  gap: 10px;
+}
+
+.recapQuestionPanel form > label {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.recapQuestionPanel textarea {
+  width: 100%;
+  min-height: 150px;
+  padding: 14px;
+  resize: vertical;
+  border: 1px solid var(--line);
+  border-radius: 0;
+  background: #fff;
+  color: var(--ink);
+  font: inherit;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.recapQuestionPanel textarea:focus {
+  border-color: var(--accent);
+  outline: 2px solid rgba(31, 75, 122, .18);
+  outline-offset: 1px;
+}
+
+.recapQuestionActions {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+}
+
+.recapQuestionActions span,
+.recapDraftNote {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.recapQuestionActions button,
+.recapQuestionSaved button {
+  min-height: 42px;
+  padding: 0 18px;
+  border: 0;
+  background: var(--accent);
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.recapQuestionActions button:disabled {
+  cursor: not-allowed;
+  opacity: .45;
+}
+
+.recapDraftNote,
+.recapQuestionError {
+  margin: 2px 0 0;
+  line-height: 1.5;
+}
+
+.recapQuestionError {
+  color: #a22d28;
+  font-size: 13px;
+}
+
+.recapQuestionSaved,
+.recapQuestionClosed {
+  margin: 0;
+  padding: 22px 0 0;
+  border-top: 1px solid var(--line);
+}
+
+.recapQuestionSaved {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: center;
+  font-size: 14px;
+}
+
+.recapQuestionClosed {
+  color: var(--muted);
+  font-size: 14px;
+}
+
 .closedDay .dayNumber,
-.closedDay p {
+.closedDay > p {
   color: #77818a;
 }
 
@@ -256,12 +442,11 @@
   }
 
   .dayMeta,
-  .overviewList p {
+  .overviewList > li > p {
     grid-column: 2;
   }
 
-  .overviewButton,
-  .overviewButtonLocked {
+  .overviewActions {
     grid-column: 3;
     grid-row: 1 / 3;
   }
@@ -326,10 +511,25 @@
     grid-template-columns: 24px minmax(0, 1fr);
   }
 
-  .overviewButton,
-  .overviewButtonLocked {
+  .overviewActions {
     grid-column: 2;
     grid-row: auto;
     width: fit-content;
+  }
+
+  .recapQuestionOverlay {
+    padding: 12px;
+    place-items: end center;
+  }
+
+  .recapQuestionPanel {
+    width: 100%;
+    max-height: calc(100vh - 24px);
+    padding: 30px 20px 24px;
+  }
+
+  .recapQuestionSaved {
+    align-items: stretch;
+    flex-direction: column;
   }
 }

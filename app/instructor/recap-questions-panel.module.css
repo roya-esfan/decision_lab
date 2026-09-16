@@ -1,0 +1,131 @@
+.panel {
+  margin-top: 64px;
+  padding: 30px 0 10px;
+  border-top: 3px solid var(--ink);
+}
+
+.panel > header {
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+  align-items: end;
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--line);
+}
+
+.panel header p {
+  margin: 0 0 7px;
+  color: var(--accent);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.panel h2 {
+  margin: 0 0 8px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(28px, 3.5vw, 42px);
+  font-weight: 400;
+  letter-spacing: -.03em;
+}
+
+.panel header span,
+.summary span,
+.list time {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.summary {
+  display: grid;
+  min-width: 130px;
+  grid-template-columns: auto 1fr;
+  gap: 2px 8px;
+  align-items: baseline;
+}
+
+.summary strong {
+  color: var(--accent);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 38px;
+  font-weight: 400;
+}
+
+.summary button {
+  grid-column: 1 / -1;
+  min-height: 34px;
+  margin-top: 8px;
+  padding: 0 13px;
+  border: 1px solid var(--accent);
+  background: transparent;
+  color: var(--accent);
+  cursor: pointer;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.summary button:disabled {
+  cursor: wait;
+  opacity: .55;
+}
+
+.empty,
+.error {
+  margin: 0;
+  padding: 24px 0;
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.error {
+  color: #a22d28;
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.list li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 130px;
+  gap: 30px;
+  padding: 22px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.list p {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+.list time {
+  text-align: right;
+}
+
+@media (max-width: 600px) {
+  .panel > header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 22px;
+  }
+
+  .summary {
+    width: 100%;
+  }
+
+  .list li {
+    grid-template-columns: 1fr;
+    gap: 9px;
+  }
+
+  .list time {
+    text-align: left;
+  }
+}
