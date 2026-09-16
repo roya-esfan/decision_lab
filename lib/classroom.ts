@@ -76,28 +76,6 @@ export function validateResponses(
   responses: unknown,
 ): responses is Array<{ promptKey: string; choice: string }> {
   if (!Array.isArray(responses)) return false;
-
-  if (activityKey === "land-dispute") {
-    if (responses.length !== 2) return false;
-    const decision = responses.find((item) =>
-      typeof item === "object" && item !== null && "promptKey" in item && item.promptKey === "land-dispute-choice",
-    );
-    const explanation = responses.find((item) =>
-      typeof item === "object" && item !== null && "promptKey" in item && item.promptKey === "land-dispute-explanation",
-    );
-    return Boolean(
-      decision
-      && "choice" in decision
-      && typeof decision.choice === "string"
-      && landDisputeResponseChoices.includes(decision.choice as (typeof landDisputeResponseChoices)[number])
-      && explanation
-      && "choice" in explanation
-      && typeof explanation.choice === "string"
-      && explanation.choice.trim().length >= 1
-      && explanation.choice.length <= 1500,
-    );
-  }
-
   const definitions = promptDefinitions[activityKey];
   if (responses.length !== definitions.length) return false;
 

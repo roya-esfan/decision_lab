@@ -20,7 +20,7 @@ export async function POST(
     const session = verifySession(token);
     if (!session || session.kind !== "participant") throw new ApiError(401, "Join the classroom session before responding.");
 
-    const body = await readJson(request, activityKey === "land-dispute" ? 8192 : 2048);
+    const body = await readJson(request, 2048);
     if (!body || typeof body !== "object" || !("idempotencyKey" in body) || !("responses" in body)) {
       throw new ApiError(400, "The response was not accepted.");
     }
@@ -40,7 +40,6 @@ export async function POST(
           p_participant_id: session.participantId,
           p_idempotency_key: body.idempotencyKey,
           p_decision: responseRows.find((item) => item.prompt_key === "land-dispute-choice")?.choice,
-          p_explanation: responseRows.find((item) => item.prompt_key === "land-dispute-explanation")?.choice,
         })
       : await supabase.rpc("submit_classroom_responses", {
           p_run_id: session.runId,

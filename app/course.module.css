@@ -4545,34 +4545,6 @@
   letter-spacing: -.035em;
 }
 
-.landDisputeExplanations {
-  margin-top: 24px;
-  padding-top: 20px;
-  border-top: 1px solid var(--line);
-}
-
-.landDisputeExplanations > header {
-  display: flex;
-  justify-content: space-between;
-  gap: 20px;
-  align-items: baseline;
-}
-
-.landDisputeExplanations > header strong { font-size: 15px; }
-.landDisputeExplanations > header span,
-.landDisputeExplanations li > span {
-  color: var(--muted);
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: .05em;
-  text-transform: uppercase;
-}
-
-.landDisputeExplanations > p { color: var(--muted); font-size: 13px; }
-.landDisputeExplanations ol { margin: 16px 0 0; padding: 0; list-style: none; }
-.landDisputeExplanations li { padding: 16px 0; border-top: 1px solid var(--fine-line); }
-.landDisputeExplanations li p { margin: 7px 0 0; font-size: 14px; line-height: 1.6; white-space: pre-wrap; }
-
 @media (max-width: 720px) {
   .joinPanel form,
   .instructorLogin,
@@ -4882,11 +4854,6 @@
     border-top: 1px solid var(--fine-line);
   }
 
-  .landDisputeExplanations > header {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 6px;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -17,7 +17,6 @@ export function LandDisputeActivity() {
   const idempotencyKey = useRef<string | null>(null);
   const [group, setGroup] = useState<LandDisputeGroup | null>(null);
   const [decision, setDecision] = useState<LandDisputeDecision | null>(null);
-  const [explanation, setExplanation] = useState("");
   const [complete, setComplete] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submissionError, setSubmissionError] = useState("");
@@ -39,7 +38,7 @@ export function LandDisputeActivity() {
   }
 
   async function submit() {
-    if (!group || !decision || !explanation.trim()) return;
+    if (!group || !decision) return;
     if (session.state === "review") {
       setComplete(true);
       return;
@@ -56,7 +55,6 @@ export function LandDisputeActivity() {
           idempotencyKey: idempotencyKey.current,
           responses: [
             { promptKey: "land-dispute-choice", choice: encodeLandDisputeDecision(group, decision) },
-            { promptKey: "land-dispute-explanation", choice: explanation.trim() },
           ],
         }),
       });
@@ -112,17 +110,9 @@ export function LandDisputeActivity() {
             >{option.toUpperCase()}</button>
           ))}
         </div>
-        <label htmlFor="land-dispute-explanation">{group === "plaintiff" ? "Explain why." : "Explain why"}</label>
-        <textarea
-          id="land-dispute-explanation"
-          value={explanation}
-          onChange={(event) => setExplanation(event.target.value)}
-          maxLength={1500}
-          rows={6}
-        />
+        <p className={styles.whyPrompt}>Why?</p>
         <div className={styles.submitRow}>
-          <span>{explanation.length}/1500</span>
-          <button type="button" disabled={!decision || !explanation.trim() || submitting} onClick={() => void submit()}>
+          <button type="button" disabled={!decision || submitting} onClick={() => void submit()}>
             {submitting ? "Submitting…" : "Submit response"}
           </button>
         </div>
@@ -135,27 +125,27 @@ export function LandDisputeActivity() {
 function PlaintiffCase() {
   return (
     <>
-      <p>Imagine that you are an attorney at a large law firm. You represent the plaintiff, <strong>Tom Smith</strong>, in a land dispute.</p>
-      <p>Mr. Smith owns a large piece of property in Oregon, where he has built a vacation home. During a recent vacation, he discovered that the neighboring bed-and-breakfast had expanded. A new set of rooms had been added on a small corner of his property. The neighboring business, <strong>Real Resorts, Inc.</strong>, is a small chain of bed-and-breakfast inns.</p>
+      <p>Imagine that you are an attorney at a large law firm. You represent the plaintiff, Tom Smith, in a land dispute.</p>
+      <p>Mr. Smith owns a large piece of property in Oregon, where he has built a vacation home. During a recent vacation, he discovered that the neighboring bed-and-breakfast had expanded. A new set of rooms had been added on a small corner of his property. The neighboring business, Real Resorts, Inc., is a small chain of bed-and-breakfast inns.</p>
       <p>Your client has asked you to file a lawsuit against Real Resorts.</p>
-      <p>It turns out that your client is correct. Some of the new rooms have been built partly on a section of his property measuring approximately <strong>30 feet by 10 feet</strong>. Real Resorts does not dispute this fact and acknowledges that the rooms were mistakenly built on your client&apos;s land.</p>
-      <p>You and Real Resorts also agree that your client&apos;s land has suffered only a <strong>very small reduction in value</strong> as a result of losing the use of this small part of the property.</p>
+      <p>It turns out that your client is correct. Some of the new rooms have been built partly on a section of his property measuring approximately 30 feet by 10 feet. Real Resorts does not dispute this fact and acknowledges that the rooms were mistakenly built on your client&apos;s land.</p>
+      <p>You and Real Resorts also agree that your client&apos;s land has suffered only a very small reduction in value as a result of losing the use of this small part of the property.</p>
       <p>Under Oregon law, as in most states, Real Resorts has trespassed on your client&apos;s land, and the trespass is continuing.</p>
       <p>The judge assigned to the case will have a choice between two legal remedies:</p>
       <ol>
         <li>Order Real Resorts to remove the part of the building that is on your client&apos;s property; or</li>
-        <li>Order your client to sell that small piece of property to Real Resorts for its actual value, which is approximately <strong>$50</strong>.</li>
+        <li>Order your client to sell that small piece of property to Real Resorts for its actual value, which is approximately $50.</li>
       </ol>
-      <p>From previous discussions with Real Resorts, you know that if the judge orders the company to remove the building, Real Resorts would rather <strong>buy the land than tear down the new rooms</strong>.</p>
-      <p>Real Resorts has indicated that, if this happens, it will offer your client <strong>$100,000</strong> for the piece of land. You are confident that your client would accept that amount.</p>
+      <p>From previous discussions with Real Resorts, you know that if the judge orders the company to remove the building, Real Resorts would rather buy the land than tear down the new rooms.</p>
+      <p>Real Resorts has indicated that, if this happens, it will offer your client $100,000 for the piece of land. You are confident that your client would accept that amount.</p>
       <p>In other words, depending on the judge&apos;s decision, your client will receive either approximately:</p>
-      <ul><li><strong>$100,000</strong>, or</li><li><strong>$50</strong></li></ul>
+      <ul><li>$100,000, or</li><li>$50</li></ul>
       <p>for this small piece of property. Your client will, of course, keep the rest of his land.</p>
-      <p>You have consulted a senior partner at your law firm who knows the judge personally and has tried property-rights cases before her. Based on his knowledge of the judge, he estimates that there is approximately a <strong>70% chance that the judge will rule in your client&apos;s favor and order Real Resorts to remove the building</strong>.</p>
+      <p>You have consulted a senior partner at your law firm who knows the judge personally and has tried property-rights cases before her. Based on his knowledge of the judge, he estimates that there is approximately a 70% chance that the judge will rule in your client&apos;s favor and order Real Resorts to remove the building.</p>
       <p>Your client has told you that if he loses before the judge, he does not want to incur the expense of an appeal. He will end the case.</p>
-      <p>It is now <strong>one day before the trial</strong>.</p>
-      <p>Real Resorts has contacted you and offered to settle the case by paying your client <strong>$70,000</strong>.</p>
-      <p>Real Resorts states that this is a <strong>final, non-negotiable offer</strong>.</p>
+      <p>It is now one day before the trial.</p>
+      <p>Real Resorts has contacted you and offered to settle the case by paying your client $70,000.</p>
+      <p>Real Resorts states that this is a final, non-negotiable offer.</p>
     </>
   );
 }
@@ -163,29 +153,29 @@ function PlaintiffCase() {
 function DefendantCase() {
   return (
     <>
-      <p>Imagine that you are an attorney at a large law firm. You represent the defendant, <strong>Real Resorts, Inc.</strong>, a small chain of bed-and-breakfast inns, in a land dispute.</p>
+      <p>Imagine that you are an attorney at a large law firm. You represent the defendant, Real Resorts, Inc., a small chain of bed-and-breakfast inns, in a land dispute.</p>
       <p>Your client recently expanded one of its inns in Oregon by adding several new rooms and buildings.</p>
-      <p>Because of an error by a surveying company, a small but expensive part of the new construction was accidentally built on a <strong>30-foot by 10-foot</strong> section of a neighboring property. That property belongs to <strong>Tom Smith</strong>, who has a vacation home there.</p>
-      <p>The surveying company has since filed for bankruptcy, so there is <strong>no realistic possibility of receiving compensation from the surveying company for its error</strong>.</p>
+      <p>Because of an error by a surveying company, a small but expensive part of the new construction was accidentally built on a 30-foot by 10-foot section of a neighboring property. That property belongs to Tom Smith, who has a vacation home there.</p>
+      <p>The surveying company has since filed for bankruptcy, so there is no realistic possibility of receiving compensation from the surveying company for its error.</p>
       <p>Tom Smith has filed a lawsuit against your client, asking the court to order Real Resorts to remove the new rooms.</p>
       <p>It turns out that the plaintiff is correct. Some of the new rooms have been built partly on his property. Your client does not dispute this fact and acknowledges that the rooms were mistakenly built on the plaintiff&apos;s land.</p>
-      <p>You and the plaintiff also agree that his land has suffered only a <strong>very small reduction in value</strong> as a result of losing the use of this small part of the property.</p>
+      <p>You and the plaintiff also agree that his land has suffered only a very small reduction in value as a result of losing the use of this small part of the property.</p>
       <p>Under Oregon law, as in most states, Real Resorts has trespassed on the plaintiff&apos;s land, and the trespass is continuing.</p>
       <p>The judge assigned to the case will have a choice between two legal remedies:</p>
       <ol>
         <li>Order your client, Real Resorts, to remove the part of the building that is on the plaintiff&apos;s property; or</li>
-        <li>Order the plaintiff to sell that small piece of property to your client for its actual value, which is approximately <strong>$50</strong>.</li>
+        <li>Order the plaintiff to sell that small piece of property to your client for its actual value, which is approximately $50.</li>
       </ol>
-      <p>You know that if the judge orders Real Resorts to remove the building, your client would rather <strong>buy the land than tear down the new rooms</strong>.</p>
-      <p>Your client has decided that, if the judge orders the building removed, it will offer the plaintiff <strong>$100,000</strong> for the piece of land. You are confident that the plaintiff would accept that amount.</p>
+      <p>You know that if the judge orders Real Resorts to remove the building, your client would rather buy the land than tear down the new rooms.</p>
+      <p>Your client has decided that, if the judge orders the building removed, it will offer the plaintiff $100,000 for the piece of land. You are confident that the plaintiff would accept that amount.</p>
       <p>In other words, depending on the judge&apos;s decision, your client will face a payment of either approximately:</p>
-      <ul><li><strong>$100,000</strong>, or</li><li><strong>$50</strong></li></ul>
+      <ul><li>$100,000, or</li><li>$50</li></ul>
       <p>for this small piece of property.</p>
-      <p>You have consulted a senior partner at your law firm who knows the judge personally and has tried property-rights cases before her. Based on his knowledge of the judge, he estimates that there is approximately a <strong>70% chance that the judge will rule against your client and order Real Resorts to remove the building</strong>.</p>
+      <p>You have consulted a senior partner at your law firm who knows the judge personally and has tried property-rights cases before her. Based on his knowledge of the judge, he estimates that there is approximately a 70% chance that the judge will rule against your client and order Real Resorts to remove the building.</p>
       <p>Your client has told you that if it loses before the judge, it does not want to incur the expense of an appeal.</p>
-      <p>It is now <strong>one day before the trial</strong>.</p>
-      <p>The plaintiff has contacted you and said that he is willing to settle the case if your client pays him <strong>$70,000</strong>.</p>
-      <p>The plaintiff states that this is a <strong>final, non-negotiable offer</strong>.</p>
+      <p>It is now one day before the trial.</p>
+      <p>The plaintiff has contacted you and said that he is willing to settle the case if your client pays him $70,000.</p>
+      <p>The plaintiff states that this is a final, non-negotiable offer.</p>
     </>
   );
 }

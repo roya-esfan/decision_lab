@@ -33,38 +33,7 @@ export async function GET(request: Request) {
       return { promptKey: prompt.key, label: prompt.label, counts };
     });
 
-    let explanations: Array<{ submissionId: string; group: string; decision: string; text: string; createdAt: string }> = [];
-    if (activityKey === "land-dispute") {
-      const { data: responseRows, error: responseError } = await supabase
-        .from("classroom_responses")
-        .select("submission_id, prompt_key, choice, created_at")
-        .eq("run_id", runId)
-        .in("prompt_key", ["land-dispute-choice", "land-dispute-explanation"])
-        .order("created_at", { ascending: false });
-      if (responseError) throw responseError;
-
-      const grouped = new Map<string, { submissionId: string; group: string; decision: string; text: string; createdAt: string }>();
-      for (const row of responseRows ?? []) {
-        const current = grouped.get(row.submission_id) ?? {
-          submissionId: row.submission_id,
-          group: "",
-          decision: "",
-          text: "",
-          createdAt: row.created_at,
-        };
-        if (row.prompt_key === "land-dispute-choice") {
-          const [group, decision] = row.choice.split(":", 2);
-          current.group = group;
-          current.decision = decision;
-        } else {
-          current.text = row.choice;
-        }
-        grouped.set(row.submission_id, current);
-      }
-      explanations = Array.from(grouped.values()).filter((item) => item.group && item.decision && item.text);
-    }
-
-    return NextResponse.json({ results, explanations }, { headers: { "Cache-Control": "no-store" } });
+    return NextResponse.json({ results }, { headers: { "Cache-Control": "no-store" } });
   } catch (error) {
     return apiFailure(error);
   }
