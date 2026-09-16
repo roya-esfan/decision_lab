@@ -16,6 +16,7 @@ import { summarizeCauseRankings } from "@/lib/day-two-activities";
 import { summarizeEndowmentFramingCounts } from "@/lib/endowment-framing";
 import { summarizeOutcomeBiasCounts } from "@/lib/outcome-bias";
 import { summarizeRareDiseaseValuations } from "@/lib/rare-disease-valuation";
+import { summarizeLandDisputeCounts } from "@/lib/land-dispute";
 import { fetchWithTransientRetry } from "@/lib/client-fetch";
 import styles from "../course.module.css";
 
@@ -34,6 +35,7 @@ type ClassroomRun = {
   activities: ActivityState[];
 };
 type ResultRow = { promptKey: string; label: string; counts: Record<string, number> };
+type LandDisputeExplanation = { submissionId: string; group: string; decision: string; text: string; createdAt: string };
 type RunOption = {
   id: string;
   dayNumber: TeachingDayNumber;
@@ -57,6 +59,7 @@ export function ControlRoom({ email }: { email: string }) {
   const [dayAccessReady, setDayAccessReady] = useState(false);
   const [dayAccessLoaded, setDayAccessLoaded] = useState(false);
   const [results, setResults] = useState<Record<string, ResultRow[]>>({});
+  const [landDisputeExplanations, setLandDisputeExplanations] = useState<LandDisputeExplanation[]>([]);
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState("");
   const [error, setError] = useState("");
@@ -108,10 +111,10 @@ export function ControlRoom({ email }: { email: string }) {
       try {
         const response = await fetchWithTransientRetry(`/api/instructor/results?run=${runId}&activity=${activity.key}`, { cache: "no-store" });
         if (!response.ok) return [activity.key, null] as const;
-        const data = await response.json() as { results?: ResultRow[] };
-        return [activity.key, data.results ?? []] as const;
+        const data = await response.json() as { results?: ResultRow[]; explanations?: LandDisputeExplanation[] };
+        return [activity.key, data.results ?? [], data.explanations ?? []] as const;
       } catch {
-        return [activity.key, null] as const;
+        return [activity.key, null, []] as const;
       }
     }));
     if (requestId !== resultsRequestId.current) return;
@@ -119,6 +122,7 @@ export function ControlRoom({ email }: { email: string }) {
       ...current,
       ...Object.fromEntries(entries.filter((entry) => entry[1] !== null)),
     }));
+    setLandDisputeExplanations([...(entries.find((entry) => entry[0] === "land-dispute")?.[2] ?? [])]);
   }, []);
 
   const loadDayAccess = useCallback(async () => {
@@ -234,6 +238,7 @@ export function ControlRoom({ email }: { email: string }) {
     setRun(null);
     setRecentRuns([]);
     setResults({});
+    setLandDisputeExplanations([]);
     setRunLoadError("");
     setSelectedDay(dayNumber);
   }
@@ -469,6 +474,8 @@ export function ControlRoom({ email }: { email: string }) {
                               <InstructorEndowmentFraming counts={result.counts} />
                             ) : activity.key === "rare-disease-valuation" ? (
                               <InstructorRareDiseaseValuation counts={result.counts} />
+                            ) : activity.key === "land-dispute" ? (
+                              <InstructorLandDispute counts={result.counts} />
                             ) : (
                               Object.entries(result.counts).map(([choice, count]) => {
                                 const percentage = total === 0 ? 0 : Math.round((count / total) * 100);
@@ -485,6 +492,9 @@ export function ControlRoom({ email }: { email: string }) {
                           </section>
                         );
                       })}
+                      {activity.key === "land-dispute" && (
+                        <InstructorLandDisputeExplanations explanations={landDisputeExplanations} />
+                      )}
                       {activityResults.length === 0 && <p>Results could not be loaded yet.</p>}
                     </div>
                   </div>
@@ -688,6 +698,38 @@ function InstructorRareDiseaseValuation({ counts }: { counts: Record<string, num
         </section>
       ))}
     </div>
+  );
+}
+
+function InstructorLandDispute({ counts }: { counts: Record<string, number> }) {
+  return (
+    <div className={styles.instructorCrewFrames}>
+      {summarizeLandDisputeCounts(counts).map((summary) => (
+        <section key={summary.group}>
+          <header><strong>Group {summary.groupLetter} · {summary.label}</strong><span>n = {summary.total}</span></header>
+          <div><span>Yes</span><strong>{summary.yesPercentage}%</strong></div>
+          <div><span>No</span><strong>{summary.noPercentage}%</strong></div>
+        </section>
+      ))}
+    </div>
+  );
+}
+
+function InstructorLandDisputeExplanations({ explanations }: { explanations: LandDisputeExplanation[] }) {
+  return (
+    <section className={styles.landDisputeExplanations}>
+      <header><strong>Written explanations</strong><span>Instructor only · not shown in presentation view</span></header>
+      {explanations.length === 0 ? <p>No explanations submitted yet.</p> : (
+        <ol>
+          {explanations.map((item) => (
+            <li key={item.submissionId}>
+              <span>Group {item.group === "plaintiff" ? "A · Plaintiff" : "B · Defendant"} · {item.decision.toUpperCase()}</span>
+              <p>{item.text}</p>
+            </li>
+          ))}
+        </ol>
+      )}
+    </section>
   );
 }
 

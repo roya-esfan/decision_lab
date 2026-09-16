@@ -330,7 +330,15 @@ export const courseDays: CourseDay[] = [
       ],
     },
     sessions: [],
-    assignments: [],
+    assignments: [
+      {
+        number: 1,
+        title: "Land dispute",
+        description: "Consider a settlement from one side of a legal dispute",
+        href: "/day/4/land-dispute",
+        status: "ready",
+      },
+    ],
   },
   {
     number: 5,

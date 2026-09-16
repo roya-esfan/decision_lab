@@ -149,6 +149,15 @@ export const courseActivityCatalog: readonly CourseActivityDefinition[] = [
     resultsPath: "/day/3/rare-disease-valuation/results",
     kind: "responses",
   },
+  {
+    key: "land-dispute",
+    day: 4,
+    number: 1,
+    title: "Land dispute",
+    activityHref: "/day/4/land-dispute",
+    resultsPath: "/day/4/land-dispute/results",
+    kind: "responses",
+  },
 ];
 
 export function isControlledActivityKey(value: unknown): value is ControlledActivityKey {

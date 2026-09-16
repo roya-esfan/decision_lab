@@ -20,7 +20,7 @@ export async function POST(
     const session = verifySession(token);
     if (!session || session.kind !== "participant") throw new ApiError(401, "Join the classroom session before responding.");
 
-    const body = await readJson(request, 2048);
+    const body = await readJson(request, activityKey === "land-dispute" ? 8192 : 2048);
     if (!body || typeof body !== "object" || !("idempotencyKey" in body) || !("responses" in body)) {
       throw new ApiError(400, "The response was not accepted.");
     }
@@ -30,16 +30,25 @@ export async function POST(
     if (!validateResponses(activityKey, body.responses)) throw new ApiError(400, "The response was not accepted.");
 
     const supabase = getSupabaseAdmin();
-    const { data, error } = await supabase.rpc("submit_classroom_responses", {
-      p_run_id: session.runId,
-      p_participant_id: session.participantId,
-      p_activity_key: activityKey,
-      p_idempotency_key: body.idempotencyKey,
-      p_responses: body.responses.map((response) => ({
-        prompt_key: response.promptKey,
-        choice: response.choice,
-      })),
-    });
+    const responseRows = body.responses.map((response) => ({
+      prompt_key: response.promptKey,
+      choice: response.choice,
+    }));
+    const { data, error } = activityKey === "land-dispute"
+      ? await supabase.rpc("submit_land_dispute_response", {
+          p_run_id: session.runId,
+          p_participant_id: session.participantId,
+          p_idempotency_key: body.idempotencyKey,
+          p_decision: responseRows.find((item) => item.prompt_key === "land-dispute-choice")?.choice,
+          p_explanation: responseRows.find((item) => item.prompt_key === "land-dispute-explanation")?.choice,
+        })
+      : await supabase.rpc("submit_classroom_responses", {
+          p_run_id: session.runId,
+          p_participant_id: session.participantId,
+          p_activity_key: activityKey,
+          p_idempotency_key: body.idempotencyKey,
+          p_responses: responseRows,
+        });
     if (error) {
       if (error.message.includes("ALREADY_SUBMITTED")) throw new ApiError(409, "You have already responded to this activity.");
       if (error.message.includes("ACTIVITY_CLOSED")) throw new ApiError(409, "This activity is currently closed.");

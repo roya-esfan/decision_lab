@@ -1,0 +1,185 @@
+.page { padding-bottom: 56px; }
+
+.breadcrumb {
+  display: flex;
+  min-height: 54px;
+  gap: 10px;
+  align-items: center;
+  border-bottom: 1px solid var(--fine-line);
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.breadcrumb a { color: var(--ink); text-underline-offset: 4px; }
+
+.header { padding: 48px 0 40px; }
+.header > p,
+.complete > p,
+.caseHeader > p {
+  margin: 0 0 10px;
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.header h1,
+.complete h2 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(38px, 5vw, 58px);
+  font-weight: 400;
+  letter-spacing: -.035em;
+  line-height: 1.05;
+}
+
+.groupPicker,
+.activity,
+.complete {
+  padding: 34px 0 48px;
+  border-top: 2px solid var(--ink);
+  border-bottom: 1px solid var(--line);
+}
+
+.groupPicker h2 {
+  max-width: 760px;
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(29px, 4vw, 44px);
+  font-weight: 400;
+  letter-spacing: -.03em;
+}
+
+.groupPicker > div {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(170px, 270px));
+  gap: 14px;
+  margin-top: 28px;
+}
+
+.groupPicker button {
+  display: grid;
+  min-height: 104px;
+  padding: 20px;
+  gap: 7px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+}
+
+.groupPicker button:hover,
+.groupPicker button:focus-visible { border-color: var(--accent); background: #edf4f7; }
+.groupPicker button strong { color: var(--accent); font-size: 17px; }
+.groupPicker button span { font-family: Georgia, "Times New Roman", serif; font-size: 23px; }
+
+.caseHeader {
+  max-width: 820px;
+  margin: 0 auto;
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--line);
+}
+
+.caseHeader h2 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(30px, 4vw, 44px);
+  font-weight: 400;
+}
+
+.caseText {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 24px 0 38px;
+  color: var(--ink);
+  font-size: 18px;
+  line-height: 1.72;
+}
+
+.caseText p { margin: 0 0 1.15em; }
+.caseText ol,
+.caseText ul { margin: -.2em 0 1.25em; padding-left: 29px; }
+.caseText li { margin: .45em 0; padding-left: 5px; }
+.caseText strong { font-weight: 700; }
+
+.response {
+  max-width: 820px;
+  margin: 0 auto;
+  padding-top: 32px;
+  border-top: 2px solid var(--ink);
+}
+
+.response h2 {
+  max-width: 720px;
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(26px, 3vw, 36px);
+  font-weight: 400;
+  letter-spacing: -.02em;
+  line-height: 1.2;
+}
+
+.decisionOptions {
+  display: flex;
+  gap: 10px;
+  margin: 22px 0 30px;
+}
+
+.decisionOptions button {
+  min-width: 110px;
+  min-height: 48px;
+  padding: 0 22px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 750;
+}
+
+.decisionOptions button:hover,
+.decisionOptions button:focus-visible { border-color: var(--accent); }
+.decisionOptions .selectedDecision { border-color: var(--accent); background: var(--accent); color: #fff; }
+
+.response label { display: block; margin-bottom: 9px; font-size: 16px; font-weight: 700; }
+.response textarea {
+  width: 100%;
+  min-height: 150px;
+  padding: 14px;
+  resize: vertical;
+  border: 1px solid var(--line);
+  border-radius: 0;
+  background: #fff;
+  color: var(--ink);
+  font: inherit;
+  font-size: 16px;
+  line-height: 1.55;
+}
+.response textarea:focus { border-color: var(--accent); outline: 2px solid rgba(31, 75, 122, .16); outline-offset: 1px; }
+
+.submitRow { display: flex; justify-content: space-between; gap: 20px; align-items: center; margin-top: 12px; }
+.submitRow span { color: var(--muted); font-size: 12px; }
+.submitRow button {
+  min-height: 44px;
+  padding: 0 19px;
+  border: 0;
+  background: var(--accent);
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+}
+.submitRow button:disabled { cursor: not-allowed; opacity: .42; }
+
+@media (max-width: 650px) {
+  .header { padding: 38px 0 32px; }
+  .groupPicker > div { grid-template-columns: 1fr 1fr; }
+  .groupPicker button { min-height: 92px; padding: 16px; }
+  .caseText { font-size: 17px; line-height: 1.68; }
+  .decisionOptions button { flex: 1; }
+  .submitRow { align-items: stretch; flex-direction: column; }
+  .submitRow button { width: 100%; }
+}

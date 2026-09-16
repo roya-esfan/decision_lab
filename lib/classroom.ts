@@ -4,6 +4,7 @@ import { crewProblemResponseChoices } from "./crew-problem";
 import { calculatorTripResponseChoices } from "./calculator-trip";
 import { endowmentFramingResponseChoices } from "./endowment-framing";
 import { isEncodedRareDiseaseValuation } from "./rare-disease-valuation";
+import { landDisputeResponseChoices } from "./land-dispute";
 
 export const activityKeys = [
   "assignment-1",
@@ -17,6 +18,7 @@ export const activityKeys = [
   "endowment-framing",
   "coin-gamble",
   "rare-disease-valuation",
+  "land-dispute",
 ] as const;
 export type ActivityKey = (typeof activityKeys)[number];
 
@@ -60,6 +62,9 @@ export const promptDefinitions = {
   "rare-disease-valuation": [
     { key: "rare-disease-amount", label: "Amount in NOK", choices: [] },
   ],
+  "land-dispute": [
+    { key: "land-dispute-choice", label: "Settlement recommendation", choices: landDisputeResponseChoices },
+  ],
 } as const;
 
 export function isActivityKey(value: unknown): value is ActivityKey {
@@ -71,6 +76,28 @@ export function validateResponses(
   responses: unknown,
 ): responses is Array<{ promptKey: string; choice: string }> {
   if (!Array.isArray(responses)) return false;
+
+  if (activityKey === "land-dispute") {
+    if (responses.length !== 2) return false;
+    const decision = responses.find((item) =>
+      typeof item === "object" && item !== null && "promptKey" in item && item.promptKey === "land-dispute-choice",
+    );
+    const explanation = responses.find((item) =>
+      typeof item === "object" && item !== null && "promptKey" in item && item.promptKey === "land-dispute-explanation",
+    );
+    return Boolean(
+      decision
+      && "choice" in decision
+      && typeof decision.choice === "string"
+      && landDisputeResponseChoices.includes(decision.choice as (typeof landDisputeResponseChoices)[number])
+      && explanation
+      && "choice" in explanation
+      && typeof explanation.choice === "string"
+      && explanation.choice.trim().length >= 1
+      && explanation.choice.length <= 1500,
+    );
+  }
+
   const definitions = promptDefinitions[activityKey];
   if (responses.length !== definitions.length) return false;
 
