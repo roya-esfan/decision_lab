@@ -22,6 +22,9 @@ export default function LandDisputePage() {
           <h1>Land dispute</h1>
         </header>
         <LandDisputeActivity />
+        <p className={styles.sourceNote}>
+          Inspired by Rachlinski, J. J. (1996). Gains, losses, and the psychology of litigation. <em>Southern California Law Review, 70</em>(1), 113–186.
+        </p>
       </main>
     </CourseShell>
   );
