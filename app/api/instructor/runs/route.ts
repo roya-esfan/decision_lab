@@ -174,6 +174,7 @@ export async function POST(request: Request) {
       "coin-gamble",
       "rare-disease-valuation",
       "land-dispute",
+      "stock-sale",
     ] as const;
     const establishedActivityKeys = controlledActivityKeys.filter(
       (activityKey) => !migrationDependentActivityKeys.includes(

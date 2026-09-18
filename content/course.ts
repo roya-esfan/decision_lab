@@ -367,7 +367,15 @@ export const courseDays: CourseDay[] = [
       ],
     },
     sessions: [],
-    assignments: [],
+    assignments: [
+      {
+        number: 1,
+        title: "Which stock would you sell?",
+        description: "Choose which of two stocks you are more likely to sell",
+        href: "/day/5/stock-sale",
+        status: "ready",
+      },
+    ],
   },
   {
     number: 6,

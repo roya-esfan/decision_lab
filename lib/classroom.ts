@@ -19,6 +19,7 @@ export const activityKeys = [
   "coin-gamble",
   "rare-disease-valuation",
   "land-dispute",
+  "stock-sale",
 ] as const;
 export type ActivityKey = (typeof activityKeys)[number];
 
@@ -64,6 +65,9 @@ export const promptDefinitions = {
   ],
   "land-dispute": [
     { key: "land-dispute-choice", label: "Settlement recommendation", choices: landDisputeResponseChoices },
+  ],
+  "stock-sale": [
+    { key: "stock-sale-choice", label: "Stock more likely to be sold", choices: ["Blueberry Tiles", "Tiffany Motors"] },
   ],
 } as const;
 
