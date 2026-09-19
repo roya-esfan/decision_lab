@@ -167,6 +167,15 @@ export const courseActivityCatalog: readonly CourseActivityDefinition[] = [
     resultsPath: "/day/5/stock-sale/results",
     kind: "responses",
   },
+  {
+    key: "confidence-intervals",
+    day: 5,
+    number: 2,
+    title: "90% confidence intervals",
+    activityHref: "/day/5/confidence-intervals",
+    resultsPath: "/day/5/confidence-intervals/results",
+    kind: "responses",
+  },
 ];
 
 export function isControlledActivityKey(value: unknown): value is ControlledActivityKey {

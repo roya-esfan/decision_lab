@@ -5,6 +5,7 @@ import { calculatorTripResponseChoices } from "./calculator-trip";
 import { endowmentFramingResponseChoices } from "./endowment-framing";
 import { isEncodedRareDiseaseValuation } from "./rare-disease-valuation";
 import { landDisputeResponseChoices } from "./land-dispute";
+import { confidenceIntervalQuestions, parseConfidenceIntervalChoice } from "./confidence-intervals";
 
 export const activityKeys = [
   "assignment-1",
@@ -20,6 +21,7 @@ export const activityKeys = [
   "rare-disease-valuation",
   "land-dispute",
   "stock-sale",
+  "confidence-intervals",
 ] as const;
 export type ActivityKey = (typeof activityKeys)[number];
 
@@ -69,6 +71,11 @@ export const promptDefinitions = {
   "stock-sale": [
     { key: "stock-sale-choice", label: "Stock more likely to be sold", choices: ["Blueberry Tiles", "Tiffany Motors"] },
   ],
+  "confidence-intervals": confidenceIntervalQuestions.map((question) => ({
+    key: question.promptKey,
+    label: `Question ${question.number}`,
+    choices: [] as const,
+  })),
 } as const;
 
 export function isActivityKey(value: unknown): value is ActivityKey {
@@ -94,6 +101,20 @@ export function validateResponses(
       && typeof response.choice === "string"
       && isEncodedRareDiseaseValuation(response.choice),
     );
+  }
+
+  if (activityKey === "confidence-intervals") {
+    return definitions.every((definition) => {
+      const response = responses.find((item) =>
+        typeof item === "object" && item !== null && "promptKey" in item && item.promptKey === definition.key,
+      );
+      return Boolean(
+        response
+        && "choice" in response
+        && typeof response.choice === "string"
+        && parseConfidenceIntervalChoice(response.choice),
+      );
+    });
   }
 
   const valid = definitions.every((definition) => {

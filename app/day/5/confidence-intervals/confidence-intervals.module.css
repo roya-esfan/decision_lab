@@ -1,0 +1,283 @@
+.breadcrumb {
+  display: flex;
+  min-height: 54px;
+  gap: 10px;
+  align-items: center;
+  border-bottom: 1px solid var(--fine-line);
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.breadcrumb a {
+  color: var(--ink);
+  text-underline-offset: 4px;
+}
+
+.activityHeader,
+.resultsHeader {
+  max-width: 920px;
+  padding: 50px 0 36px;
+}
+
+.activityHeader p,
+.resultsHeader p {
+  margin: 0;
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.activityHeader h1,
+.resultsHeader h1 {
+  margin: 11px 0 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(38px, 4.6vw, 56px);
+  font-weight: 400;
+  letter-spacing: -.04em;
+  line-height: 1.05;
+}
+
+.intervalActivity {
+  padding: 34px 0 56px;
+  border-top: 3px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+
+.instructions {
+  display: grid;
+  grid-template-columns: minmax(260px, .8fr) minmax(300px, 1.2fr);
+  gap: 40px;
+  align-items: start;
+  margin-bottom: 30px;
+}
+
+.instructions h2 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(25px, 3vw, 34px);
+  font-weight: 400;
+  letter-spacing: -.025em;
+  line-height: 1.15;
+}
+
+.instructions p {
+  max-width: 620px;
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+.registeredStatus {
+  margin: 0 0 15px;
+  padding: 13px 16px;
+  border-left: 3px solid #39835c;
+  background: #edf6f0;
+  color: #285e43;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.intervalTable {
+  border: 1px solid var(--line);
+}
+
+.intervalHead,
+.intervalRow {
+  display: grid;
+  grid-template-columns: minmax(115px, .55fr) minmax(145px, 1fr) minmax(145px, 1fr) minmax(105px, .55fr);
+  align-items: center;
+}
+
+.intervalHead {
+  min-height: 44px;
+  padding: 0 18px;
+  background: #edf2f7;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.intervalRow {
+  min-height: 72px;
+  padding: 10px 18px;
+  border-top: 1px solid var(--fine-line);
+  background: var(--surface);
+}
+
+.intervalRow > strong {
+  font-size: 16px;
+}
+
+.intervalRow label:not(.checkLabel) {
+  padding-right: 16px;
+}
+
+.intervalRow label:not(.checkLabel) > span {
+  display: none;
+}
+
+.intervalRow input[type="number"] {
+  width: 100%;
+  min-height: 46px;
+  padding: 9px 12px;
+  border: 1px solid var(--line);
+  border-radius: 0;
+  background: white;
+  color: var(--ink);
+  font: inherit;
+  font-size: 16px;
+}
+
+.intervalRow input[type="number"]:focus {
+  border-color: var(--accent);
+  outline: 2px solid rgb(30 68 158 / 16%);
+  outline-offset: 1px;
+}
+
+.intervalRow input[readonly] {
+  background: #f5f7f9;
+}
+
+.checkLabel {
+  display: flex;
+  gap: 9px;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.checkLabel input {
+  width: 24px;
+  height: 24px;
+  accent-color: #39835c;
+}
+
+.checkLabel input:disabled + span {
+  color: var(--muted);
+  opacity: .6;
+}
+
+.registerActions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 22px;
+}
+
+.registerActions button {
+  min-width: 180px;
+  min-height: 50px;
+  padding: 0 24px;
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: white;
+  font-size: 14px;
+  font-weight: 750;
+}
+
+.registerActions button:hover,
+.registerActions button:focus-visible {
+  background: var(--accent-dark);
+}
+
+.registerActions button:disabled {
+  cursor: wait;
+  opacity: .65;
+}
+
+.calibrationScore {
+  display: grid;
+  min-height: 88px;
+  margin-top: 24px;
+  padding: 18px 22px;
+  grid-template-columns: 1fr auto auto;
+  gap: 24px;
+  align-items: center;
+  border: 1px solid var(--line);
+  background: #edf6f0;
+}
+
+.calibrationScore span {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.calibrationScore strong {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 29px;
+  font-weight: 400;
+}
+
+.calibrationScore em {
+  color: #285e43;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 800;
+}
+
+@media (max-width: 720px) {
+  .activityHeader,
+  .resultsHeader {
+    padding: 38px 0 30px;
+  }
+
+  .activityHeader h1,
+  .resultsHeader h1 {
+    font-size: 38px;
+  }
+
+  .instructions {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .intervalHead {
+    display: none;
+  }
+
+  .intervalRow {
+    grid-template-columns: 1fr 1fr auto;
+    gap: 10px;
+    padding: 15px 12px;
+  }
+
+  .intervalRow > strong {
+    grid-column: 1 / -1;
+  }
+
+  .intervalRow label:not(.checkLabel) {
+    padding-right: 0;
+  }
+
+  .intervalRow label:not(.checkLabel) > span {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .checkLabel {
+    align-self: end;
+    min-height: 46px;
+  }
+
+  .registerActions button {
+    width: 100%;
+  }
+
+  .calibrationScore {
+    grid-template-columns: 1fr auto;
+    gap: 8px 18px;
+  }
+
+  .calibrationScore span {
+    grid-column: 1 / -1;
+  }
+}

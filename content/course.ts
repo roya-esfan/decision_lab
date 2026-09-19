@@ -375,6 +375,13 @@ export const courseDays: CourseDay[] = [
         href: "/day/5/stock-sale",
         status: "ready",
       },
+      {
+        number: 2,
+        title: "90% confidence intervals",
+        description: "Give a minimum and maximum estimate for ten questions",
+        href: "/day/5/confidence-intervals",
+        status: "ready",
+      },
     ],
   },
   {

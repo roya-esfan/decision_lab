@@ -18,16 +18,28 @@ export async function GET(request: Request) {
 
     const promptKeys = promptDefinitions[activityKey].map((item) => item.key);
     const supabase = getSupabaseAdmin();
-    const { data: rows, error } = await supabase
+    const { data: firstRows, error } = await supabase
       .from("classroom_responses")
       .select("prompt_key, choice")
       .eq("run_id", runId)
-      .in("prompt_key", promptKeys);
+      .in("prompt_key", promptKeys)
+      .range(0, 999);
     if (error) throw error;
+    let rows = firstRows ?? [];
+    if (activityKey === "confidence-intervals" && rows.length === 1000) {
+      const { data: remainingRows, error: remainingError } = await supabase
+        .from("classroom_responses")
+        .select("prompt_key, choice")
+        .eq("run_id", runId)
+        .in("prompt_key", promptKeys)
+        .range(1000, 1999);
+      if (remainingError) throw remainingError;
+      rows = [...rows, ...(remainingRows ?? [])];
+    }
 
     const results = promptDefinitions[activityKey].map((prompt) => {
       const counts = Object.fromEntries(prompt.choices.map((choice) => [choice, 0])) as Record<string, number>;
-      for (const row of rows ?? []) {
+      for (const row of rows) {
         if (row.prompt_key === prompt.key) counts[row.choice] = (counts[row.choice] ?? 0) + 1;
       }
       return { promptKey: prompt.key, label: prompt.label, counts };

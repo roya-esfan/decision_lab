@@ -9,6 +9,7 @@ import { summarizeCrewProblemCounts } from "@/lib/crew-problem";
 import { summarizeOutcomeBiasCounts } from "@/lib/outcome-bias";
 import { summarizeRareDiseaseValuations } from "@/lib/rare-disease-valuation";
 import { summarizeLandDisputeCounts } from "@/lib/land-dispute";
+import { summarizeConfidenceIntervalResults } from "@/lib/confidence-intervals";
 import styles from "../course.module.css";
 
 type ResultRow = { promptKey: string; label: string; counts: Record<string, number> };
@@ -86,6 +87,10 @@ export function LiveResults({
     return <LandDisputeResults results={state.results} />;
   }
 
+  if (activityKey === "confidence-intervals") {
+    return <ConfidenceIntervalResults results={state.results} />;
+  }
+
   return (
     <section className={styles.liveResultRows} aria-live="polite" aria-label="Revealed class results">
       {state.results.map((result, index) => {
@@ -124,6 +129,135 @@ export function LiveResults({
       )}
     </section>
   );
+}
+
+function ConfidenceIntervalResults({ results }: { results: ResultRow[] }) {
+  const summaries = summarizeConfidenceIntervalResults(results);
+  const responseCount = Math.max(0, ...summaries.map((summary) => summary.total));
+
+  return (
+    <section className={styles.confidenceResults} aria-live="polite" aria-label="Class confidence interval results">
+      <header className={styles.confidenceResultsHeader}>
+        <div>
+          <p className={styles.eyebrow}>Class estimates</p>
+          <h2>Average intervals and crowd estimates</h2>
+        </div>
+        <strong>{responseCount} {responseCount === 1 ? "response" : "responses"}</strong>
+      </header>
+      <p className={styles.confidenceResultsIntro}>
+        Each curve is fitted to the midpoint of the intervals submitted by the class. The average interval uses the mean minimum and mean maximum.
+      </p>
+      <div className={styles.confidenceQuestionResults}>
+        {summaries.map((summary) => (
+          <article key={summary.promptKey}>
+            <header>
+              <h3>Question {summary.number}</h3>
+              <span className={summary.trueValueWithinMeanInterval ? styles.intervalHit : styles.intervalMiss}>
+                {summary.total === 0
+                  ? "No responses"
+                  : summary.trueValueWithinMeanInterval
+                    ? "True answer within average interval"
+                    : "True answer outside average interval"}
+              </span>
+            </header>
+            <ConfidenceDistribution summary={summary} />
+            <dl>
+              <div>
+                <dt>Average interval</dt>
+                <dd>{formatInterval(summary.meanMinimum, summary.meanMaximum)}</dd>
+              </div>
+              <div>
+                <dt>Crowd estimate</dt>
+                <dd>{formatEstimate(summary.meanMidpoint)}</dd>
+              </div>
+              <div>
+                <dt>True answer</dt>
+                <dd>{formatEstimate(summary.trueValue)}</dd>
+              </div>
+              <div>
+                <dt>Responses</dt>
+                <dd>{summary.total}</dd>
+              </div>
+            </dl>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+type ConfidenceSummary = ReturnType<typeof summarizeConfidenceIntervalResults>[number];
+
+function ConfidenceDistribution({ summary }: { summary: ConfidenceSummary }) {
+  if (
+    summary.meanMinimum === null
+    || summary.meanMaximum === null
+    || summary.meanMidpoint === null
+    || summary.midpointStandardDeviation === null
+  ) {
+    return <div className={styles.emptyConfidencePlot}>No class estimates yet</div>;
+  }
+
+  const deviation = summary.midpointStandardDeviation;
+  const spread = deviation > 0 ? deviation * 3 : Math.max(Math.abs(summary.meanMidpoint) * 0.08, 1);
+  const domainMinimum = Math.min(summary.meanMinimum, summary.trueValue, summary.meanMidpoint - spread);
+  let domainMaximum = Math.max(summary.meanMaximum, summary.trueValue, summary.meanMidpoint + spread);
+  if (domainMaximum === domainMinimum) domainMaximum = domainMinimum + 1;
+  const domainWidth = domainMaximum - domainMinimum;
+  const x = (value: number) => ((value - domainMinimum) / domainWidth) * 600;
+  const intervalStart = Math.max(0, Math.min(600, x(summary.meanMinimum)));
+  const intervalEnd = Math.max(0, Math.min(600, x(summary.meanMaximum)));
+  const meanX = Math.max(0, Math.min(600, x(summary.meanMidpoint)));
+  const trueX = Math.max(0, Math.min(600, x(summary.trueValue)));
+
+  let curvePath = "";
+  if (deviation > 0) {
+    const points = Array.from({ length: 121 }, (_, index) => {
+      const plotX = index * 5;
+      const value = domainMinimum + (plotX / 600) * domainWidth;
+      const density = Math.exp(-0.5 * ((value - summary.meanMidpoint) / deviation) ** 2);
+      const plotY = 154 - density * 116;
+      return `${index === 0 ? "M" : "L"}${plotX.toFixed(1)},${plotY.toFixed(1)}`;
+    });
+    curvePath = `${points.join(" ")} L600,154 L0,154 Z`;
+  }
+
+  return (
+    <div className={styles.confidencePlot}>
+      <svg viewBox="0 0 600 175" role="img" aria-label={`Distribution of midpoint estimates for Question ${summary.number}`}>
+        <line className={styles.confidenceAxis} x1="0" y1="154" x2="600" y2="154" />
+        <rect
+          className={styles.meanIntervalBand}
+          x={Math.min(intervalStart, intervalEnd)}
+          y="145"
+          width={Math.max(3, Math.abs(intervalEnd - intervalStart))}
+          height="18"
+        />
+        {curvePath && <path className={styles.confidenceCurve} d={curvePath} />}
+        <line className={styles.crowdMeanLine} x1={meanX} y1="28" x2={meanX} y2="160" />
+        <line className={styles.trueAnswerLine} x1={trueX} y1="18" x2={trueX} y2="160" />
+      </svg>
+      <div className={styles.confidenceLegend}>
+        <span><i className={styles.meanLegend} />Crowd estimate</span>
+        <span><i className={styles.trueLegend} />True answer</span>
+        <span><i className={styles.intervalLegend} />Average interval</span>
+      </div>
+      {deviation === 0 && summary.total > 0 && (
+        <p>All submitted midpoint estimates were identical, so no curve is shown.</p>
+      )}
+    </div>
+  );
+}
+
+const resultNumberFormatter = new Intl.NumberFormat("en-US", { maximumFractionDigits: 1 });
+
+function formatEstimate(value: number | null) {
+  return value === null ? "—" : resultNumberFormatter.format(value);
+}
+
+function formatInterval(minimum: number | null, maximum: number | null) {
+  if (minimum === null || maximum === null) return "—";
+  return `${formatEstimate(minimum)}–${formatEstimate(maximum)}`;
 }
 
 function LandDisputeResults({ results }: { results: ResultRow[] }) {
