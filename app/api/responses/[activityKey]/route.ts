@@ -34,13 +34,20 @@ export async function POST(
       prompt_key: response.promptKey,
       choice: response.choice,
     }));
-    const { data, error } = activityKey === "land-dispute"
+    const rpcResult = activityKey === "land-dispute"
       ? await supabase.rpc("submit_land_dispute_response", {
           p_run_id: session.runId,
           p_participant_id: session.participantId,
           p_idempotency_key: body.idempotencyKey,
           p_decision: responseRows.find((item) => item.prompt_key === "land-dispute-choice")?.choice,
         })
+      : activityKey === "snow-shovel-fairness"
+        ? await supabase.rpc("submit_snow_shovel_response", {
+            p_run_id: session.runId,
+            p_participant_id: session.participantId,
+            p_idempotency_key: body.idempotencyKey,
+            p_choice: responseRows.find((item) => item.prompt_key === "snow-shovel-choice")?.choice,
+          })
       : await supabase.rpc("submit_classroom_responses", {
           p_run_id: session.runId,
           p_participant_id: session.participantId,
@@ -48,6 +55,7 @@ export async function POST(
           p_idempotency_key: body.idempotencyKey,
           p_responses: responseRows,
         });
+    const { data, error } = rpcResult;
     if (error) {
       if (error.message.includes("ALREADY_SUBMITTED")) throw new ApiError(409, "You have already responded to this activity.");
       if (error.message.includes("ACTIVITY_CLOSED")) throw new ApiError(409, "This activity is currently closed.");

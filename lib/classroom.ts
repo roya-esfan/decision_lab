@@ -22,6 +22,7 @@ export const activityKeys = [
   "land-dispute",
   "stock-sale",
   "confidence-intervals",
+  "snow-shovel-fairness",
 ] as const;
 export type ActivityKey = (typeof activityKeys)[number];
 
@@ -76,6 +77,9 @@ export const promptDefinitions = {
     label: `Question ${question.number}`,
     choices: [] as const,
   })),
+  "snow-shovel-fairness": [
+    { key: "snow-shovel-choice", label: "Rating of the store’s action", choices: ["Fair", "Unfair"] },
+  ],
 } as const;
 
 export function isActivityKey(value: unknown): value is ActivityKey {

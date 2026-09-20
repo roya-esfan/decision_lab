@@ -176,6 +176,15 @@ export const courseActivityCatalog: readonly CourseActivityDefinition[] = [
     resultsPath: "/day/5/confidence-intervals/results",
     kind: "responses",
   },
+  {
+    key: "snow-shovel-fairness",
+    day: 6,
+    number: 1,
+    title: "Fair or unfair?",
+    activityHref: "/day/6/snow-shovel-fairness",
+    resultsPath: "/day/6/snow-shovel-fairness/results",
+    kind: "responses",
+  },
 ];
 
 export function isControlledActivityKey(value: unknown): value is ControlledActivityKey {

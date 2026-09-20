@@ -407,7 +407,15 @@ export const courseDays: CourseDay[] = [
       ],
     },
     sessions: [],
-    assignments: [],
+    assignments: [
+      {
+        number: 1,
+        title: "Fair or unfair?",
+        description: "Rate the store’s pricing decision",
+        href: "/day/6/snow-shovel-fairness",
+        status: "ready",
+      },
+    ],
   },
   {
     number: 7,
