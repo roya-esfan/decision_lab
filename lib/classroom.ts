@@ -7,6 +7,7 @@ import { isEncodedRareDiseaseValuation } from "./rare-disease-valuation";
 import { landDisputeResponseChoices } from "./land-dispute";
 import { confidenceIntervalQuestions, parseConfidenceIntervalChoice } from "./confidence-intervals";
 import { wageFairnessResponseChoices } from "./wage-fairness";
+import { isEncodedBeerValuation } from "./beer-valuation";
 
 export const activityKeys = [
   "assignment-1",
@@ -25,6 +26,7 @@ export const activityKeys = [
   "confidence-intervals",
   "snow-shovel-fairness",
   "wage-fairness",
+  "beer-valuation",
 ] as const;
 export type ActivityKey = (typeof activityKeys)[number];
 
@@ -85,6 +87,9 @@ export const promptDefinitions = {
   "wage-fairness": [
     { key: "wage-fairness-choice", label: "Rating of the company’s action", choices: wageFairnessResponseChoices },
   ],
+  "beer-valuation": [
+    { key: "beer-price", label: "Price for the beer", choices: [] },
+  ],
 } as const;
 
 export function isActivityKey(value: unknown): value is ActivityKey {
@@ -109,6 +114,19 @@ export function validateResponses(
       && "choice" in response
       && typeof response.choice === "string"
       && isEncodedRareDiseaseValuation(response.choice),
+    );
+  }
+
+  if (activityKey === "beer-valuation") {
+    const response = responses[0];
+    return Boolean(
+      typeof response === "object"
+      && response !== null
+      && "promptKey" in response
+      && response.promptKey === "beer-price"
+      && "choice" in response
+      && typeof response.choice === "string"
+      && isEncodedBeerValuation(response.choice),
     );
   }
 

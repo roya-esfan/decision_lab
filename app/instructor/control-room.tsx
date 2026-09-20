@@ -17,6 +17,7 @@ import { summarizeEndowmentFramingCounts } from "@/lib/endowment-framing";
 import { summarizeOutcomeBiasCounts } from "@/lib/outcome-bias";
 import { summarizeRareDiseaseValuations } from "@/lib/rare-disease-valuation";
 import { summarizeLandDisputeCounts } from "@/lib/land-dispute";
+import { summarizeBeerValuations } from "@/lib/beer-valuation";
 import { fetchWithTransientRetry } from "@/lib/client-fetch";
 import styles from "../course.module.css";
 
@@ -470,6 +471,8 @@ export function ControlRoom({ email }: { email: string }) {
                               <InstructorEndowmentFraming counts={result.counts} />
                             ) : activity.key === "rare-disease-valuation" ? (
                               <InstructorRareDiseaseValuation counts={result.counts} />
+                            ) : activity.key === "beer-valuation" ? (
+                              <InstructorBeerValuation counts={result.counts} />
                             ) : activity.key === "land-dispute" ? (
                               <InstructorLandDispute counts={result.counts} />
                             ) : (
@@ -684,6 +687,24 @@ function InstructorRareDiseaseValuation({ counts }: { counts: Record<string, num
         <section key={summary.condition}>
           <header>
             <strong>Group {summary.condition} · {summary.label}</strong>
+            <span>n = {summary.total}</span>
+          </header>
+          <div><span>Median</span><strong>{summary.median === null ? "—" : `${formatter.format(summary.median)} NOK`}</strong></div>
+          <div><span>Mean</span><strong>{summary.mean === null ? "—" : `${formatter.format(summary.mean)} NOK`}</strong></div>
+        </section>
+      ))}
+    </div>
+  );
+}
+
+function InstructorBeerValuation({ counts }: { counts: Record<string, number> }) {
+  const formatter = new Intl.NumberFormat("nb-NO", { maximumFractionDigits: 0 });
+  return (
+    <div className={styles.instructorCrewFrames}>
+      {summarizeBeerValuations(counts).map((summary) => (
+        <section key={summary.group}>
+          <header>
+            <strong>Group {summary.group} · {summary.label}</strong>
             <span>n = {summary.total}</span>
           </header>
           <div><span>Median</span><strong>{summary.median === null ? "—" : `${formatter.format(summary.median)} NOK`}</strong></div>

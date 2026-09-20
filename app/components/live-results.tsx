@@ -11,6 +11,7 @@ import { summarizeRareDiseaseValuations } from "@/lib/rare-disease-valuation";
 import { summarizeLandDisputeCounts } from "@/lib/land-dispute";
 import { summarizeConfidenceIntervalResults } from "@/lib/confidence-intervals";
 import { summarizeWageFairnessCounts } from "@/lib/wage-fairness";
+import { summarizeBeerValuations } from "@/lib/beer-valuation";
 import styles from "../course.module.css";
 
 type ResultRow = { promptKey: string; label: string; counts: Record<string, number> };
@@ -94,6 +95,10 @@ export function LiveResults({
 
   if (activityKey === "wage-fairness") {
     return <WageFairnessResults results={state.results} />;
+  }
+
+  if (activityKey === "beer-valuation") {
+    return <BeerValuationResults results={state.results} />;
   }
 
   return (
@@ -365,6 +370,49 @@ function RareDiseaseValuationResults({ results }: { results: ResultRow[] }) {
               <span>Group {summary.condition}</span>
               <h3>{summary.label}</h3>
               <p>{summary.measure}</p>
+            </header>
+            <dl>
+              <div>
+                <dt>Median</dt>
+                <dd>{summary.median === null ? "—" : `${formatter.format(summary.median)} NOK`}</dd>
+              </div>
+              <div>
+                <dt>Mean</dt>
+                <dd>{summary.mean === null ? "—" : `${formatter.format(summary.mean)} NOK`}</dd>
+              </div>
+              <div>
+                <dt>Responses</dt>
+                <dd>{summary.total}</dd>
+              </div>
+            </dl>
+          </section>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function BeerValuationResults({ results }: { results: ResultRow[] }) {
+  const summaries = summarizeBeerValuations(results[0]?.counts ?? {});
+  const total = summaries.reduce((sum, summary) => sum + summary.total, 0);
+  const formatter = new Intl.NumberFormat("nb-NO", { maximumFractionDigits: 0 });
+
+  return (
+    <section className={styles.valuationResults} aria-live="polite" aria-label="Beer prices by group">
+      <header>
+        <div>
+          <p className={styles.eyebrow}>Class responses</p>
+          <h2>Price by group</h2>
+        </div>
+        <strong>{total} {total === 1 ? "response" : "responses"}</strong>
+      </header>
+      <div className={styles.valuationComparison}>
+        {summaries.map((summary) => (
+          <section key={summary.group}>
+            <header>
+              <span>Group {summary.group}</span>
+              <h3>{summary.label}</h3>
+              <p>{summary.seller}</p>
             </header>
             <dl>
               <div>

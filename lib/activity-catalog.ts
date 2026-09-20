@@ -159,6 +159,15 @@ export const courseActivityCatalog: readonly CourseActivityDefinition[] = [
     kind: "responses",
   },
   {
+    key: "beer-valuation",
+    day: 2,
+    number: 7,
+    title: "What price would you pay?",
+    activityHref: "/day/2/beer-valuation",
+    resultsPath: "/day/2/beer-valuation/results",
+    kind: "responses",
+  },
+  {
     key: "land-dispute",
     day: 4,
     number: 1,

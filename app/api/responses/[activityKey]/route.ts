@@ -55,6 +55,13 @@ export async function POST(
               p_idempotency_key: body.idempotencyKey,
               p_choice: responseRows.find((item) => item.prompt_key === "wage-fairness-choice")?.choice,
             })
+          : activityKey === "beer-valuation"
+            ? await supabase.rpc("submit_beer_valuation_response", {
+                p_run_id: session.runId,
+                p_participant_id: session.participantId,
+                p_idempotency_key: body.idempotencyKey,
+                p_choice: responseRows.find((item) => item.prompt_key === "beer-price")?.choice,
+              })
       : await supabase.rpc("submit_classroom_responses", {
           p_run_id: session.runId,
           p_participant_id: session.participantId,
