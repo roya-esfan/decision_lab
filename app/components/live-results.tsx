@@ -10,6 +10,7 @@ import { summarizeOutcomeBiasCounts } from "@/lib/outcome-bias";
 import { summarizeRareDiseaseValuations } from "@/lib/rare-disease-valuation";
 import { summarizeLandDisputeCounts } from "@/lib/land-dispute";
 import { summarizeConfidenceIntervalResults } from "@/lib/confidence-intervals";
+import { summarizeWageFairnessCounts } from "@/lib/wage-fairness";
 import styles from "../course.module.css";
 
 type ResultRow = { promptKey: string; label: string; counts: Record<string, number> };
@@ -91,6 +92,10 @@ export function LiveResults({
     return <ConfidenceIntervalResults results={state.results} />;
   }
 
+  if (activityKey === "wage-fairness") {
+    return <WageFairnessResults results={state.results} />;
+  }
+
   return (
     <section className={styles.liveResultRows} aria-live="polite" aria-label="Revealed class results">
       {state.results.map((result, index) => {
@@ -127,6 +132,45 @@ export function LiveResults({
       {activityKey === "company-revenue" && (
         <p className={styles.correctAnswerNote}><strong>Answer:</strong> Group B had the larger combined sales revenue.</p>
       )}
+    </section>
+  );
+}
+
+function WageFairnessResults({ results }: { results: ResultRow[] }) {
+  const summaries = summarizeWageFairnessCounts(results[0]?.counts ?? {});
+  const total = summaries.reduce((sum, summary) => sum + summary.total, 0);
+
+  return (
+    <section className={styles.crewFrameResults} aria-live="polite" aria-label="Fairness ratings by group">
+      <header>
+        <div><p className={styles.eyebrow}>Class ratings</p><h2>Rating by group</h2></div>
+        <strong>{total} {total === 1 ? "response" : "responses"}</strong>
+      </header>
+      <div className={styles.crewFrameComparison}>
+        {summaries.map((summary) => (
+          <section className={styles.crewFrameGroup} key={summary.group}>
+            <header>
+              <div><span>Group {summary.group}</span><h3>{summary.label}</h3></div>
+              <strong>n = {summary.total}</strong>
+            </header>
+            <div className={styles.liveResultChart}>
+              {(["fair", "unfair"] as const).map((decision) => {
+                const count = summary[decision];
+                const percentage = summary[`${decision}Percentage`];
+                const label = decision === "fair" ? "Fair" : "Unfair";
+                return (
+                  <div className={styles.liveResultColumn} key={decision} aria-label={`Group ${summary.group}, ${label}: ${percentage}% (${count} responses)`}>
+                    <strong>{percentage}%</strong>
+                    <div aria-hidden="true"><i style={{ height: percentage === 0 ? "2px" : `${percentage}%` }} /></div>
+                    <span>{label}</span>
+                    <em>{count} {count === 1 ? "response" : "responses"}</em>
+                  </div>
+                );
+              })}
+            </div>
+          </section>
+        ))}
+      </div>
     </section>
   );
 }

@@ -338,6 +338,13 @@ export const courseDays: CourseDay[] = [
         href: "/day/4/land-dispute",
         status: "ready",
       },
+      {
+        number: 6,
+        title: "Fair or unfair?",
+        description: "Rate the company’s decision about wages and salaries",
+        href: "/day/2/wage-fairness",
+        status: "ready",
+      },
     ],
   },
   {

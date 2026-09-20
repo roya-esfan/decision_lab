@@ -6,6 +6,7 @@ import { endowmentFramingResponseChoices } from "./endowment-framing";
 import { isEncodedRareDiseaseValuation } from "./rare-disease-valuation";
 import { landDisputeResponseChoices } from "./land-dispute";
 import { confidenceIntervalQuestions, parseConfidenceIntervalChoice } from "./confidence-intervals";
+import { wageFairnessResponseChoices } from "./wage-fairness";
 
 export const activityKeys = [
   "assignment-1",
@@ -23,6 +24,7 @@ export const activityKeys = [
   "stock-sale",
   "confidence-intervals",
   "snow-shovel-fairness",
+  "wage-fairness",
 ] as const;
 export type ActivityKey = (typeof activityKeys)[number];
 
@@ -79,6 +81,9 @@ export const promptDefinitions = {
   })),
   "snow-shovel-fairness": [
     { key: "snow-shovel-choice", label: "Rating of the store’s action", choices: ["Fair", "Unfair"] },
+  ],
+  "wage-fairness": [
+    { key: "wage-fairness-choice", label: "Rating of the company’s action", choices: wageFairnessResponseChoices },
   ],
 } as const;
 

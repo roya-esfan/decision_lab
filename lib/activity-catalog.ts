@@ -150,6 +150,15 @@ export const courseActivityCatalog: readonly CourseActivityDefinition[] = [
     kind: "responses",
   },
   {
+    key: "wage-fairness",
+    day: 2,
+    number: 6,
+    title: "Fair or unfair?",
+    activityHref: "/day/2/wage-fairness",
+    resultsPath: "/day/2/wage-fairness/results",
+    kind: "responses",
+  },
+  {
     key: "land-dispute",
     day: 4,
     number: 1,

@@ -177,6 +177,7 @@ export async function POST(request: Request) {
       "stock-sale",
       "confidence-intervals",
       "snow-shovel-fairness",
+      "wage-fairness",
     ] as const;
     const establishedActivityKeys = controlledActivityKeys.filter(
       (activityKey) => !migrationDependentActivityKeys.includes(
