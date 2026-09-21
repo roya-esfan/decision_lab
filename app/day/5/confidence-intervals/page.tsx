@@ -15,10 +15,10 @@ export default function ConfidenceIntervalsPage() {
       <main>
         <nav className={styles.breadcrumb} aria-label="Breadcrumb">
           <Link href="/">Course home</Link><span>/</span>
-          <Link href="/day/5">Day 5</Link><span>/</span><span>Activity 2</span>
+          <Link href="/day/5">Day 5</Link><span>/</span><span>Activity 1</span>
         </nav>
         <header className={styles.activityHeader}>
-          <p>Day 5 · Activity 2</p>
+          <p>Day 5 · Activity 1</p>
           <h1>90% confidence intervals</h1>
         </header>
         <ConfidenceIntervalActivity />

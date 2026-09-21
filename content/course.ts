@@ -384,16 +384,16 @@ export const courseDays: CourseDay[] = [
     assignments: [
       {
         number: 1,
-        title: "Which stock would you sell?",
-        description: "Choose which of two stocks you are more likely to sell",
-        href: "/day/5/stock-sale",
+        title: "90% confidence intervals",
+        description: "Give a minimum and maximum estimate for ten questions",
+        href: "/day/5/confidence-intervals",
         status: "ready",
       },
       {
         number: 2,
-        title: "90% confidence intervals",
-        description: "Give a minimum and maximum estimate for ten questions",
-        href: "/day/5/confidence-intervals",
+        title: "Which stock would you sell?",
+        description: "Choose which of two stocks you are more likely to sell",
+        href: "/day/5/stock-sale",
         status: "ready",
       },
     ],

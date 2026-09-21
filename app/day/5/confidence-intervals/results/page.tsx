@@ -16,10 +16,10 @@ export default async function ConfidenceIntervalResultsPage({
     <CourseShell>
       <main>
         <nav className={styles.breadcrumb} aria-label="Breadcrumb">
-          <Link href="/day/5/confidence-intervals">Activity 2</Link><span>/</span><span>Class results</span>
+          <Link href="/day/5/confidence-intervals">Activity 1</Link><span>/</span><span>Class results</span>
         </nav>
         <header className={styles.resultsHeader}>
-          <p>Day 5 · Activity 2 · Class results</p>
+          <p>Day 5 · Activity 1 · Class results</p>
           <h1>90% confidence intervals</h1>
         </header>
         <LiveResults activityKey="confidence-intervals" projector={projector} instructorRunId={instructorRunId} />

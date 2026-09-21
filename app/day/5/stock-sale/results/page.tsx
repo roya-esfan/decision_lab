@@ -16,10 +16,10 @@ export default async function StockSaleResultsPage({
     <CourseShell>
       <main>
         <nav className={styles.breadcrumb} aria-label="Breadcrumb">
-          <Link href="/day/5/stock-sale">Activity 1</Link><span>/</span><span>Class results</span>
+          <Link href="/day/5/stock-sale">Activity 2</Link><span>/</span><span>Class results</span>
         </nav>
         <header className={styles.resultsHeader}>
-          <p className={styles.eyebrow}>Day 5 · Activity 1 · Class results</p>
+          <p className={styles.eyebrow}>Day 5 · Activity 2 · Class results</p>
           <h1>Which stock would you sell?</h1>
         </header>
         <LiveResults activityKey="stock-sale" projector={projector} instructorRunId={instructorRunId} />

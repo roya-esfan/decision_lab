@@ -194,7 +194,7 @@ function ConfidenceIntervalResults({ results }: { results: ResultRow[] }) {
         <strong>{responseCount} {responseCount === 1 ? "response" : "responses"}</strong>
       </header>
       <p className={styles.confidenceResultsIntro}>
-        Each curve is fitted to the midpoint of the intervals submitted by the class. The average interval uses the mean minimum and mean maximum.
+        Each curve is fitted to the midpoint of the intervals submitted by the class. The average interval is calculated by averaging all lower bounds and all upper bounds separately. The crowd estimate is the average midpoint, which is also the midpoint of the average interval.
       </p>
       <div className={styles.confidenceQuestionResults}>
         {summaries.map((summary) => (
@@ -213,15 +213,15 @@ function ConfidenceIntervalResults({ results }: { results: ResultRow[] }) {
             <dl>
               <div>
                 <dt>Average interval</dt>
-                <dd>{formatInterval(summary.meanMinimum, summary.meanMaximum)}</dd>
+                <dd>{formatInterval(summary.meanMinimum, summary.meanMaximum, summary.number === 1)}</dd>
               </div>
               <div>
                 <dt>Crowd estimate</dt>
-                <dd>{formatEstimate(summary.meanMidpoint)}</dd>
+                <dd>{formatEstimate(summary.meanMidpoint, summary.number === 1)}</dd>
               </div>
               <div>
                 <dt>True answer</dt>
-                <dd>{formatEstimate(summary.trueValue)}</dd>
+                <dd>{formatEstimate(summary.trueValue, summary.number === 1)}</dd>
               </div>
               <div>
                 <dt>Responses</dt>
@@ -299,14 +299,16 @@ function ConfidenceDistribution({ summary }: { summary: ConfidenceSummary }) {
 }
 
 const resultNumberFormatter = new Intl.NumberFormat("en-US", { maximumFractionDigits: 1 });
+const resultYearFormatter = new Intl.NumberFormat("en-US", { maximumFractionDigits: 1, useGrouping: false });
 
-function formatEstimate(value: number | null) {
-  return value === null ? "—" : resultNumberFormatter.format(value);
+function formatEstimate(value: number | null, isYear = false) {
+  if (value === null) return "—";
+  return (isYear ? resultYearFormatter : resultNumberFormatter).format(value);
 }
 
-function formatInterval(minimum: number | null, maximum: number | null) {
+function formatInterval(minimum: number | null, maximum: number | null, isYear = false) {
   if (minimum === null || maximum === null) return "—";
-  return `${formatEstimate(minimum)}–${formatEstimate(maximum)}`;
+  return `${formatEstimate(minimum, isYear)}–${formatEstimate(maximum, isYear)}`;
 }
 
 function LandDisputeResults({ results }: { results: ResultRow[] }) {

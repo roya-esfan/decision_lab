@@ -87,7 +87,7 @@
 .intervalHead,
 .intervalRow {
   display: grid;
-  grid-template-columns: minmax(115px, .55fr) minmax(145px, 1fr) minmax(145px, 1fr) minmax(105px, .55fr);
+  grid-template-columns: minmax(115px, .55fr) minmax(145px, 1fr) minmax(145px, 1fr) minmax(150px, .7fr);
   align-items: center;
 }
 
@@ -121,7 +121,7 @@
   display: none;
 }
 
-.intervalRow input[type="number"] {
+.numberInput {
   width: 100%;
   min-height: 46px;
   padding: 9px 12px;
@@ -133,7 +133,7 @@
   font-size: 16px;
 }
 
-.intervalRow input[type="number"]:focus {
+.numberInput:focus {
   border-color: var(--accent);
   outline: 2px solid rgb(30 68 158 / 16%);
   outline-offset: 1px;
@@ -143,24 +143,39 @@
   background: #f5f7f9;
 }
 
-.checkLabel {
+.checkButtons {
   display: flex;
-  gap: 9px;
+  gap: 7px;
   align-items: center;
   justify-content: center;
+}
+
+.checkButtons button {
+  min-width: 58px;
+  min-height: 38px;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink);
+  font: inherit;
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 750;
 }
 
-.checkLabel input {
-  width: 24px;
-  height: 24px;
-  accent-color: #39835c;
+.checkButtons button[aria-pressed="true"]:first-child {
+  border-color: #39835c;
+  background: #39835c;
+  color: #fff;
 }
 
-.checkLabel input:disabled + span {
-  color: var(--muted);
-  opacity: .6;
+.checkButtons button[aria-pressed="true"]:last-child {
+  border-color: #a64040;
+  background: #a64040;
+  color: #fff;
+}
+
+.checkButtons button:disabled {
+  cursor: not-allowed;
+  opacity: .45;
 }
 
 .registerActions {
@@ -250,11 +265,11 @@
     grid-column: 1 / -1;
   }
 
-  .intervalRow label:not(.checkLabel) {
+  .intervalRow label {
     padding-right: 0;
   }
 
-  .intervalRow label:not(.checkLabel) > span {
+  .intervalRow label > span {
     display: block;
     margin-bottom: 5px;
     color: var(--muted);
@@ -263,7 +278,7 @@
     text-transform: uppercase;
   }
 
-  .checkLabel {
+  .checkButtons {
     align-self: end;
     min-height: 46px;
   }

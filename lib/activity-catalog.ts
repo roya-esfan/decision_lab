@@ -179,7 +179,7 @@ export const courseActivityCatalog: readonly CourseActivityDefinition[] = [
   {
     key: "stock-sale",
     day: 5,
-    number: 1,
+    number: 2,
     title: "Which stock would you sell?",
     activityHref: "/day/5/stock-sale",
     resultsPath: "/day/5/stock-sale/results",
@@ -188,7 +188,7 @@ export const courseActivityCatalog: readonly CourseActivityDefinition[] = [
   {
     key: "confidence-intervals",
     day: 5,
-    number: 2,
+    number: 1,
     title: "90% confidence intervals",
     activityHref: "/day/5/confidence-intervals",
     resultsPath: "/day/5/confidence-intervals/results",

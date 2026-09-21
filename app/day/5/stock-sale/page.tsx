@@ -15,11 +15,11 @@ export default function StockSalePage() {
       <main>
         <nav className={styles.breadcrumb} aria-label="Breadcrumb">
           <Link href="/">Course home</Link><span>/</span>
-          <Link href="/day/5">Day 5</Link><span>/</span><span>Activity 1</span>
+          <Link href="/day/5">Day 5</Link><span>/</span><span>Activity 2</span>
         </nav>
 
         <header className={styles.activityHeader}>
-          <p className={styles.eyebrow}>Day 5 · Activity 1</p>
+          <p className={styles.eyebrow}>Day 5 · Activity 2</p>
           <h1>Which stock would you sell?</h1>
         </header>
 

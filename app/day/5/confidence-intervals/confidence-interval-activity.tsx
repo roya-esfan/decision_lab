@@ -13,15 +13,29 @@ import sharedStyles from "../../../course.module.css";
 import styles from "./confidence-intervals.module.css";
 
 type RangeDraft = { minimum: string; maximum: string };
+type RangeCheck = "yes" | "no" | null;
 
 const emptyRanges = confidenceIntervalQuestions.map((): RangeDraft => ({ minimum: "", maximum: "" }));
-const emptyChecks = confidenceIntervalQuestions.map(() => false);
+const emptyChecks = confidenceIntervalQuestions.map((): RangeCheck => null);
+
+function normalizeNumberDraft(value: string) {
+  const cleaned = value.replaceAll(",", "").replace(/[^\d.]/g, "");
+  const [integer = "", ...decimalParts] = cleaned.split(".");
+  return decimalParts.length === 0 ? integer : `${integer}.${decimalParts.join("")}`;
+}
+
+function formatNumberDraft(value: string, useGrouping: boolean) {
+  if (!useGrouping || value === "") return value;
+  const [integer, decimal] = value.split(".");
+  const groupedInteger = integer.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  return decimal === undefined ? groupedInteger : `${groupedInteger}.${decimal}`;
+}
 
 export function ConfidenceIntervalActivity() {
   const session = useLiveSession("confidence-intervals");
   const idempotencyKey = useRef<string | null>(null);
   const [ranges, setRanges] = useState<RangeDraft[]>(emptyRanges);
-  const [checks, setChecks] = useState<boolean[]>(emptyChecks);
+  const [checks, setChecks] = useState<RangeCheck[]>(emptyChecks);
   const [submitted, setSubmitted] = useState(false);
   const [hydratedKey, setHydratedKey] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -40,11 +54,13 @@ export function ConfidenceIntervalActivity() {
         if (saved) {
           const parsed = JSON.parse(saved) as {
             ranges?: RangeDraft[];
-            checks?: boolean[];
+            checks?: Array<RangeCheck | boolean>;
             submitted?: boolean;
           };
           if (parsed.ranges?.length === confidenceIntervalQuestions.length) setRanges(parsed.ranges);
-          if (parsed.checks?.length === confidenceIntervalQuestions.length) setChecks(parsed.checks);
+          if (parsed.checks?.length === confidenceIntervalQuestions.length) {
+            setChecks(parsed.checks.map((check) => check === true ? "yes" : check === false ? null : check));
+          }
           setSubmitted(parsed.submitted === true);
         }
       } catch {
@@ -60,7 +76,7 @@ export function ConfidenceIntervalActivity() {
     window.sessionStorage.setItem(storageKey, JSON.stringify({ ranges, checks, submitted }));
   }, [checks, hydratedKey, ranges, storageKey, submitted]);
 
-  const checkedCount = useMemo(() => checks.filter(Boolean).length, [checks]);
+  const checkedCount = useMemo(() => checks.filter((check) => check === "yes").length, [checks]);
   const checkedPercentage = checkedCount * 10;
 
   function updateRange(index: number, field: keyof RangeDraft, value: string) {
@@ -74,8 +90,8 @@ export function ConfidenceIntervalActivity() {
     setSubmissionError("");
 
     const intervals = ranges.map((range) => ({
-      minimum: Number(range.minimum),
-      maximum: Number(range.maximum),
+      minimum: Number(range.minimum.replaceAll(",", "")),
+      maximum: Number(range.maximum.replaceAll(",", "")),
       hasValues: range.minimum.trim() !== "" && range.maximum.trim() !== "",
     }));
     const invalidIndex = intervals.findIndex((interval) =>
@@ -153,43 +169,49 @@ export function ConfidenceIntervalActivity() {
               <label>
                 <span>Minimum</span>
                 <input
-                  type="number"
+                  type="text"
                   inputMode="decimal"
-                  min="0"
-                  max={confidenceIntervalMax}
-                  step="any"
-                  value={ranges[index].minimum}
+                  className={styles.numberInput}
+                  value={formatNumberDraft(ranges[index].minimum, question.number !== 1)}
                   readOnly={submitted}
                   aria-label={`Question ${question.number}, minimum`}
-                  onChange={(event) => updateRange(index, "minimum", event.target.value)}
+                  onChange={(event) => updateRange(index, "minimum", normalizeNumberDraft(event.target.value))}
                 />
               </label>
               <label>
                 <span>Maximum</span>
                 <input
-                  type="number"
+                  type="text"
                   inputMode="decimal"
-                  min="0"
-                  max={confidenceIntervalMax}
-                  step="any"
-                  value={ranges[index].maximum}
+                  className={styles.numberInput}
+                  value={formatNumberDraft(ranges[index].maximum, question.number !== 1)}
                   readOnly={submitted}
                   aria-label={`Question ${question.number}, maximum`}
-                  onChange={(event) => updateRange(index, "maximum", event.target.value)}
+                  onChange={(event) => updateRange(index, "maximum", normalizeNumberDraft(event.target.value))}
                 />
               </label>
-              <label className={styles.checkLabel}>
-                <input
-                  type="checkbox"
-                  checked={checks[index]}
+              <div className={styles.checkButtons} role="group" aria-label={`Was the answer to Question ${question.number} within your range?`}>
+                <button
+                  type="button"
                   disabled={!submitted}
-                  aria-label={`The answer to Question ${question.number} was within my range`}
-                  onChange={(event) => setChecks((current) => current.map((checked, checkIndex) =>
-                    checkIndex === index ? event.target.checked : checked,
+                  aria-pressed={checks[index] === "yes"}
+                  onClick={() => setChecks((current) => current.map((check, checkIndex) =>
+                    checkIndex === index ? "yes" : check,
                   ))}
-                />
-                <span>Yes</span>
-              </label>
+                >
+                  Yes
+                </button>
+                <button
+                  type="button"
+                  disabled={!submitted}
+                  aria-pressed={checks[index] === "no"}
+                  onClick={() => setChecks((current) => current.map((check, checkIndex) =>
+                    checkIndex === index ? "no" : check,
+                  ))}
+                >
+                  No
+                </button>
+              </div>
             </div>
           ))}
         </div>
