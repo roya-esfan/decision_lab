@@ -357,16 +357,20 @@ export const courseDays: CourseDay[] = [
   {
     number: 5,
     week: 39,
-    title: "Overconfidence, Influence, and Escalation of Commitment",
+    title: "Emotions, Overconfidence, and Escalation of Commitment",
     room: "P35 PI251",
     dateISO: "2026-09-22",
     date: "Tuesday, 22 September 2026",
-    time: "12:30–17:15",
+    time: "12:30–16:30",
     topics: [
-      "Overconfidence, persuasion and influence",
-      "Leader certainty and uncertainty",
-      "Sunk costs, self-justification and escalation",
-      "Learning from negative feedback and organizational safeguards",
+      "Emotions and decision making: valence, discrete emotions and arousal",
+      "The appraisal-tendency framework and emotion regulation",
+      "Retrieval practice from the previous lecture",
+      "Overprecision, overestimation and overplacement",
+      "Wisdom of crowds and ways to reduce overconfidence",
+      "Overconfidence in organizations and leader uncertainty",
+      "Illusion of validity and regression to the mean",
+      "Mental accounting, sunk costs and escalation of commitment",
     ],
     readings: {
       required: [
@@ -380,7 +384,54 @@ export const courseDays: CourseDay[] = [
         "Staw & Ross (1987), Knowing when to pull the plug.",
       ],
     },
-    sessions: [],
+    sessions: [
+      {
+        time: "12:30–13:15",
+        label: "Session 1",
+        duration: "45 min",
+        description: "More on emotions and retrieval practice from the previous lecture",
+        kind: "teaching",
+      },
+      {
+        time: "13:15–13:30",
+        label: "Break",
+        duration: "15 min",
+        kind: "break",
+      },
+      {
+        time: "13:30–14:15",
+        label: "Session 2",
+        duration: "45 min",
+        description: "Overconfidence: overprecision, overestimation and overplacement",
+        kind: "teaching",
+      },
+      {
+        time: "14:15–14:45",
+        label: "Break",
+        duration: "30 min",
+        kind: "break",
+      },
+      {
+        time: "14:45–15:30",
+        label: "Session 3",
+        duration: "45 min",
+        description: "Overconfidence in organizations and leader certainty and uncertainty",
+        kind: "teaching",
+      },
+      {
+        time: "15:30–15:45",
+        label: "Break",
+        duration: "15 min",
+        kind: "break",
+      },
+      {
+        time: "15:45–16:30",
+        label: "Session 4",
+        duration: "45 min",
+        description: "Illusion of validity, mental accounting, escalation of commitment and sunk costs",
+        kind: "teaching",
+      },
+    ],
     assignments: [
       {
         number: 1,
