@@ -250,13 +250,6 @@ export const courseDays: CourseDay[] = [
         href: "/day/2/wage-fairness",
         status: "ready",
       },
-      {
-        number: 7,
-        title: "What price would you pay?",
-        description: "State the price you would be willing to pay for a beer",
-        href: "/day/2/beer-valuation",
-        status: "ready",
-      },
     ],
   },
   {
@@ -475,9 +468,9 @@ export const courseDays: CourseDay[] = [
     assignments: [
       {
         number: 1,
-        title: "Fair or unfair?",
-        description: "Rate the store’s pricing decision",
-        href: "/day/6/snow-shovel-fairness",
+        title: "What price would you pay?",
+        description: "State the price you would be willing to pay for a beer",
+        href: "/day/6/beer-valuation",
         status: "ready",
       },
     ],

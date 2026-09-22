@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { CourseShell } from "../../../components/course-shell";
-import { BeerValuationActivity } from "./beer-valuation-activity";
+import { BeerValuationActivity } from "../../2/beer-valuation/beer-valuation-activity";
 import styles from "../../3/crew-problem/crew-problem.module.css";
 
 export const metadata: Metadata = {
@@ -15,10 +15,10 @@ export default function BeerValuationPage() {
       <main className={styles.page}>
         <nav className={styles.breadcrumb} aria-label="Breadcrumb">
           <Link href="/">Course home</Link><span>/</span>
-          <Link href="/day/2">Day 2</Link><span>/</span><span>Activity 7</span>
+          <Link href="/day/6">Day 6</Link><span>/</span><span>Activity 1</span>
         </nav>
         <header className={styles.header}>
-          <p>Day 2 · Activity 7</p>
+          <p>Day 6 · Activity 1</p>
           <h1>What price would you pay?</h1>
         </header>
         <BeerValuationActivity />

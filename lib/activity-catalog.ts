@@ -160,11 +160,11 @@ export const courseActivityCatalog: readonly CourseActivityDefinition[] = [
   },
   {
     key: "beer-valuation",
-    day: 2,
-    number: 7,
+    day: 6,
+    number: 1,
     title: "What price would you pay?",
-    activityHref: "/day/2/beer-valuation",
-    resultsPath: "/day/2/beer-valuation/results",
+    activityHref: "/day/6/beer-valuation",
+    resultsPath: "/day/6/beer-valuation/results",
     kind: "responses",
   },
   {
@@ -192,15 +192,6 @@ export const courseActivityCatalog: readonly CourseActivityDefinition[] = [
     title: "90% confidence intervals",
     activityHref: "/day/5/confidence-intervals",
     resultsPath: "/day/5/confidence-intervals/results",
-    kind: "responses",
-  },
-  {
-    key: "snow-shovel-fairness",
-    day: 6,
-    number: 1,
-    title: "Fair or unfair?",
-    activityHref: "/day/6/snow-shovel-fairness",
-    resultsPath: "/day/6/snow-shovel-fairness/results",
     kind: "responses",
   },
 ];
