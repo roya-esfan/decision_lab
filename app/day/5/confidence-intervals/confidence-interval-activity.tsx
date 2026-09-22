@@ -14,6 +14,7 @@ import styles from "./confidence-intervals.module.css";
 
 type RangeDraft = { minimum: string; maximum: string };
 type RangeCheck = "yes" | "no" | null;
+type SubmissionMode = "live" | "review" | null;
 
 const emptyRanges = confidenceIntervalQuestions.map((): RangeDraft => ({ minimum: "", maximum: "" }));
 const emptyChecks = confidenceIntervalQuestions.map((): RangeCheck => null);
@@ -37,6 +38,7 @@ export function ConfidenceIntervalActivity() {
   const [ranges, setRanges] = useState<RangeDraft[]>(emptyRanges);
   const [checks, setChecks] = useState<RangeCheck[]>(emptyChecks);
   const [submitted, setSubmitted] = useState(false);
+  const [submissionMode, setSubmissionMode] = useState<SubmissionMode>(null);
   const [hydratedKey, setHydratedKey] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [submissionError, setSubmissionError] = useState("");
@@ -48,20 +50,42 @@ export function ConfidenceIntervalActivity() {
       setRanges(emptyRanges.map((range) => ({ ...range })));
       setChecks([...emptyChecks]);
       setSubmitted(false);
+      setSubmissionMode(null);
       idempotencyKey.current = null;
       try {
-        const saved = window.sessionStorage.getItem(storageKey);
+        let saved = window.sessionStorage.getItem(storageKey);
+        if (!saved) {
+          const previousKeys = Array.from({ length: window.sessionStorage.length }, (_, index) =>
+            window.sessionStorage.key(index),
+          ).filter((key): key is string => Boolean(key?.startsWith("confidence-intervals:")));
+          for (const previousKey of previousKeys.reverse()) {
+            const candidate = window.sessionStorage.getItem(previousKey);
+            if (candidate) {
+              saved = candidate;
+              break;
+            }
+          }
+        }
         if (saved) {
           const parsed = JSON.parse(saved) as {
             ranges?: RangeDraft[];
             checks?: Array<RangeCheck | boolean>;
             submitted?: boolean;
+            submissionMode?: SubmissionMode;
           };
           if (parsed.ranges?.length === confidenceIntervalQuestions.length) setRanges(parsed.ranges);
           if (parsed.checks?.length === confidenceIntervalQuestions.length) {
             setChecks(parsed.checks.map((check) => check === true ? "yes" : check === false ? null : check));
           }
-          setSubmitted(parsed.submitted === true);
+          if (parsed.submitted === true) {
+            const savedMode = parsed.submissionMode === "live" || parsed.submissionMode === "review"
+              ? parsed.submissionMode
+              : session.state === "review"
+                ? "review"
+                : null;
+            setSubmissionMode(savedMode);
+            setSubmitted(savedMode !== null);
+          }
         }
       } catch {
         // A stored draft is optional; the activity still works without it.
@@ -69,15 +93,16 @@ export function ConfidenceIntervalActivity() {
       setHydratedKey(storageKey);
     }, 0);
     return () => window.clearTimeout(timer);
-  }, [hydratedKey, storageKey]);
+  }, [hydratedKey, session.state, storageKey]);
 
   useEffect(() => {
     if (!storageKey || hydratedKey !== storageKey) return;
-    window.sessionStorage.setItem(storageKey, JSON.stringify({ ranges, checks, submitted }));
-  }, [checks, hydratedKey, ranges, storageKey, submitted]);
+    window.sessionStorage.setItem(storageKey, JSON.stringify({ ranges, checks, submitted, submissionMode }));
+  }, [checks, hydratedKey, ranges, storageKey, submissionMode, submitted]);
 
   const checkedCount = useMemo(() => checks.filter((check) => check === "yes").length, [checks]);
   const checkedPercentage = checkedCount * 10;
+  const isRegistered = submitted && !(session.state === "joined" && submissionMode === "review");
 
   function updateRange(index: number, field: keyof RangeDraft, value: string) {
     setRanges((current) => current.map((range, rangeIndex) =>
@@ -86,7 +111,7 @@ export function ConfidenceIntervalActivity() {
   }
 
   async function register() {
-    if (submitting || submitted) return;
+    if (submitting || isRegistered) return;
     setSubmissionError("");
 
     const intervals = ranges.map((range) => ({
@@ -109,6 +134,7 @@ export function ConfidenceIntervalActivity() {
 
     if (session.state === "review") {
       setSubmitted(true);
+      setSubmissionMode("review");
       return;
     }
 
@@ -128,9 +154,15 @@ export function ConfidenceIntervalActivity() {
       });
       const data = await response.json() as { accepted?: boolean; error?: string };
       if (!response.ok || !data.accepted) {
+        if (response.status === 409 && data.error?.includes("already responded")) {
+          setSubmitted(true);
+          setSubmissionMode("live");
+          return;
+        }
         throw new Error(data.error ?? "Your responses could not be registered.");
       }
       setSubmitted(true);
+      setSubmissionMode("live");
     } catch (error) {
       setSubmissionError(error instanceof Error ? error.message : "Your responses could not be registered.");
     } finally {
@@ -150,9 +182,11 @@ export function ConfidenceIntervalActivity() {
           <p>Use the questions shown in class. Your minimum and maximum will remain visible after you register them.</p>
         </header>
 
-        {submitted && (
+        {isRegistered && (
           <p className={styles.registeredStatus} role="status">
-            {session.state === "review" ? "Ranges ready for review" : "All ten ranges have been registered"}
+            {submissionMode === "live"
+              ? "All ten ranges have been registered"
+              : "Review complete — these ranges have not been added to the classroom results"}
           </p>
         )}
 
@@ -173,7 +207,7 @@ export function ConfidenceIntervalActivity() {
                   inputMode="decimal"
                   className={styles.numberInput}
                   value={formatNumberDraft(ranges[index].minimum, question.number !== 1)}
-                  readOnly={submitted}
+                  readOnly={isRegistered}
                   aria-label={`Question ${question.number}, minimum`}
                   onChange={(event) => updateRange(index, "minimum", normalizeNumberDraft(event.target.value))}
                 />
@@ -185,7 +219,7 @@ export function ConfidenceIntervalActivity() {
                   inputMode="decimal"
                   className={styles.numberInput}
                   value={formatNumberDraft(ranges[index].maximum, question.number !== 1)}
-                  readOnly={submitted}
+                  readOnly={isRegistered}
                   aria-label={`Question ${question.number}, maximum`}
                   onChange={(event) => updateRange(index, "maximum", normalizeNumberDraft(event.target.value))}
                 />
@@ -193,7 +227,7 @@ export function ConfidenceIntervalActivity() {
               <div className={styles.checkButtons} role="group" aria-label={`Was the answer to Question ${question.number} within your range?`}>
                 <button
                   type="button"
-                  disabled={!submitted}
+                  disabled={!isRegistered}
                   aria-pressed={checks[index] === "yes"}
                   onClick={() => setChecks((current) => current.map((check, checkIndex) =>
                     checkIndex === index ? "yes" : check,
@@ -203,7 +237,7 @@ export function ConfidenceIntervalActivity() {
                 </button>
                 <button
                   type="button"
-                  disabled={!submitted}
+                  disabled={!isRegistered}
                   aria-pressed={checks[index] === "no"}
                   onClick={() => setChecks((current) => current.map((check, checkIndex) =>
                     checkIndex === index ? "no" : check,
@@ -216,10 +250,10 @@ export function ConfidenceIntervalActivity() {
           ))}
         </div>
 
-        {!submitted ? (
+        {!isRegistered ? (
           <div className={styles.registerActions}>
             <button type="button" disabled={submitting} onClick={() => void register()}>
-              {submitting ? "Registering…" : "Register"}
+              {submitting ? "Registering…" : session.state === "review" ? "Finish review" : "Register"}
             </button>
           </div>
         ) : (
@@ -232,7 +266,7 @@ export function ConfidenceIntervalActivity() {
         {submissionError && <p className={sharedStyles.formError} role="alert">{submissionError}</p>}
       </section>
 
-      {submitted && session.state === "review" && (
+      {isRegistered && session.state === "review" && (
         <div className={sharedStyles.reviewResults}>
           <header>
             <p className={sharedStyles.eyebrow}>From the classroom session</p>

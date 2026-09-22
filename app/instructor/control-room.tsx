@@ -493,6 +493,11 @@ export function ControlRoom({ email }: { email: string }) {
                       })}
                       {activityResults.length === 0 && <p>Results could not be loaded yet.</p>}
                     </div>
+                    {mode === "review" && responseCount === 0 && (
+                      <p className={styles.activitySetupWarning}>
+                        No classroom responses were saved for this session. Answers completed in review mode stay on each student’s device and are not added to the class results.
+                      </p>
+                    )}
                   </div>
                 ) : (
                   <div className={styles.privateActivitySummary}>
