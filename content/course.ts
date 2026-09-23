@@ -451,10 +451,9 @@ export const courseDays: CourseDay[] = [
     date: "Wednesday, 23 September 2026",
     time: "12:30–15:15",
     topics: [
-      "Interdependence and social dilemmas",
-      "Trust, reciprocity and fairness",
-      "Responses to unfairness and concern for others",
-      "Group dynamics, bounded ethicality and favoritism",
+      "Fairness and (rational) decision making",
+      "Game theory",
+      "In-groups, bounded ethicality and indirect unethical behavior",
     ],
     readings: {
       required: [
