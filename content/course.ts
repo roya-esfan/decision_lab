@@ -464,7 +464,41 @@ export const courseDays: CourseDay[] = [
         "Kouchaki & Smith (2025), Moral decision-making in organizations.",
       ],
     },
-    sessions: [],
+    sessions: [
+      {
+        time: "12:30–13:15",
+        label: "Session 1",
+        duration: "45 min",
+        description: "Fairness and (rational) decision making",
+        kind: "teaching",
+      },
+      {
+        time: "13:15–13:30",
+        label: "Break",
+        duration: "15 min",
+        kind: "break",
+      },
+      {
+        time: "13:30–14:15",
+        label: "Session 2",
+        duration: "45 min",
+        description: "Game theory",
+        kind: "teaching",
+      },
+      {
+        time: "14:15–14:30",
+        label: "Break",
+        duration: "15 min",
+        kind: "break",
+      },
+      {
+        time: "14:30–15:15",
+        label: "Session 3",
+        duration: "45 min",
+        description: "In-groups, bounded ethicality, indirect unethical behavior",
+        kind: "teaching",
+      },
+    ],
     assignments: [
       {
         number: 1,
